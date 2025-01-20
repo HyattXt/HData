@@ -101,6 +101,7 @@ interface UserInfoRes extends UserReq, IdReq {
   alertGroup?: any
   createTime: string
   updateTime: string
+  approvalUserType?: number
 }
 
 interface UserListRes {

@@ -73,7 +73,7 @@
         <n-input v-model:value="formValue.userName" disabled/>
       </n-form-item>
       <n-form-item label="用户角色:" path="approvalUserType">
-        <n-select v-model:value="formValue.approvalUserType" :options="[{label: '开发', value: 2 },{label: '管理员', value: 1 }]"/>
+        <n-select v-model:value="formValue.approvalUserType" :options="[{label: '开发', value: 2 },{label: '管理员', value: 1 },{label: '游客', value: 3 }]"/>
       </n-form-item>
       <n-form-item label="备注:" path="approvalAuthorizationRemarks">
         <n-input v-model:value="formValue.approvalAuthorizationRemarks" type="textarea"/>
@@ -223,6 +223,7 @@ const columns =  [
       switch (row.approvalUserType) {
         case 1: return h("div",'管理员')
         case 2: return h("div",'开发')
+        case 3: return h("div",'游客')
         default: return ''
       }
     }

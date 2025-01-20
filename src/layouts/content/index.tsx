@@ -25,6 +25,8 @@ import { useRouteStore } from '@/store/route/route'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import {useProjectStore} from "@/store/route/project";
+import {useUserStore} from "@/store/user/user";
+import type {UserInfoRes} from "@/service/modules/users/types";
 
 const Content = defineComponent({
   name: 'DSContent',
@@ -35,6 +37,7 @@ const Content = defineComponent({
     const { locale } = useI18n()
     const localesStore = useLocalesStore()
     const routeStore = useRouteStore()
+    const userStore = useUserStore()
     const ProjectStore = useProjectStore()
     const {
       state,
@@ -117,7 +120,8 @@ const Content = defineComponent({
       ...toRefs(state),
       changeMenuOption,
       sideKeyRef,
-      customStyle
+      customStyle,
+      userStore
     }
   },
 
@@ -151,6 +155,7 @@ const Content = defineComponent({
             style={{padding: this.$route.fullPath.includes('data-business')&&!this.$route.fullPath.includes('label') || this.$route.fullPath.includes('relation') ? 0 : '12px', backgroundColor: '#e8ecf0!important'}}
             contentStyle={'height: 100%'}
           >
+            {(this.userStore.getUserInfo as UserInfoRes).approvalUserType === 3 && (<div class="read-only"></div>)}
             <router-view key={this.$route.fullPath} />
           </NLayoutContent>
         </NLayout>
