@@ -817,7 +817,7 @@ dt {
   width: 100%;
   height: calc(100%);
   background: rgb(255, 255, 255, 0);
-  z-index: 10000000000000000;
+  z-index: 1000;
 
   &::before {
     content: '当前处于游客模式';
@@ -829,7 +829,7 @@ dt {
     font-weight: bold;
     color: rgba(0, 0, 0, 0.3); /* 半透明黑色，你可以根据需要调整颜色和透明度 */
     pointer-events: none; /* 确保水印不会干扰用户的点击事件 */
-    z-index: 10000000000000001; /* 确保水印位于其他内容之上，但通常不需要这么大的数字 */
+    z-index: 1000; /* 确保水印位于其他内容之上，但通常不需要这么大的数字 */
     white-space: nowrap; /* 防止水印文本换行 */
     /* 可选：添加一些样式来使水印更显眼或更符合你的设计 */
     /* 例如：text-align: center; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.1); */
