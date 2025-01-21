@@ -106,7 +106,21 @@ const loginPage: RouteRecordRaw[] = [
   }
 ]
 
-const routes: RouteRecordRaw[] = [...basePage, ...loginPage]
+/**
+ * visitor page
+ */
+const visitorPage: RouteRecordRaw[] = [
+  {
+    path: '/visitor',
+    name: 'visitor',
+    component: components['visitor'],
+    meta: {
+      auth: []
+    }
+  }
+]
+
+const routes: RouteRecordRaw[] = [...basePage, ...loginPage, ...visitorPage]
 
 // 重新组织后导出
 export default routes

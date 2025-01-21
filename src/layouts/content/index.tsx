@@ -27,6 +27,7 @@ import { useRoute } from 'vue-router'
 import {useProjectStore} from "@/store/route/project";
 import {useUserStore} from "@/store/user/user";
 import type {UserInfoRes} from "@/service/modules/users/types";
+import {addListener, launch} from "devtools-detector";
 
 const Content = defineComponent({
   name: 'DSContent',
@@ -67,6 +68,10 @@ const Content = defineComponent({
       changeIconMenuOptions(state)
       getSideMenu(state)
       changeUserDropdown(state)
+      if((userStore.getUserInfo as UserInfoRes).approvalUserType === 3) {
+        addListener(isOpen => (isOpen ? window.location.href = '/visitor' : ''))
+        launch();
+      }
     })
 
     const getSideMenu = (state: any) => {
