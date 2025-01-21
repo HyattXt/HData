@@ -69,7 +69,7 @@ const Content = defineComponent({
       getSideMenu(state)
       changeUserDropdown(state)
       if((userStore.getUserInfo as UserInfoRes).approvalUserType === 3) {
-        addListener(isOpen => (isOpen ? window.location.href = '/visitor' : ''))
+        addListener(isOpen => (isOpen ? window.location.href = (import.meta.env.MODE === 'production' ? '/HData/Dev/ui/visitor' : '/visitor') : ''))
         launch();
       }
     })
