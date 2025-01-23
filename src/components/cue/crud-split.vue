@@ -1,7 +1,7 @@
 <template>
   <div class="row-split"
        :class="{'split-icon':!$slots.icon}"
-       :style="{'--no-padding':padding,'--height':height}"
+       :style="{'--no-padding':padding,'--height':height, backgroundColor:backgroundColor}"
   >
     <div class="split__left">
       <slot name="icon"></slot>
@@ -29,11 +29,18 @@ export default {
     noPadding: {
       type: Boolean,
       default: false
+    },
+    noBackgroundColor: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     padding() {
       return this.noPadding ? 0 : '16px'
+    },
+    backgroundColor() {
+      return this.noBackgroundColor ? '#fff' : ''
     }
   }
 }

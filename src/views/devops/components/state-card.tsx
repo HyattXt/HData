@@ -26,6 +26,7 @@ import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import {SelectMixedOption} from "naive-ui/lib/select/src/interface";
+import CrudSplit from "@/components/cue/crud-split.vue";
 
 const props = {
   title: {
@@ -215,7 +216,8 @@ const StateCard = defineComponent({
           </div>
           <NGrid x-gap={0} cols={2}  >
             <NGi span={2}>
-              <Card title={'任务状态统计'}>
+              <Card>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>任务状态统计</CrudSplit>
                 <div style="display: flex;padding: 10px; height: 90px">
                   <div class="hover_div" style="flex: 1;background-color: #f4f6f9;margin: 0 24px 0 0;padding-top: 16px;padding-left: 16px;padding-bottom: 8px;border-radius: 2px;">
                   <span role="img" class="anticon" style="font-size: 16px; padding-right: 8px">
@@ -275,12 +277,14 @@ const StateCard = defineComponent({
               </Card>
             </NGi>
             <NGi span={2}>
-              <Card title={'实例运行时段分布'} style={{ height: '400px', width: '100%', flexWrap: "nowrap" }}>
+              <Card style={{ height: '400px', width: '100%', flexWrap: "nowrap" }}>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>实例运行时段分布</CrudSplit>
                 {chartData.length > 0 && <ChartLineBox data={chartData} />}
               </Card>
             </NGi>
             <NGi span={2} >
-              <Card title={'实例类别占比'} style={{ border: 'none', height: '100%' }}>
+              <Card style={{ border: 'none', height: '100%' }}>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>实例类别占比</CrudSplit>
                 <div style={{ border: 'none', display: 'flex', height: '100%',justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ width: '50%'  }}>
                     {TaskPieData.chart.length > 0 && <TaskPie data={TaskPieData.chart} taskTotalNum={TaskPieData.table[0].taskTotalNum} colors={colors} height={'350px'}/>}
@@ -294,7 +298,7 @@ const StateCard = defineComponent({
             <NGi span={1}>
               <Card >
                 <NSpace justify='space-between' style={{ height: '40px' }}>
-                  <p style="font-size:16px;">作业运行时长排行TOP10</p>
+                  <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>作业运行时长排行TOP10</CrudSplit>
                   <NSelect
                       size='small'
                       value={RunSelectCurrent}
@@ -318,7 +322,7 @@ const StateCard = defineComponent({
             <NGi span={1}>
               <Card >
                 <NSpace justify='space-between' style={{ height: '40px' }}>
-                  <p style="font-size:16px;">作业运行出错排行TOP10</p>
+                  <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>作业运行出错排行TOP10</CrudSplit>
                   <NSelect
                       size='small'
                       value={RunErrorSelectCurrent}
@@ -342,7 +346,7 @@ const StateCard = defineComponent({
             <NGi span={2}>
               <Card>
                 <NSpace justify='space-between' style={{ height: '40px' }}>
-                  <p style="font-size:16px;">API调用次数TOP10</p>
+                  <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>API调用次数TOP10</CrudSplit>
                   <NSelect
                       size='small'
                       value={ApiSelectCurrent}

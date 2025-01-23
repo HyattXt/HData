@@ -24,8 +24,7 @@ import { ref } from 'vue'
 import CrudHead from "@/components/cue/crud-header.vue"
 import {SelectMixedOption} from "naive-ui/lib/select/src/interface";
 import {RowData} from "naive-ui/es/data-table/src/interface";
-import utils from "@/utils";
-import axios from "axios";
+import CrudSplit from "@/components/cue/crud-split.vue";
 import {useUserStore} from "@/store/user/user";
 import {queryListUrl} from "@/service/modules/data-bussiness";
 import styles from './index.module.scss'
@@ -120,35 +119,6 @@ const StateCard = defineComponent({
       { title: '接口访问次数', key: '接口访问次数' },
     ]
 
-    const collectCol = [
-      {
-        title: '#',
-        key: 'key',
-        width: 40,
-        render: (_: any, index: any) => {
-          return `${index + 1}`;
-        }
-      },
-      { title: '表名', key: 'sqlLineageName'},
-      { title: '收藏时间', key: 'collectionTime' },
-      { title: '收藏数', key: 'totalCollections', width: 100  }
-    ]
-
-    const likeCol = [
-      {
-        title: '#',
-        key: 'key',
-        width: 40,
-        render: (_: any, index: any) => {
-          return `${index + 1}`;
-        }
-      },
-      { title: '表名', key: 'sqlLineageName'},
-      { title: '点赞时间', key: 'likeTime' },
-      { title: '点赞数', key: 'totalLikes', width: 100 },
-    ]
-
-
     return (
 
       <div>
@@ -168,7 +138,8 @@ const StateCard = defineComponent({
         </div>
         <NGrid x-gap={0} cols={2} >
           <NGi span={2}>
-            <Card title={'基础概况'} >
+            <Card >
+              <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>基础概况</CrudSplit>
               <div style="display: flex;padding: 10px; height: 90px">
                 <div class="hover_div" style="flex: 1;background-color: #f4f6f9;margin: 0 24px 0 0;padding-top: 16px;padding-left: 16px;padding-bottom: 8px;border-radius: 2px;">
                   <span role="img" class="anticon" style="font-size: 16px; padding-right: 8px">
@@ -211,7 +182,7 @@ const StateCard = defineComponent({
           <NGi span={1}>
             <Card style={{height: '300px'}}>
               <NSpace justify='space-between' style={{height: '40px'}}>
-                <p style="font-size:16px;">我的收藏</p>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>我的收藏</CrudSplit>
                 <router-link to="/data-assets/assets-catalog?type=collect&back=true"
                              style={{'text-decoration': 'none', 'color': '#0974f1'}}>
                   更多 &gt;
@@ -265,7 +236,7 @@ const StateCard = defineComponent({
           <NGi span={1}>
             <Card style={{height: '300px'}}>
               <NSpace justify='space-between' style={{height: '40px'}}>
-                <p style="font-size:16px;">我的点赞</p>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>我的点赞</CrudSplit>
                 <router-link to="/data-assets/assets-catalog?type=like&back=true"
                              style={{'text-decoration': 'none', 'color': '#0974f1'}}>
                   更多 &gt;
@@ -312,23 +283,27 @@ const StateCard = defineComponent({
             </Card>
           </NGi>
           <NGi span={1}>
-            <Card title={'数据表总数'} style={{height: '300px'}}>
+            <Card style={{height: '300px'}}>
+              <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>数据表总数</CrudSplit>
               {AssetOverviewLineData.length > 0 && <LineBox data={AssetOverviewLineData} title='' label='totalTables'/>}
             </Card>
           </NGi>
           <NGi span={1}>
-            <Card title={'数据存储量'} style={{height: '300px'}}>
+            <Card style={{height: '300px'}}>
+              <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>数据存储量</CrudSplit>
               {AssetOverviewLineData.length > 0 && <LineBox data={AssetOverviewLineData} title='' label='dataSize'/>}
             </Card>
           </NGi>
           <NGi span={1}>
-            <Card title={'存储记录数'} style={{height: '300px'}}>
+            <Card style={{height: '300px'}}>
+              <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>存储记录数</CrudSplit>
               {AssetOverviewLineData.length > 0 &&
                   <LineBox data={AssetOverviewLineData} title='' label='totalRecords'/>}
             </Card>
           </NGi>
           <NGi span={1}>
-            <Card title={'API服务数'} style={{height: '300px'}}>
+            <Card style={{height: '300px'}}>
+              <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>API服务数</CrudSplit>
               {AssetOverviewLineData.length > 0 &&
                   <LineBox data={AssetOverviewLineData} title='' label='totalApiInterface'/>}
             </Card>
@@ -336,7 +311,7 @@ const StateCard = defineComponent({
           <NGi span={2}>
             <Card>
               <NSpace justify='space-between' style={{height: '40px'}}>
-                <p style="font-size:16px;">API调用次数TOP10</p>
+                <CrudSplit noPadding noBackgroundColor style={"fontSize: 16px; fontWeight: 600"}>API调用次数TOP10</CrudSplit>
                 <NSelect
                     size='small'
                     value={ApiSelectCurrent}

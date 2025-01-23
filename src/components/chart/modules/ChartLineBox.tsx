@@ -82,7 +82,6 @@ const PieChart = defineComponent({
         }
       },
       yAxis: {
-        name: '数量',
         minInterval: 1,
         nameTextStyle: {
           color: '#262626',
@@ -168,9 +167,9 @@ const PieChart = defineComponent({
       ],
       grid: {
         x: 30,
-        y: 50,
+        y: 30,
         x2: 30,
-        y2: 35
+        y2: 50
       },
     };
 
