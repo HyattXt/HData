@@ -47,6 +47,9 @@ export default defineConfig({
   define: {
     '__APP_VERSION__': JSON.stringify(CurrentTimeVersion)
   },
+  build: {
+    outDir: 'ui'
+  },
   server: {
     host: "0.0.0.0",
     proxy: {
