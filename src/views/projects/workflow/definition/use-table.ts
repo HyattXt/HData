@@ -127,10 +127,10 @@ export function useTable() {
         ...COLUMN_WIDTH_CONFIG['state'],
         render: (row) =>
           row.releaseState === 'ONLINE'
-              ? t('project.workflow.down_line')
+              ? t('project.workflow.up_line')
               : row.releaseState === 'APPROVE'
                   ? t('project.workflow.on_approval')
-                  : t('project.workflow.up_line'),
+                  : t('project.workflow.down_line'),
       },
       {
         title: t('project.workflow.schedule_publish_status'),
