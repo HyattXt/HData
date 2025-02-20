@@ -114,6 +114,29 @@ export default {
             }
         },
         {
+            path: '/devops/service/api-strategy',
+            name: 'devops-api-strategy',
+            component: () => import('@/views/api/api-strategy/list/index.vue'),
+            meta: {
+                title: '服务策略-api-strategy',
+                activeMenu: 'devops',
+                showSide: true,
+                auth: []
+            }
+        },
+        {
+            path: '/devops/service/api-strategy/bw-list',
+            name: 'devops-api-strategy-bw-list',
+            component: () => import('@/views/api/api-strategy/add/BwList.vue'),
+            meta: {
+                title: '服务策略黑白名单-api-strategy-bw-list',
+                activeMenu: 'devops',
+                activeSide: '/devops/service/api-strategy',
+                showSide: true,
+                auth: []
+            }
+        },
+        {
             path: '/devops/security/alarm-instance-manage',
             name: 'devops-alarm-instance-manage',
             component: components['security-alarm-instance-manage'],

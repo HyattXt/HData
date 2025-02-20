@@ -71,6 +71,7 @@ export default {
   data_customAnalyse: 'Data CustomAnalyse',
   data_userPortrayal: 'Data UserPortrayal',
   api_manager: 'API manager',
+  api_strategy: 'API Strategy',
   data_assets: 'Data Assets',
   assets: 'Assets',
   assets_overview: 'Assets Overview',

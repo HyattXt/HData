@@ -354,6 +354,10 @@ export function useDataList() {
               {
                 label: t('menu.rest_manager'),
                 key: '/devops/rest/rest-manager'
+              },
+              {
+                label: t('menu.api_strategy'),
+                key: '/devops/service/api-strategy'
               }
             ]
           },
