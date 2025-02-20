@@ -3,7 +3,7 @@
   <div class="FBH mb16">
     <div class="overview-item-2 hover_div FB1 FBV FBJB">
       <div class="FBH FBJB">
-        <div>数据元数</div>
+        <div class="FBT">数据元数</div>
         <n-tooltip trigger="hover">
           <template #trigger>
             <NIcon><QuestionCircle28Regular/></NIcon>
@@ -11,12 +11,12 @@
           所有草稿/已发布/废止状态的基础数据元总数
         </n-tooltip>
       </div>
-      <div class="overview-countlast FBV FBAC FBJC">{{ indexData.dataElementNum }}<div class="overview-default">基础</div>
+      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElementNum }}<div class="overview-default">基础</div>
       </div>
     </div>
     <div class="overview-item-2 hover_div FB1 FBV FBJB">
       <div class="FBH FBJB">
-        <div>数据模型数</div>
+        <div class="FBT">数据模型数</div>
         <n-tooltip trigger="hover">
           <template #trigger>
             <NIcon><QuestionCircle28Regular/></NIcon>
@@ -24,12 +24,12 @@
           所有草稿/已发布/废止状态的基础和指标数据元总数
         </n-tooltip>
       </div>
-      <div class="overview-countlast FBV FBAC FBJC">{{ indexData.modelNum }}<div class="overview-default"></div>
+      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.modelNum }}<div class="overview-default"></div>
       </div>
     </div>
     <div class="overview-item-2 hover_div FB1 FBV FBJB">
       <div class="FBH FBJB">
-        <div>近3个月添加数</div>
+        <div class="FBT">近3个月添加数</div>
         <n-tooltip trigger="hover">
           <template #trigger>
             <NIcon><QuestionCircle28Regular/></NIcon>
@@ -37,12 +37,12 @@
           所有草稿/已发布/废止状态的数据模型总数
         </n-tooltip>
       </div>
-      <div class="overview-countlast FBV FBAC FBJC">{{ indexData.dataElement3Num + '/' +  indexData.model3Num}}<div class="overview-default">数据元/数据模型</div>
+      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElement3Num + '/' +  indexData.model3Num}}<div class="overview-default">数据元/数据模型</div>
       </div>
     </div>
     <div class="overview-item-2 hover_div FB1 FBV FBJB" style="margin-right: 0">
       <div class="FBH FBJB">
-        <div>近3个月发布数</div>
+        <div class="FBT">近3个月发布数</div>
         <n-tooltip trigger="hover">
           <template #trigger>
             <NIcon><QuestionCircle28Regular/></NIcon>
@@ -50,7 +50,7 @@
           近3个月添加的数据元的总数，包括添加后删除的。同一个数据元添加后编辑的，数量仍为1
         </n-tooltip>
       </div>
-      <div class="overview-countlast FBV FBAC FBJC">{{ indexData.dataElement3ReleaseStatusNum }}<div class="overview-default">数据元</div>
+      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElement3ReleaseStatusNum }}<div class="overview-default">数据元</div>
       </div>
     </div>
   </div>
@@ -65,13 +65,15 @@
         style="margin-right: 12px"
     >
       <template #header>
-        热门标准云图
+        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
+          热门标准云图
         <n-tooltip trigger="hover">
           <template #trigger>
-            <NIcon><QuestionCircle28Regular/></NIcon>
+            <NIcon size="14"><QuestionCircle28Regular/></NIcon>
           </template>
           数据元映射至数据模型，按照数据元被引用的次数从高至低排列
         </n-tooltip>
+        </CrudSplit>
       </template>
       <MyChart :option="cloudOption" height="300px"/>
     </NCard>
@@ -84,7 +86,9 @@
         }"
     >
       <template #header>
+        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
         数据元落标情况
+        </CrudSplit>
       </template>
       <div class="FBH FBJB" style="background: rgba(243, 244, 249, 0.5); width: 168px; height: 43px; flex-direction: column">
         <div class="bar-tag">
@@ -116,7 +120,9 @@
         style="margin-right: 12px"
     >
       <template #header>
+        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
         最新30个数据元
+        </CrudSplit>
       </template>
       <n-data-table
           striped
@@ -135,7 +141,9 @@
         }"
     >
       <template #header>
+        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
         最新30个标准的类型占比
+        </CrudSplit>
       </template>
       <div style="display: flex">
         <MyChart :option="pieOptionOne" height="300px" width="50%"/>
@@ -157,6 +165,7 @@ import {
   queryModelIndexNum,
   queryModelIndexRate
 } from "@/service/modules/data-standard";
+import CrudSplit from "@/components/cue/crud-split.vue";
 
 const total = ref()
 const rate = ref()
@@ -433,9 +442,9 @@ onMounted(() => {
   border: 1px solid #e8e8e8;
   margin: 12px 12px 0 0;
 
-  .overview-countlast {
+  .overview-countLast {
     height: 120px;
-    font-size: 30px;
+    font-size: 35px;
     color: rgba(0, 0, 0, .85);
   }
 
@@ -449,7 +458,7 @@ onMounted(() => {
   flex: 1;
 }
 
-.FBJ, .FBJB {
+.FBJB {
   justify-content: space-between;
 }
 
@@ -479,5 +488,10 @@ html .FBV {
   flex-direction: row;
   justify-content: space-between;
   padding: 0 10px
+}
+
+.FBT {
+  font-size: 18px;
+  font-weight: 600
 }
 </style>
