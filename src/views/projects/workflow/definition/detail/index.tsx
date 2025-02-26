@@ -114,7 +114,7 @@ export default defineComponent({
           props.projectCode
       ).then((ignored: any) => {
         message.success(t('project.dag.success'))
-        router.push({ path: `/devops/${props.projectCode}/workflow-definition` })
+        //router.push({ path: `/devops/${props.projectCode}/workflow-definition` })
       })
     }
 
