@@ -269,7 +269,7 @@ export default defineComponent({
               <div>
                 {this.definition && (
                     <>
-                      {this.row.releaseState === 'ONLINE' && (
+                      {this.row.releaseState === 'ONLINE' ? (
                           <NButton
                               style={'margin-right: 15px'}
                               type='warning'
@@ -277,14 +277,15 @@ export default defineComponent({
                               onClick={this.handleOffline}
                           >
                             {'下线'}
+                          </NButton>)
+                          : (
+                          <NButton
+                              type='info'
+                              size='small'
+                              onClick={this.handleOnline}
+                          >
+                            {'确定并上线'}
                           </NButton>)}
-                      <NButton
-                          type='info'
-                          size='small'
-                          onClick={this.handleOnline}
-                      >
-                        {'确定并上线'}
-                      </NButton>
                     </>
                 )}
               </div>
