@@ -121,8 +121,8 @@ onMounted(() => {
   dbType.value = history.state.dbType
   backName.value = history.state.backName
   iframeSrc.value = import.meta.env.MODE === 'development'
-      ? import.meta.env.VITE_APP_DEV_BLOOD_URL+'/?e='+history.state.tableName
-      : window.webConfig.VITE_APP_PROD_BLOOD_URL+'/?e='+history.state.tableName
+      ? import.meta.env.VITE_APP_DEV_BLOOD_URL+'/?e='+encodeURIComponent(history.state.tableName)
+      : window.webConfig.VITE_APP_PROD_BLOOD_URL+'/?e='+encodeURIComponent(history.state.tableName)
   initData()
 })
 </script>
