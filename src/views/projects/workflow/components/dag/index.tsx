@@ -428,6 +428,7 @@ export default defineComponent({
                 v-model:row={variables.tableData[0]}
                 v-model:show={timingModalShow.value}
                 onHandleReleaseState={handleReleaseState}
+                onOnlineBeforeRefresh={requestData}
             />
         )}
         {!!props.definition && (

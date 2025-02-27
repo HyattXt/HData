@@ -76,7 +76,7 @@ const props = {
 export default defineComponent({
   name: 'workflowDefinitionStart',
   props,
-  emits: ['update:show', 'update:row', 'updateList', 'handleReleaseState'],
+  emits: ['update:show', 'update:row', 'updateList', 'handleReleaseState', 'onlineBeforeRefresh'],
   setup(props, ctx) {
     const crontabRef = ref()
     const parallelismRef = ref(false)
@@ -113,10 +113,14 @@ export default defineComponent({
     const handleOnline = async () => {
       if (props.type === 'create') {
         await handleCreateTiming(!!props.processCode ? props.processCode : props.row.code as number)
+        ctx.emit('onlineBeforeRefresh')
+        setTimeout(() => {
+          ctx.emit('handleReleaseState', props.row)
+        }, 1000)
       } else {
         await handleUpdateTiming(props.row.id)
+        ctx.emit('handleReleaseState', props.row)
       }
-      ctx.emit('handleReleaseState', props.row)
     }
 
     const handleOffline = () => {
