@@ -31,10 +31,10 @@ export function useResources(): IJsonItem {
   const taskStore = useTaskNodeStore()
 
   const getResources = async () => {
-    if (taskStore.resources.length) {
+/*    if (taskStore.resources.length) {
       resourcesOptions.value = taskStore.resources
       return
-    }
+    }*/
     if (resourcesLoading.value) return
     resourcesLoading.value = true
     const res = await queryResourceList({ type: 'FILE' })
