@@ -217,13 +217,18 @@ const getLogs = (row) => {
         limit: limit.value,
         skipLineNum: skipLineNum.value
       }).then((res) => {
+        console.log("res")
         if (!'35679'.includes(res.state)) {
+          console.log("35679")
           if(res?.message){
+            console.log("message")
             logMessage.value += res.message
             limit.value += 100
             skipLineNum.value += res.lineNum
           }
-          if(disableStop.value){
+          console.log(disableStop.value)
+          if(!disableStop.value){
+            console.log("disableStop")
             setTimeout(()=>getLogs(row),3000)
           }
         } else {

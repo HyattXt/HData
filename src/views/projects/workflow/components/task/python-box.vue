@@ -223,7 +223,7 @@ const getLogs = (row) => {
             limit.value += 100
             skipLineNum.value += res.lineNum
           }
-          if(disableStop.value){
+          if(!disableStop.value){
             setTimeout(()=>getLogs(row),3000)
           }
         } else {
