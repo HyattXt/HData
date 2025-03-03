@@ -71,7 +71,7 @@
 import {h, onMounted, ref} from 'vue'
 import {NButton, NCheckbox, NFormItem, NIcon, NInput, NSelect, NTooltip, useMessage} from 'naive-ui'
 import axios from 'axios'
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {PlusSquareOutlined, QuestionCircleTwotone} from "@vicons/antd";
 import utils from "@/utils";
 import CrudHeader from "@/components/cue/crud-header.vue";
@@ -81,6 +81,7 @@ const message = useMessage()
 const isDisable = ref(false)
 const emit = defineEmits(['nextStep'])
 const route = useRoute()
+const router = useRouter()
 const requestParams = ref([])
 const inputValidationStatus = ref([])
 const formValue = ref({
@@ -264,9 +265,11 @@ function formSubmit() {
             .post(policySubmitUrl, body)
             .then(function (response) {
               message.info(response.data.info)
-              router.push({
-                path: '/devops/service/api-strategy',
-              })
+              if(response.data.status) {
+                router.push({
+                  path: '/devops/service/api-strategy',
+                })
+              }
             })
       } else {
         message.error('验证失败，请重新修改输入的ip')
