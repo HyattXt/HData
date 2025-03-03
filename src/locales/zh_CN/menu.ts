@@ -26,6 +26,7 @@ export default {
   workflow_relation: '工作流定义',
   workflow: '工作流',
   workflow_definition: '工作流管理',
+  workflow_timing: '工作流定时',
   workflow_instance: '工作流实例',
   task: '任务',
   task_instance: '任务实例',

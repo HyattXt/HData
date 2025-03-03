@@ -333,6 +333,10 @@ export function useDataList() {
                 key: `/devops/${projectCode}/workflow-definition`
               },
               {
+                label: t('menu.workflow_timing'),
+                key: `/devops/${projectCode}/workflow/timings`
+              },
+              {
                 label: t('menu.workflow_instance'),
                 key: `/devops/${projectCode}/workflow/instances`
               },

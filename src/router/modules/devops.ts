@@ -55,8 +55,18 @@ export default {
                 showSide: true,
                 auth: []
             }
-        }
-        ,
+        },
+        {
+            path: '/devops/:projectCode/workflow/timings',
+            name: 'devops-workflow-timing-list',
+            component: components['projects-workflow-timing'],
+            meta: {
+                title: '工作流定时',
+                activeMenu: 'devops',
+                showSide: true,
+                auth: []
+            }
+        },
         {
             path: '/devops/:projectCode/workflow/instances',
             name: 'devops-workflow-instance-list',

@@ -26,6 +26,7 @@ export default {
   workflow_relation: 'Workflow Relation',
   workflow: 'Workflow',
   workflow_definition: 'Workflow Definition',
+  workflow_timing: 'Workflow Timing',
   workflow_instance: 'Workflow Instance',
   task: 'Task',
   task_instance: 'Task Instance',
