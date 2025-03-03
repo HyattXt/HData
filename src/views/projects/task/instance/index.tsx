@@ -35,6 +35,7 @@ import { stateType } from '@/common/common'
 import CrudForm from "@/components/cue/crud-form.vue";
 import CrudHeader from "@/components/cue/crud-header.vue";
 import CrudPageDs from "@/components/cue/crud-page-ds.vue";
+import {ElRadioButton, ElRadioGroup} from "element-plus";
 
 const TaskInstance = defineComponent({
   name: 'task-instance',
@@ -51,12 +52,18 @@ const TaskInstance = defineComponent({
         stateType: variables.stateType,
         datePickerRange: variables.datePickerRange,
         executorName: variables.executorName,
-        processInstanceName: variables.processInstanceName
+        processInstanceName: variables.processInstanceName,
+        taskType: variables.taskType,
       })
     }
 
     const handlePageChange = (page: number) => {
       variables.page = page
+      requestTableData()
+    }
+
+    const handleTypeChange = () => {
+      variables.page = 1
       requestTableData()
     }
 
@@ -133,6 +140,7 @@ const TaskInstance = defineComponent({
       ...toRefs(variables),
       requestTableData,
       handlePageChange,
+      handleTypeChange,
       onUpdatePageSize,
       onSearch,
       onConfirmModal,
@@ -143,6 +151,7 @@ const TaskInstance = defineComponent({
     const {
       t,
       handlePageChange,
+      handleTypeChange,
       onUpdatePageSize,
       onSearch,
       onConfirmModal,
@@ -226,6 +235,12 @@ const TaskInstance = defineComponent({
                       flex-height
                       single-line={false}
                   />
+              ),
+              tab: () => (
+                  <ElRadioGroup v-model={this.taskType} onChange={handleTypeChange}>
+                    <ElRadioButton label="离线任务" value='0' />
+                    <ElRadioButton label="实时任务" value='1' />
+                  </ElRadioGroup>
               ),
               page: () => (
                     <CrudPageDs

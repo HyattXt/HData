@@ -70,7 +70,8 @@ export function useTable() {
     logRef: '',
     logLoadingRef: ref(true),
     skipLineNum: ref(0),
-    limit: ref(1000)
+    limit: ref(1000),
+    taskType: ref(0)
   })
 
   // 如果 timeRange 参数存在，则进行拆分处理
@@ -291,7 +292,8 @@ export function useTable() {
         stateType: variables.stateType,
         datePickerRange: variables.datePickerRange,
         executorName: variables.executorName,
-        processInstanceName: variables.processInstanceName
+        processInstanceName: variables.processInstanceName,
+        taskType: variables.taskType,
       })
     })
   }
@@ -313,7 +315,8 @@ export function useTable() {
         ? format(parseTime(params.datePickerRange[1]), 'yyyy-MM-dd HH:mm:ss')
         : '',
       executorName: params.executorName,
-      processInstanceName: params.processInstanceName
+      processInstanceName: params.processInstanceName,
+      taskType: params.taskType,
     }
 
     const { state } = useAsyncState(
