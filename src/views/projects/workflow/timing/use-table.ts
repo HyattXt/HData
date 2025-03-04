@@ -251,6 +251,7 @@ export function useTable() {
       variables.projectCode
     ).then((res: any) => {
       variables.totalPage = res.totalPage
+      variables.total = res.total
       variables.tableData = res.totalList.map((item: any) => {
         return { ...item }
       })
