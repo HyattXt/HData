@@ -21,6 +21,8 @@ import type { IJsonItem } from '../types'
 
 export function useFlink(model: { [field: string]: any }): IJsonItem[] {
   const { t } = useI18n()
+
+  const mainJarSpan = computed(() => (model.programType === 'SQL' ? 0 : 24))
   const mainClassSpan = computed(() =>
     model.programType === 'PYTHON' || model.programType === 'SQL' ? 0 : 24
   )
@@ -85,7 +87,30 @@ export function useFlink(model: { [field: string]: any }): IJsonItem[] {
         }
       }
     },
-    useMainJar(model),
+    {
+      type: 'tree-select',
+      field: 'mainJar',
+      name: t('project.node.main_package'),
+      span: mainJarSpan,
+      props: {
+        cascade: true,
+        showPath: true,
+        checkStrategy: 'child',
+        placeholder: t('project.node.main_package_tips'),
+        keyField: 'id',
+        labelField: 'fullName'
+      },
+      validate: {
+        trigger: ['input', 'blur'],
+        required: model.programType !== 'SQL',
+        validator(validate: any, value: string) {
+          if (!value && model.programType !== 'SQL') {
+            return new Error(t('project.node.main_package_tips'))
+          }
+        }
+      },
+      options: model.mainJarOptions
+    },
     useDeployMode(24, ref(false)),
     {
       type: 'editor',
@@ -234,13 +259,7 @@ export function useFlink(model: { [field: string]: any }): IJsonItem[] {
         type: 'textarea',
         placeholder: t('project.node.option_parameters_tips')
       }
-    },
-    useResources(),
-    ...useCustomParams({
-      model,
-      field: 'localParams',
-      isSimple: true
-    })
+    }
   ]
 }
 

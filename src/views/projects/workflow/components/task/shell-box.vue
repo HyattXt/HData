@@ -14,7 +14,7 @@
         :releaseState="props.releaseState"
     >
     </CrudWorkflowTooltip>
-    <div class="right-bar"><div @click="openTab('first')">任务属性</div><div @click="openTab('second')">参数配置</div><div @click="openTab('third')">资源源配置</div></div>
+    <div class="right-bar"><div @click="openTab('first')">任务属性</div><div @click="openTab('second')">参数配置</div><div @click="openTab('third')">资源配置</div></div>
     <n-split class="split_lower" direction="vertical" v-model:size="logHeight" @drag-move="handleOnDragMove" style="width: calc(100% - 36px)">
       <template #1>
         <div style="height: 100%">
@@ -57,7 +57,7 @@
               <UseParameterConfiguration :disabled="props.readOnly" @updateParamConfig="updateTaskTab" ref="paramConfigRef" :formModel="taskData"/>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="数据源配置" name="third" >
+          <el-tab-pane label="资源配置" name="third" >
             <div style="padding: 30px 20px; overflow: auto">
               <UseResources :disabled="props.readOnly" @updateResources="updateTaskTab" ref="resourcesRef"  :formModel="taskData"/>
             </div>

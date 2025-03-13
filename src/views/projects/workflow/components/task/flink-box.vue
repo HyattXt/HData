@@ -12,13 +12,12 @@
         :showStop="false"
     >
     </CrudWorkflowTooltip>
-      <div class="right-bar"><div @click="openTab('first')">任务属性</div></div>
+      <div class="right-bar"><div @click="openTab('first')">任务属性</div><div @click="openTab('second')">参数配置</div><div @click="openTab('third')">资源配置</div></div>
       <div style="height: calc(100% - 90px); margin: 30px 100px; overflow: auto;">
         <NForm :disabled="props.readOnly" size="small" label-placement="left" require-mark-placement="left" label-align="right" label-width="150" :rules="rules" :model="taskData" ref="formRef">
           <NGrid x-gap="10">
+            <template v-for="(element, index) in elements" :key="element.path || String(Date.now() + Math.random())">
             <NFormItemGi
-                v-for="element in elements"
-                :key="element.path || String(Date.now() + Math.random())"
                 :span="unref(element.span) === void 0 ? 24 : unref(element.span)"
                 :path="element.path"
                 :showLabel="element.showLabel"
@@ -28,6 +27,8 @@
             >
               <component :is="element.widget" />
             </NFormItemGi>
+
+            </template>
           </NGrid>
         </NForm>
       </div>
@@ -43,7 +44,12 @@
           </el-tab-pane>
           <el-tab-pane label="参数配置" name="second" >
             <div style="padding: 30px 20px; overflow: auto">
-              <UseParameterConfiguration :disabled="props.readOnly" :is-simple="true" @updateParamConfig="updateTaskTab" ref="paramConfigRef" :formModel="taskData"/>
+              <UseParameterConfiguration :disabled="props.readOnly" @updateParamConfig="updateTaskTab" ref="paramConfigRef" :formModel="taskData"/>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="资源配置" name="third" >
+            <div style="padding: 30px 20px; overflow: auto">
+              <UseResources :disabled="props.readOnly" @updateResources="updateTaskTab" ref="resourcesRef"  :formModel="taskData"/>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -74,6 +80,9 @@ import * as Fields from "@/views/projects/task/components/node/fields";
 import getElementByJson from "@/components/form/get-elements-by-json";
 import UseParameterConfiguration from "@/views/projects/workflow/components/task/items/use-parameter-configuration.vue";
 import {useHeightAdjustment} from "@/views/projects/workflow/components/task/useHeightAdjustment";
+import {queryResourceByProgramType} from "@/service/modules/resources";
+import utils from "@/utils";
+import UseResources from "@/views/projects/workflow/components/task/items/use-resources.vue";
 
 const props = defineProps({
   taskCode: {
@@ -137,8 +146,18 @@ const taskData = ref({
   taskManagerMemory: '2G',
   slot: 1,
   taskManager: 2,
-  parallelism: 1
+  parallelism: 1,
+  mainJarOptions: []
 })
+
+const getMainJars = async (programType) => {
+  const res = await queryResourceByProgramType({
+    type: 'FILE',
+    programType
+  })
+  utils.removeUselessChildren(res)
+  taskData.value.mainJarOptions = res || []
+}
 
 const json = computed(() => {
   return [...Fields.useFlink(taskData.value)];
@@ -208,8 +227,10 @@ function updateJsonObject(original, updates) {
 
 function ifSave() {
   let actualValues = tabData.value.filter(value => value !== undefined && value !== null);
-  if(actualValues.length === 1) {
+  if(actualValues.length === 3) {
     updateJsonObject(taskData.value, tabData.value[0])
+    updateJsonObject(taskData.value, tabData.value[1])
+    updateJsonObject(taskData.value, tabData.value[2])
     configTabsVisible.value = !configTabsVisible.value
   }
 }
@@ -239,7 +260,18 @@ watch(taskData, () => {
 
 onMounted( () => {
   initData()
+  getMainJars(taskData.value.programType)
 })
+
+watch(
+    () => taskData.value.programType,
+    (value) => {
+      if (value !== 'SQL') {
+        getMainJars(value)
+        console.log('a')
+      }
+    }
+)
 
 </script>
 
