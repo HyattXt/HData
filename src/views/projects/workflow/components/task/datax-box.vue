@@ -1315,7 +1315,6 @@ function formatJson() {
     json.job.content[0].reader.parameter['fieldDelimiter'] = taskData.value.hiveDs.fieldDelimiter
     json.job.content[0].reader.parameter['fileType'] = 'text'
     json.job.content[0].reader.parameter['path'] = taskData.value.hiveDs.path
-    json.job.content[0].reader.parameter['fieldDelimiter'] = taskData.value.hiveDs.fieldDelimiter.toString()
     json.job.content[0].reader.parameter.column = generateNewList(taskData.value.leftData, taskData.value.leftList, 'source')
   }
   if(taskData.value.dtType === 'HIVE') {
