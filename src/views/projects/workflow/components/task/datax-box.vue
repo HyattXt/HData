@@ -1311,6 +1311,7 @@ function formatJson() {
     delete json.job.content[0].reader.parameter.username
     delete json.job.content[0].reader.parameter.where
     json.job.content[0].reader.parameter['defaultFS'] = taskData.value.hiveDs.defaultFS
+    json.job.content[0].reader.parameter['nullFormat'] = '\\N'
     json.job.content[0].reader.parameter['fieldDelimiter'] = taskData.value.hiveDs.fieldDelimiter
     json.job.content[0].reader.parameter['fileType'] = 'text'
     json.job.content[0].reader.parameter['path'] = taskData.value.hiveDs.path
