@@ -96,7 +96,8 @@ export default defineComponent({
             'SWITCH': markRaw(SwitchBox),
             'CONDITIONS': markRaw(ConditionsBox),
             'FLINK': markRaw(FlinkBox),
-            'SQOOP': markRaw(SqoopBox)
+            'SQOOP': markRaw(SqoopBox),
+            'STORM': markRaw(ShellBox),
         };
 
         const rules = {

@@ -34,6 +34,7 @@ export type TaskType =
   | 'SEATUNNEL'
   | 'EMR'
   | 'ZEPPELIN'
+  | 'STORM'
 
 export const TASK_TYPES_MAP = {
   SHELL: {
@@ -92,6 +93,9 @@ export const TASK_TYPES_MAP = {
   },
   ZEPPELIN: {
     alias: 'ZEPPELIN',
+  },
+  STORM: {
+    alias: 'STORM',
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
 
@@ -137,5 +141,8 @@ export const TASK_TYPES_MAP_OFFLINE = {
 export const TASK_TYPES_MAP_REALTIME = {
   FLINK: {
     alias: 'FLINK'
+  },
+  STORM: {
+    alias: 'STORM',
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
