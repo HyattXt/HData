@@ -80,13 +80,15 @@ const err = (err: AxiosError): Promise<AxiosError> => {
 }
 
 service.interceptors.request.use( async (config: InternalAxiosRequestConfig<any>) => {
-  if (!userStore.getSessionId && !config.url?.includes('login')) {
-    console.log('未访问登录页且未获取到SessionId')
+  if ((!userStore.getSessionId || userStore.getSessionTimeOut) && !config.url?.includes('login')) {
+    if(!userStore.getSessionId) console.log('未访问登录页且未获取到SessionId')
+    if(userStore.getSessionTimeOut) console.log('未访问登录页且SessionId过期')
     let uniwater_utoken = getUrlParam("uniwater_utoken") || ""
     if (uniwater_utoken) {
       console.log('获取到token，尝试进行单点登录')
       const loginRes: SessionIdRes = await loginSso({uniwater_utoken: uniwater_utoken})
       await userStore.setSessionId(loginRes.sessionId)
+      await userStore.setSessionTime(Date.now())
 
       const userInfoRes: UserInfoRes = await getUserInfo()
       await userStore.setUserInfo(userInfoRes)

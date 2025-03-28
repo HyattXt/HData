@@ -23,12 +23,16 @@ export const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     sessionId: '',
+    sessionTime: 0,
     userInfo: {}
   }),
   persist: true,
   getters: {
     getSessionId(): string {
       return this.sessionId
+    },
+    getSessionTimeOut(): number {
+      return (Date.now() - this.sessionTime) > 604800000 ? 1 : 0;
     },
     getUserInfo(): UserInfoRes | {} {
       return this.userInfo
@@ -37,6 +41,9 @@ export const useUserStore = defineStore({
   actions: {
     setSessionId(sessionId: string): void {
       this.sessionId = sessionId
+    },
+    setSessionTime(sessionTime: number): void {
+      this.sessionTime = sessionTime
     },
     setUserInfo(userInfo: UserInfoRes | {}): void {
       this.userInfo = userInfo
