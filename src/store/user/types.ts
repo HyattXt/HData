@@ -19,6 +19,7 @@ import type { UserInfoRes } from '@/service/modules/users/types'
 
 interface UserState {
   sessionId: string
+  sessionTime: number
   userInfo: UserInfoRes | {}
 }
 
