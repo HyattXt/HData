@@ -115,6 +115,7 @@ const configTabsVisible = ref(false)
 const activeTabName = ref(1)
 const taskProperRef = ref(null)
 const paramConfigRef = ref(null)
+const resourcesRef = ref(null)
 const tabData = ref([])
 const initTag = ref(false)
 const taskData = ref({
@@ -202,6 +203,8 @@ const onTaskSubmit = async (data) => {
 function confirmTaskProperties() {
   tabData.value = []
   taskProperRef.value.save()
+  paramConfigRef.value.save();
+  resourcesRef.value.save();
 }
 
 function updateTaskTab(index, val) {
