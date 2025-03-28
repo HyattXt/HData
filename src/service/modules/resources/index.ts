@@ -262,7 +262,7 @@ export function updateUdfFunc(
   })
 }
 
-export function resourcePlanningList(data) {
+export function resourcePlanningList(data: any) {
   return axios({
     url: '/ModelField/resourcePlanningList',
     method: 'post',
@@ -274,7 +274,7 @@ export function resourcePlanningList(data) {
   })
 }
 
-export function resourcePlanningUpdate(data) {
+export function resourcePlanningUpdate(data: any) {
   return axios({
     url: '/ModelField/resourcePlanningUpdate',
     method: 'post',
