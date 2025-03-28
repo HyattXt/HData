@@ -69,7 +69,8 @@ export function createResource(
   return axios({
     url: '/resources',
     method: 'post',
-    data
+    data,
+    timeout: 30 * 60 * 1000,
   })
 }
 
