@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, Ref, isRef, h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { queryResourceList } from '@/service/modules/resources'
 import { useTaskNodeStore } from '@/store/project/task-node'
+import { NButton, NIcon, NTag } from 'naive-ui'
 import utils from '@/utils'
 import type { IJsonItem, IResource } from '../types'
+import { CopyOutlined } from '@vicons/antd'
+import { useClipboard } from '@vueuse/core'
 
 export function useResources(): IJsonItem {
   const { t } = useI18n()
@@ -29,6 +32,9 @@ export function useResources(): IJsonItem {
   const resourcesLoading = ref(false)
 
   const taskStore = useTaskNodeStore()
+
+  const source = ref('Hello')
+  const { copy } = useClipboard({ source })
 
   const getResources = async () => {
 /*    if (taskStore.resources.length) {
@@ -44,6 +50,12 @@ export function useResources(): IJsonItem {
     taskStore.updateResource(res)
   }
 
+  const copyResourceName = async (name: string) => {
+    event?.stopPropagation()
+    await copy(name)
+    window.$message.success(t('project.node.copy_success'))
+  }
+
   onMounted(() => {
     getResources()
   })
@@ -51,18 +63,60 @@ export function useResources(): IJsonItem {
   return {
     type: 'tree-select',
     field: 'resourceList',
+    class: 'resource-select',
     name: t('project.node.resources'),
+    span: 24,
     options: resourcesOptions,
     props: {
       multiple: true,
       checkable: true,
       cascade: true,
       showPath: true,
+      filterable: true,
+      clearFilterAfterSelect: false,
       checkStrategy: 'child',
       placeholder: t('project.node.resources_tips'),
-      keyField: 'id',
+      keyField: 'fullName',
       labelField: 'name',
-      loading: resourcesLoading.value
+      disabledField: 'disable',
+      loading: resourcesLoading.value,
+      'render-tag': ({
+                       option,
+                       handleClose
+                     }: {
+        option: any
+        handleClose: any
+      }) => {
+        return h(
+            NTag,
+            {
+              type: 'success',
+              closable: true,
+              onClose: () => {
+                handleClose()
+              }
+            },
+            {
+              default: () => option.fullName,
+              avatar: () =>
+                  h(
+                      NButton,
+                      {
+                        tag: 'div',
+                        type: 'info',
+                        size: 'tiny',
+                        onClick: () => copyResourceName(option.fullName)
+                      },
+                      {
+                        icon: () =>
+                            h(NIcon, null, {
+                              default: () => h(CopyOutlined)
+                            })
+                      }
+                  )
+            }
+        )
+      }
     }
   }
 }
