@@ -18,6 +18,9 @@
         <n-descriptions-item label="频次限制">
           {{ basicInfo.apiFrequency }}次/秒
         </n-descriptions-item>
+        <n-descriptions-item label="服务地址">
+          {{ ip }}
+        </n-descriptions-item>
       </n-descriptions>
     </n-card>
     <n-card size="small" style="height: 200px">
@@ -78,6 +81,9 @@ const basicInfo = ref({})
 const apiAuthorizer = ref([])
 const apiAuthorizerName = ref('')
 const userList = ref([])
+const ip = ref(import.meta.env.MODE === 'development'
+    ? import.meta.env.VITE_APP_DEV_API_URL
+    : window.webConfig.VITE_APP_PROD_API_URL)
 const apiData =ref({
       portTable: {
         data: [],
