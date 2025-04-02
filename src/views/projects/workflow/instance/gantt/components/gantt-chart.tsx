@@ -141,7 +141,8 @@ const GanttChart = defineComponent({
           str += `endTime : ${data[0].isoEnd}</br>`
           str += `duration : ${data[0].duration}</br>`
           return str
-        }
+        },
+        backgroundColor: '#fff'
       },
       legend: {
         left: 150,

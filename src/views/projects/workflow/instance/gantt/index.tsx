@@ -21,6 +21,8 @@ import { useRoute } from 'vue-router'
 import Card from '@/components/card'
 import GanttChart from './components/gantt-chart'
 import { useGantt } from './use-gantt'
+import CrudHeader from "@/components/cue/crud-header.vue";
+import CrudForm from "@/components/cue/crud-form.vue";
 
 const workflowRelation = defineComponent({
   name: 'workflow-relation',
@@ -55,17 +57,22 @@ const workflowRelation = defineComponent({
   render() {
     const { t } = this
     return (
-      <Card title={t('project.workflow.gantt')}>
-        {{
-          default: () =>
-            this.seriesData.length > 0 && (
-              <GanttChart
-                seriesData={this.seriesData}
-                taskList={this.taskList}
-              />
-            )
-        }}
-      </Card>
+        <>
+          <CrudForm>
+            {{
+              header: () => (
+                  <CrudHeader title={t('project.workflow.gantt')}/>
+              ),
+              table: () =>
+                  this.seriesData.length > 0 && (
+                      <GanttChart
+                          seriesData={this.seriesData}
+                          taskList={this.taskList}
+                      />
+                  )
+            }}
+          </CrudForm>
+        </>
     )
   }
 })
