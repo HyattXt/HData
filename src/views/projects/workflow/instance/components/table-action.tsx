@@ -25,7 +25,7 @@ import {
   CloseOutlined,
   CloseCircleOutlined,
   PauseCircleOutlined,
-  PlayCircleOutlined
+  PlayCircleOutlined, ControlOutlined
 } from '@vicons/antd'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -65,7 +65,7 @@ export default defineComponent({
       router.push({
         name: 'workflow-instance-gantt',
         params: { id: props.row!.id },
-        query: { code: props.row!.processDefinitionCode }
+        query: { code: props.row!.processDefinitionCode, back: 1 }
       })
     }
 
@@ -278,6 +278,25 @@ export default defineComponent({
                   }}
                 </NPopconfirm>
               </NButton>
+            )
+          }}
+        </NTooltip>
+        <NTooltip trigger={'hover'}>
+          {{
+            default: () => t('project.workflow.gantt'),
+            trigger: () => (
+                <NButton
+                    tag='div'
+                    size='small'
+                    type='info'
+                    circle
+                    disabled={this.row?.disabled}
+                    onClick={this.handleGantt}
+                >
+                  <NIcon>
+                    <ControlOutlined />
+                  </NIcon>
+                </NButton>
             )
           }}
         </NTooltip>
