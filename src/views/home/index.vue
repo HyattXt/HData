@@ -66,7 +66,7 @@
             <div
                 v-for="(item, index) in loopData0"
                 :key="index"
-                :style="{ background: 'url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng1964f580694fe48c7c7d77510a12885aa30e557b31e2f9e6f40daea4f80f5273) 0px -1px no-repeat' }"
+                :style="{ background: `url('${loopDataBack}') 0px -1px no-repeat` }"
                 class="image-text_1 flex-row"
             >
               <img
@@ -135,6 +135,7 @@ const router = useRouter()
 const data = ref({})
 const firstListData = ref([])
 const secondListData = ref([])
+const loopDataBack = `${import.meta.env.BASE_URL}images/home/background.png`
 const loopData0 = [
   {
     lanhuimage0: `${import.meta.env.BASE_URL}images/home/2-1.png`,
