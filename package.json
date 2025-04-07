@@ -27,6 +27,7 @@
     "echarts-wordcloud": "^2.1.0",
     "element-plus": "^2.6.0",
     "highlight.js": "^11.6.0",
+    "html2pdf.js": "^0.10.3",
     "js-cookie": "^3.0.1",
     "jsplumb": "^2.15.6",
     "lodash": "^4.17.21",

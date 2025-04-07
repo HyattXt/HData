@@ -1,58 +1,59 @@
 <template>
   <div class="n-scrollbar-container">
-    <CrudHead class="sticky-top" title="服务详情" defineButton button-title="返回" @click-event="goBack"/>
-    <n-card :title=basicInfo.apiName size="large">
-      <n-descriptions label-placement="left">
-        <n-descriptions-item label="API类型">
-          {{ basicInfo.apiFlag }}
-        </n-descriptions-item>
-        <n-descriptions-item label="更新时间">
-          {{ basicInfo.apiGmtTime }}
-        </n-descriptions-item>
-        <n-descriptions-item label="描述">
-          {{ basicInfo.apiComment }}
-        </n-descriptions-item>
-        <n-descriptions-item label="创建人">
-          {{ basicInfo.apiCreator }}
-        </n-descriptions-item>
-        <n-descriptions-item label="频次限制">
-          {{ basicInfo.apiFrequency }}次/秒
-        </n-descriptions-item>
-        <n-descriptions-item label="服务地址">
-          {{ ip }}
-        </n-descriptions-item>
-      </n-descriptions>
-    </n-card>
-    <n-card size="small" style="height: 200px">
-      <CrudSplit class='titleSplit' title="服务路径"/>
-      <CrudTable
-          :tableData="apiData.portTable.data"
-          :columnData="apiData.portTable.columns"
-      />
-    </n-card>
-    <n-card size="small" style="height: 200px">
-      <CrudSplit class='titleSplit' title="请求参数(Headers)"/>
-      <CrudTable
-          :tableData="apiData.requestParamHeadersTable.data"
-          :columnData="apiData.requestParamHeadersTable.columns"
-      />
-    </n-card>
-    <n-card size="small" style="height: 200px">
-      <CrudSplit class='titleSplit' title="请求参数(Body)"/>
-      <CrudTable
-          :tableData="apiData.requestParamBodyTable.data"
-          :columnData="apiData.requestParamBodyTable.columns"
-      />
-    </n-card>
-    <n-card size="small">
-      <CrudSplit class='titleSplit' title="自定义SQL"/>
-      <n-descriptions label-placement="left" column="1" separator="" style="padding: 18px">
-        <n-descriptions-item>
-          {{ basicInfo.apiScript }}
-        </n-descriptions-item>
-      </n-descriptions>
-    </n-card>
-    <n-card size="small">
+    <CrudHead class="sticky-top" title="服务详情" defineButton button-title="导出" @click-event="exportPdf"/>
+    <div id="pdfContent">
+      <n-card :title=basicInfo.apiName size="large">
+        <n-descriptions label-placement="left">
+          <n-descriptions-item label="API类型">
+            {{ basicInfo.apiFlag }}
+          </n-descriptions-item>
+          <n-descriptions-item label="更新时间">
+            {{ basicInfo.apiGmtTime }}
+          </n-descriptions-item>
+          <n-descriptions-item label="描述">
+            {{ basicInfo.apiComment }}
+          </n-descriptions-item>
+          <n-descriptions-item label="创建人">
+            {{ basicInfo.apiCreator }}
+          </n-descriptions-item>
+          <n-descriptions-item label="频次限制">
+            {{ basicInfo.apiFrequency }}次/秒
+          </n-descriptions-item>
+          <n-descriptions-item label="服务地址">
+            {{ ip }}
+          </n-descriptions-item>
+        </n-descriptions>
+      </n-card>
+      <n-card size="small" style="height: 200px">
+        <CrudSplit class='titleSplit' title="服务路径"/>
+        <CrudTable
+            :tableData="apiData.portTable.data"
+            :columnData="apiData.portTable.columns"
+        />
+      </n-card>
+      <n-card size="small" style="height: 200px">
+        <CrudSplit class='titleSplit' title="请求参数(Headers)"/>
+        <CrudTable
+            :tableData="apiData.requestParamHeadersTable.data"
+            :columnData="apiData.requestParamHeadersTable.columns"
+        />
+      </n-card>
+      <n-card size="small" style="height: 200px">
+        <CrudSplit class='titleSplit' title="请求参数(Body)"/>
+        <CrudTable
+            :tableData="apiData.requestParamBodyTable.data"
+            :columnData="apiData.requestParamBodyTable.columns"
+        />
+      </n-card>
+      <n-card size="small">
+        <CrudSplit class='titleSplit' title="自定义SQL"/>
+        <n-descriptions label-placement="left" column="1" separator="" style="padding: 18px">
+          <n-descriptions-item>
+            {{ basicInfo.apiScript }}
+          </n-descriptions-item>
+        </n-descriptions>
+      </n-card>
+      <n-card size="small">
       <CrudSplit class='titleSplit' title="授权用户"/>
       <n-descriptions label-placement="left" column="1" style="padding: 18px">
         <n-descriptions-item label="用户列表">
@@ -60,6 +61,7 @@
         </n-descriptions-item>
       </n-descriptions>
     </n-card>
+    </div>
   </div>
 </template>
 
@@ -73,6 +75,7 @@ import moment from "moment/moment";
 import CrudSplit from "@/components/cue/crud-split.vue";
 import CrudTable from "@/components/cue/crud-table.vue";
 import utils from "@/utils";
+import html2pdf from 'html2pdf.js'
 
 const route = useRoute()
 const backName = ref("")
@@ -158,6 +161,12 @@ const apiData =ref({
       requestDemo: '',
       responseDemo: ''
     })
+
+const exportPdf = () => {
+  const element = document.getElementById('pdfContent')
+  console.log(element)
+  html2pdf().from(element).save()
+}
 
 function queryUser() {
   const listUrl = utils.getUrl('interface/getUser')

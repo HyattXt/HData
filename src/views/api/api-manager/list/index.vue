@@ -496,7 +496,8 @@ const columnsRef = ref(
           play(row) {
             router.push({
                   name: 'api-detail',
-                  state: {apiId: row.apiId, backName: 'api-manager'}
+                  state: {apiId: row.apiId, backName: 'api-manager'},
+                  query: {back: true}
                 }
             )
             }
