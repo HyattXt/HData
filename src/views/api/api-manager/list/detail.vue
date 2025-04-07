@@ -164,7 +164,11 @@ const apiData =ref({
 
 const exportPdf = () => {
   const element = document.getElementById('pdfContent')
-  html2pdf().from(element).save()
+  let opt = {
+    filename:     basicInfo.value.apiName + '.pdf',
+    jsPDF:        { format: 'a3', orientation: 'landscape' }
+  };
+  html2pdf().set(opt).from(element).save()
 }
 
 function queryUser() {
