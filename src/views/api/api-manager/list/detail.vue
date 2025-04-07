@@ -164,7 +164,6 @@ const apiData =ref({
 
 const exportPdf = () => {
   const element = document.getElementById('pdfContent')
-  console.log(element)
   html2pdf().from(element).save()
 }
 
