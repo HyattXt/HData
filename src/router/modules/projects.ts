@@ -141,8 +141,8 @@ export default {
       component: components['projects-workflow-instance-gantt'],
       meta: {
         title: '工作流实例甘特图',
-        activeMenu: 'projects',
-        activeSide: '/projects/:projectCode/workflow/instances',
+        activeMenu: 'devops',
+        activeSide: '/devops/:projectCode/workflow/instances',
         showSide: true,
         auth: []
       }
