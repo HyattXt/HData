@@ -18,7 +18,7 @@
 import {defineComponent, onMounted, ref, unref, h, nextTick, VNode, provide, markRaw} from 'vue'
 import {DropdownGroupOption, DropdownOption, NPopconfirm, TreeOption, useMessage, NSplit} from 'naive-ui'
 import Detail from '../definition/detail'
-import {SqlBox, DataXBox, ShellBox, PythonBox, SubProcessBox, DependentBox, DataQualityBox, HttpBox, SwitchBox, ConditionsBox, FlinkBox, SqoopBox} from '../components/task'
+import {SqlBox, DataXBox, ShellBox, PythonBox, SubProcessBox, DependentBox, DataQualityBox, HttpBox, SwitchBox, ConditionsBox, FlinkBox, SqoopBox, SeaTunnelBox} from '../components/task'
 import { SearchOutlined } from '@vicons/antd';
 import {Circle24Filled, Add12Filled} from "@vicons/fluent";
 import { CaretUp, CaretDown } from "@vicons/fa";
@@ -96,7 +96,8 @@ export default defineComponent({
             'SWITCH': markRaw(SwitchBox),
             'CONDITIONS': markRaw(ConditionsBox),
             'FLINK': markRaw(FlinkBox),
-            'SQOOP': markRaw(SqoopBox)
+            'SQOOP': markRaw(SqoopBox),
+            'SEATUNNEL': markRaw(SeaTunnelBox),
         };
 
         const rules = {

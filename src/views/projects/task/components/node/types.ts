@@ -325,6 +325,10 @@ interface ITaskParams {
   postSql?: string
   hiveDs?: Object
   hiveDt?: Object
+  startupScript?: string
+  useCustom?: boolean
+  runMode?: string
+  masterUrl?: string
 }
 
 interface INodeData

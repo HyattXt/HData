@@ -68,6 +68,7 @@ export function formatParams(data: INodeData): {
     taskParams.taskManager = data.taskManager
     taskParams.parallelism = data.parallelism
   }
+
   if (data.taskType === 'HTTP') {
     taskParams.httpMethod = data.httpMethod
     taskParams.httpCheckCondition = data.httpCheckCondition
@@ -261,7 +262,7 @@ export function formatParams(data: INodeData): {
 
     //} else {
       taskParams.jsonConfig = data.jsonConfig
-      taskParams.json = data.json.replace(/\\\\(?!N)/g, '\\');
+      taskParams.json = data.json?.replace(/\\\\(?!N)/g, '\\');
       data?.localParams?.map((param: ILocalParam) => {
         param.direct = 'IN'
         param.type = 'VARCHAR'

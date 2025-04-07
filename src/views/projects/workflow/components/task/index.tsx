@@ -10,6 +10,7 @@ import SwitchBox from './switch-box.vue'
 import ConditionsBox from './conditions-box.vue'
 import FlinkBox from './flink-box.vue'
 import SqoopBox from './sqoop-box.vue'
+import SeaTunnelBox from './seaTunnel-box.vue'
 
 export {
     SqlBox,
@@ -23,5 +24,6 @@ export {
     SwitchBox,
     ConditionsBox,
     FlinkBox,
-    SqoopBox
+    SqoopBox,
+    SeaTunnelBox
 }

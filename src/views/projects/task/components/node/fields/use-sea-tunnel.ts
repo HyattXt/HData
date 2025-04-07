@@ -14,10 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { watch, computed } from 'vue'
+import {watch, computed, h, ref, onMounted} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDeployMode, useResources, useCustomParams } from '.'
-import type { IJsonItem } from '../types'
+import type {IJsonItem, IResource} from '../types'
+import {NButton, NIcon, NTag} from "naive-ui";
+import {CopyOutlined} from "@vicons/antd";
+import {queryResourceList} from "@/service/modules/resources";
+import utils from "@/utils";
+import {useTaskNodeStore} from "@/store/project/task-node";
+import {useClipboard} from "@vueuse/core";
 
 export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
   const { t } = useI18n()
@@ -48,6 +54,14 @@ export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
     }
   ]
 
+  const resourcesOptions = ref([] as IResource[])
+  const resourcesLoading = ref(false)
+
+  const taskStore = useTaskNodeStore()
+
+  const source = ref('Hello')
+  const { copy } = useClipboard({ source })
+
   const masterSpan = computed(() => (model.deployMode === 'local' ? 0 : 12))
   const queueSpan = computed(() =>
     model.deployMode === 'local' || model.master != 'yarn' ? 0 : 12
@@ -58,6 +72,12 @@ export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
       ? 0
       : 12
   )
+
+  const copyResourceName = async (name: string) => {
+    event?.stopPropagation()
+    await copy(name)
+    window.$message.success(t('project.node.copy_success'))
+  }
 
   const baseScript = 'sh ${WATERDROP_HOME}/bin/start-waterdrop.sh'
 
@@ -122,7 +142,65 @@ export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
       value: model.queue,
       span: queueSpan
     },
-    useResources(),
+    {
+      type: 'tree-select',
+      field: 'resourceList',
+      class: 'resource-select',
+      name: t('project.node.resources'),
+      span: 24,
+      options: model.resourcesOptions,
+      props: {
+        multiple: true,
+        checkable: true,
+        cascade: true,
+        showPath: true,
+        filterable: true,
+        clearFilterAfterSelect: false,
+        checkStrategy: 'child',
+        placeholder: t('project.node.resources_tips'),
+        keyField: 'fullName',
+        labelField: 'name',
+        disabledField: 'disable',
+        loading: model.resourcesLoading,
+        'render-tag': ({
+                         option,
+                         handleClose
+                       }: {
+          option: any
+          handleClose: any
+        }) => {
+          return h(
+              NTag,
+              {
+                type: 'success',
+                closable: true,
+                onClose: () => {
+                  handleClose()
+                }
+              },
+              {
+                default: () => option.fullName,
+                avatar: () =>
+                    h(
+                        NButton,
+                        {
+                          tag: 'div',
+                          type: 'info',
+                          size: 'tiny',
+                          onClick: () => copyResourceName(option.fullName)
+                        },
+                        {
+                          icon: () =>
+                              h(NIcon, null, {
+                                default: () => h(CopyOutlined)
+                              })
+                        }
+                    )
+              }
+          )
+        }
+      }
+    },
     ...useCustomParams({ model, field: 'localParams', isSimple: true })
   ]
 }
