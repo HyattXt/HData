@@ -80,13 +80,7 @@
     apiComment: '',
     apiScript: '',
     fieldsInfo: [],
-    headersArray: [{
-      paramTitle: "token",
-      paramNotes: "接口token信息",
-      paramType: "varchar",
-      paramIsNull: "N",
-      demoValue: "token test"
-    }],
+    headersArray: [],
     bodyArray: [],
     requestDemo: [],
     responseDemo: '{\n' +

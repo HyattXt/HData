@@ -20,7 +20,7 @@
             {{ basicInfo.apiFrequency }}次/秒
           </n-descriptions-item>
           <n-descriptions-item label="服务地址">
-            {{ ip }}
+            {{ ip.replace('/HData/DevApi', '') + apiData.portTable.data[0].apiPath }}
           </n-descriptions-item>
         </n-descriptions>
       </n-card>
