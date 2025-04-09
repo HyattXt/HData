@@ -557,8 +557,8 @@ a {
 .no-data {
   /* 为“无数据”提示添加样式 */
   height: 100%;
-  padding: 16px;
   text-align: center;
+  background-color: #ffffff;
   color: #999;
   display: flex;              /* 启用Flexbox布局 */
   justify-content: center;    /* 在水平方向上居中 */
