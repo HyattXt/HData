@@ -37,13 +37,13 @@ const columnsRef =[
   },
   {
     title: '类型',
-    key: 'colComment',
+    key: 'colDataType',
     align: 'center',
     width: 250
   },
   {
     title: '注释',
-    key: 'colDataType',
+    key: 'colComment',
     align: 'center',
     ellipsis: { tooltip: true}
   },
