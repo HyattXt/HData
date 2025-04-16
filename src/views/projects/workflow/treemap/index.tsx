@@ -97,7 +97,7 @@ export default defineComponent({
             'CONDITIONS': markRaw(ConditionsBox),
             'FLINK': markRaw(FlinkBox),
             'SQOOP': markRaw(SqoopBox),
-            'SEATUNNEL': markRaw(SeaTunnelBox),
+            'STORM': markRaw(ShellBox),
         };
 
         const rules = {

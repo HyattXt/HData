@@ -158,6 +158,9 @@ $bgLight: #ffffff;
     &.icon-zeppelin {
       background-image: url('/images/task-icons/zeppelin.png');
     }
+    &.icon-storm {
+      background-image: url('/images/task-icons/storm.png');
+    }
   }
 
   &:hover {
@@ -218,6 +221,9 @@ $bgLight: #ffffff;
       }
       &.icon-zeppelin {
         background-image: url('/images/task-icons/zeppelin_hover.png');
+      }
+      &.icon-storm {
+        background-image: url('/images/task-icons/storm_hover.png');
       }
     }
   }

@@ -31,9 +31,9 @@ export type TaskType =
   | 'CONDITIONS'
   | 'DATA_QUALITY'
   | 'SWITCH'
-  | 'SEATUNNEL'
   | 'EMR'
   | 'ZEPPELIN'
+  | 'STORM'
 
 export const TASK_TYPES_MAP = {
   SHELL: {
@@ -92,6 +92,9 @@ export const TASK_TYPES_MAP = {
   },
   ZEPPELIN: {
     alias: 'ZEPPELIN',
+  },
+  STORM: {
+    alias: 'STORM',
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
 
@@ -132,8 +135,8 @@ export const TASK_TYPES_MAP_OFFLINE = {
   SQOOP: {
     alias: 'SQOOP',
   },
-  SEATUNNEL: {
-    alias: 'SeaTunnel',
+  STORM: {
+    alias: 'STORM',
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
 

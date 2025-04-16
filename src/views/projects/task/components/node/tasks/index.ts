@@ -54,5 +54,6 @@ export default {
   DEPENDENT: useDependent,
   DATA_QUALITY: useDataQuality,
   EMR: useEmr,
-  ZEPPELIN: useZeppelin
+  ZEPPELIN: useZeppelin,
+  STORM: useShell
 }
