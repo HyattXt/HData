@@ -907,8 +907,7 @@ function createIndex () {
             paginationReactive.apiTreeId
         )
       })
-      indexFormValue.value = {}
-      active.value = false
+      metaDialogVisible()
     } else {
       message.error('验证失败，请填写完整信息')
     }
