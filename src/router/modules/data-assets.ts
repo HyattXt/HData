@@ -142,6 +142,72 @@ export default {
         showSide: true,
         auth: []
       }
+    },
+    {
+      path: '/data-assets/model-classification-review',
+      name: 'model-classification-review',
+      component: () => import('@/views/data-assets/qitaihe/model_class.vue'),
+      meta: {
+        title: 'model-classification-review',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
+      path: '/data-assets/basic-spatial-analysis',
+      name: 'basic-spatial-analysis',
+      component: () => import('@/views/data-assets/qitaihe/basic_spatial_analysis.vue'),
+      meta: {
+        title: 'basic-spatial-analysis',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
+      path: '/data-assets/data-analysis-engine',
+      name: 'data-analysis-engine',
+      component: () => import('@/views/data-assets/qitaihe/data_analysis_engine.vue'),
+      meta: {
+        title: 'data-analysis-engine',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
+      path: '/data-assets/data-integration-engine',
+      name: 'data-integration-engine',
+      component: () => import('@/views/data-assets/qitaihe/data_integration_engine.vue'),
+      meta: {
+        title: 'data-integration-engine',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
+      path: '/data-assets/space-fusion-engine',
+      name: 'space-fusion-engine',
+      component: () => import('@/views/data-assets/qitaihe/space_fusion_engine.vue'),
+      meta: {
+        title: 'space-fusion-engine',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
+      path: '/data-assets/stream-computing-engine',
+      name: 'stream-computing-engine',
+      component: () => import('@/views/data-assets/qitaihe/stream_computing_engine.vue'),
+      meta: {
+        title: 'stream-computing-engine',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
     }
   ]
 }
