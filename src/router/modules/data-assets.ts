@@ -208,6 +208,17 @@ export default {
         showSide: true,
         auth: []
       }
+    },
+    {
+      path: '/data-assets/unified_encoding_engine',
+      name: 'unified_encoding_engine',
+      component: () => import('@/views/data-assets/qitaihe/unified_encoding_engine.vue'),
+      meta: {
+        title: 'unified_encoding_engine',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
     }
   ]
 }

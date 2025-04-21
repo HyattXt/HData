@@ -8,6 +8,7 @@
               addButton updateButton deleteButton
               :disableUpdate="!currentRow"
               :disableDelete="ifDisableDelete"
+              defineButton button-title="导出" @click-event="exportToCSV"
               @add-event="addMetadata" @update-event="editMetadata" @delete-event="delConfirm"
           />
           <div class="crud-v2-condition" >
@@ -265,6 +266,32 @@ function deleteIndex (id) {
         paginationReactive.dataName
     )
   })
+}
+
+function exportToCSV() {
+  // 获取表格数据（假设为 tableData）
+  const data = TableData.tableList;
+  const header = ['序号', '数据名称', '数据格式', '整合格式', '整合规则', '整合后路径']
+
+  // 将数据转换为 CSV 格式字符串
+  const csvContent = convertToCSV(data, header);
+
+  // 创建 Blob 对象并触发下载
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'table_data.csv');
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function convertToCSV(data, header) {
+  const headers = header.join(',') + '\n';
+  const rows = data.map(row =>
+      Object.values(row).map(val => `"${val}"`).join(',')
+  ).join('\n');
+  return headers + rows;
 }
 
 onMounted(() => {

@@ -4,7 +4,7 @@
       <div class="cue-drag-layout__mainview" :style="{width: '100%'}">
         <div class="cue-crud cue-crud-v2">
           <CrudHead
-              title="模型分类审查"
+              title="统一编码引擎"
               addButton updateButton deleteButton
               :disableUpdate="!currentRow"
               :disableDelete="ifDisableDelete"
@@ -15,11 +15,8 @@
             <div class="cue-crud__header-condition">
               <div class="cue-crud__header-content">
                 <el-form inline>
-                  <el-form-item label="管线编号">
-                    <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.pipelineNumber"/>
-                  </el-form-item>
-                  <el-form-item label="管材">
-                    <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.pipe"/>
+                  <el-form-item label="编码名称">
+                    <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.codeName"/>
                   </el-form-item>
                 </el-form>
               </div>
@@ -33,12 +30,9 @@
               <div class="cue-table-container">
                 <el-table v-loading="loadingRef" :data="TableData.tableList" border resizable highlight-current-row height="100%" show-overflow-tooltip @current-change="handleCurrentChange">
                   <el-table-column type="index" label="序号" width="50" align="center"/>
-                  <el-table-column prop="pipelineNumber" label="管线编号" align="center"/>
-                  <el-table-column prop="pipelineLength" label="管线长度" align="center"/>
-                  <el-table-column prop="pressureRating" label="压力等级" align="center"/>
-                  <el-table-column prop="pipe" label="管材" align="center"/>
-                  <el-table-column prop="pipelineWallThickness" label="管线壁厚" align="center"/>
-                  <el-table-column prop="position" label="位置" align="center"/>
+                  <el-table-column prop="codeType" label="编码类型" align="center"/>
+                  <el-table-column prop="codeName" label="编码名称" align="center"/>
+                  <el-table-column prop="codeValue" label="编码值" align="center"/>
                 </el-table>
               </div>
             </div>
@@ -70,32 +64,21 @@
             :model='indexFormValue'
             label-placement="left"
             require-mark-placement="left"
-            :label-width="100"
+            :label-width="130"
             ref="formRef"
             :rules="rules"
         >
           <n-grid :cols="24" :x-gap="24">
-            <n-form-item-gi :span="12" label="管线编号:" path="pipelineNumber">
-              <n-input v-model:value="indexFormValue.pipelineNumber" placeholder="请输入管线编号" :disabled="ifUpdate"/>
+            <n-form-item-gi :span="12" label="编码名称:" path="codeName">
+              <n-input v-model:value="indexFormValue.codeName" placeholder="请输入编码名称" :disabled="ifUpdate"/>
             </n-form-item-gi>
-            <n-form-item-gi :span="12" label="管线长度:" path="pipelineLength">
-              <n-input v-model:value="indexFormValue.pipelineLength" placeholder="请输入管线长度" :disabled="ifUpdate"/>
-            </n-form-item-gi>
-          </n-grid>
-          <n-grid :cols="24" :x-gap="24">
-            <n-form-item-gi :span="12" label="压力等级:" path="pressureRating">
-              <n-input v-model:value="indexFormValue.pressureRating" placeholder="请输入压力等级" :disabled="ifUpdate"/>
-            </n-form-item-gi>
-            <n-form-item-gi :span="12" label="管材:" path="pipe">
-              <n-input v-model:value="indexFormValue.pipe" placeholder="请输入管材" :disabled="ifUpdate"/>
+            <n-form-item-gi :span="12" label="编码类型:" path="codeType">
+              <n-input v-model:value="indexFormValue.codeType" placeholder="请输入编码类型" :disabled="ifUpdate"/>
             </n-form-item-gi>
           </n-grid>
           <n-grid :cols="24" :x-gap="24">
-            <n-form-item-gi :span="12" label="管线壁厚:" path="pipelineWallThickness">
-              <n-input v-model:value="indexFormValue.pipelineWallThickness" placeholder="请输入管线壁厚" :disabled="ifUpdate"/>
-            </n-form-item-gi>
-            <n-form-item-gi :span="12" label="位置:" path="position">
-              <n-input v-model:value="indexFormValue.position" placeholder="请输入位置" :disabled="ifUpdate"/>
+            <n-form-item-gi :span="12" label="编码值:" path="codeValue">
+              <n-input v-model:value="indexFormValue.codeValue" placeholder="请输入编码值" :disabled="ifUpdate"/>
             </n-form-item-gi>
           </n-grid>
         </n-form>
@@ -135,12 +118,12 @@ const operaOffSpan = ref(0)
 const ifUpdate = ref(false)
 const currentRow = ref()
 const ifDisableDelete = ref(true)
-const insertIndexUrl = utils.getUrl('QthModelClassificationReview/insert')
-const updateIndexUrl = utils.getUrl('QthModelClassificationReview/update')
-const deleteIndexUrl = utils.getUrl('QthModelClassificationReview/delete')
+const insertIndexUrl = utils.getUrl('QthUnifiedEncodingEngine/insert')
+const updateIndexUrl = utils.getUrl('QthUnifiedEncodingEngine/update')
+const deleteIndexUrl = utils.getUrl('QthUnifiedEncodingEngine/delete')
 
 const rules = reactive({
-  pipelineNumber: {
+  codeName: {
     required: true,
     message: '请输入内容',
     trigger: 'blur'
@@ -148,29 +131,24 @@ const rules = reactive({
 })
 
 const paginationReactive = reactive({
-  pipelineNumber: '',
-  pipelineLength: '',
+  codeName: '',
+  codeType: '',
   page: 1,
   pageSize: 30,
-  pressureRating: '',
-  pipe: '',
-  pipelineWallThickness: '',
-  position: '',
+  codeValue: '',
   itemCount: 0
 })
 
 function query(
-    pipe,
     page,
     pageSize = 30,
-    pipelineNumber,
+    codeName,
 ) {
-  const url = utils.getUrl('QthModelClassificationReview/getList')
+  const url = utils.getUrl('QthUnifiedEncodingEngine/getList')
   const params = {
-    'pipe': pipe,
     'pageNum': page,
     'pageSize': pageSize,
-    'pipelineNumber': pipelineNumber,
+    'codeName': codeName,
   }
   loadingRef.value = true
   axios
@@ -197,7 +175,6 @@ function addMetadata() {
 
 function editMetadata() {
   indexFormValue.value = { ...currentRow.value }
-  indexFormValue.value.treeId = Number(currentRow.value.treeId)
   indexFormValue.value.opperate = '编辑'
   active.value = true
 }
@@ -212,7 +189,7 @@ function metaDialogVisible () {
 
 const delConfirm = () => {
   ElMessageBox.confirm(
-      '您将删除' + currentRow.value.pipelineNumber + '，是否继续？',
+      '您将删除' + currentRow.value.codeName + '，是否继续？',
       '提示',
       {
         cancelButtonText: '取消',
@@ -237,10 +214,9 @@ function handlePageChange(currentPage, pageSize) {
     paginationReactive.page = currentPage
     paginationReactive.pageSize = pageSize
     query(
-        paginationReactive.pipe,
         paginationReactive.page,
         paginationReactive.pageSize,
-        paginationReactive.pipelineNumber
+        paginationReactive.codeName
     )
   }
 }
@@ -253,10 +229,9 @@ function createIndex () {
       axios.post(url, params).then((res) => {
         message.info(res.data.info)
         query(
-            paginationReactive.pipe,
             paginationReactive.page,
             paginationReactive.pageSize,
-            paginationReactive.pipelineNumber
+            paginationReactive.codeName
         )
       })
       metaDialogVisible()
@@ -274,10 +249,9 @@ function deleteIndex (id) {
     message.info(res.data.info)
     showDropdownRef.value = false
     query(
-        paginationReactive.pipe,
         paginationReactive.page,
         paginationReactive.pageSize,
-        paginationReactive.pipelineNumber
+        paginationReactive.codeName
     )
   })
 }
@@ -285,7 +259,7 @@ function deleteIndex (id) {
 function exportToCSV() {
   // 获取表格数据（假设为 tableData）
   const data = TableData.tableList;
-  const header = ['序号', '管线编号', '管线长度', '压力等级', '管材', '管线壁厚', '位置']
+  const header = ['序号', '编码类型', '编码名称', '编码值']
 
   // 将数据转换为 CSV 格式字符串
   const csvContent = convertToCSV(data, header);
@@ -310,10 +284,9 @@ function convertToCSV(data, header) {
 
 onMounted(() => {
   query(
-      paginationReactive.pipe,
       paginationReactive.page,
       paginationReactive.pageSize,
-      paginationReactive.pipelineNumber
+      paginationReactive.codeName
   )
 })
 </script>
