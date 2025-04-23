@@ -864,9 +864,9 @@ const handleTargetSpan = () => {
   }
 }
 
-const getConnect = (id, type)=>{
+const getConnect = (id, type, dtype)=>{
   if( type === 'dataSource' ) {
-    if(taskData.value.dsType === 'HIVE') {
+    if(dtype === 2) {
       queryHiveConnect().then((res) => {
         jdbcConnectInfo.value.hiveDs= res
       })
@@ -876,7 +876,7 @@ const getConnect = (id, type)=>{
       })
     }
   } else {
-    if(taskData.value.dtType === 'HIVE') {
+    if(dtype === 2) {
       queryHiveConnect().then((res) => {
         jdbcConnectInfo.value.hiveDt = res
       })
@@ -969,7 +969,7 @@ async function updateSourceTableList(dataSource) {
       taskData.value.splitPk = null
     }
   }
-  getConnect(dataSource, 'dataSource')
+  getConnect(dataSource, 'dataSource', type)
 }
 
 async function initSourceTableList(dataSource, type) {
@@ -982,7 +982,7 @@ async function initSourceTableList(dataSource, type) {
     }
     sourceLoading.value = false
   }
-  getConnect(dataSource, 'dataSource')
+  getConnect(dataSource, 'dataSource', type)
 }
 
 async function updateTargetTableList(dataSource) {
@@ -1004,7 +1004,7 @@ async function updateTargetTableList(dataSource) {
       taskData.value.targetTable = null
     }
   }
-  getConnect(dataSource, 'dataTarget')
+  getConnect(dataSource, 'dataTarget', type)
 }
 
 async function initTargetTableList(dataSource, type) {
@@ -1017,7 +1017,7 @@ async function initTargetTableList(dataSource, type) {
     }
     targetLoading.value = false
   }
-  getConnect(dataSource, 'dataTarget')
+  getConnect(dataSource, 'dataTarget', type)
 }
 
 async function getDatasourceTableColumns(dataSource, table) {
@@ -1036,9 +1036,11 @@ async function getDatasourceTableColumns(dataSource, table) {
 }
 
 async function updateSplitPk() {
-  taskData.value.hiveDs.path = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsPath + taskData.value.sourceTable
-  taskData.value.hiveDs.defaultFS = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsUrl
-  taskData.value.hiveDs.fieldDelimiter = '\\u0001'
+  if(taskData.value.dsType === 'HIVE') {
+    taskData.value.hiveDs.path = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsPath + taskData.value.sourceTable
+    taskData.value.hiveDs.defaultFS = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsUrl
+    taskData.value.hiveDs.fieldDelimiter = '\\u0001'
+  }
   if(taskData.value.sourceTable){
     splitPkOption.value = await getDatasourceTableColumns(
         taskData.value.dataSource,
