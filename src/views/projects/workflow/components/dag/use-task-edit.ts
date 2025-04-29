@@ -119,15 +119,6 @@ export function useTaskEdit(options: Options) {
     } as NodeData
 
     processDefinition.value.taskDefinitionList.push(newDefinition)
-
-    let data = {
-      processDefinitionCode: processCode,
-      upstreamCodes: '',
-      taskDefinitionJsonObj: JSON.stringify(newDefinition),
-      locations: JSON.stringify(coordinate)
-    }
-
-    saveInit(projectCode, data)
   }
 
   /**

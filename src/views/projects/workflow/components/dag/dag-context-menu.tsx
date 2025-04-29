@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { genTaskCodeList } from '@/service/modules/task-definition'
+import { genTaskCodeAndCopy, genTaskCodeList } from '@/service/modules/task-definition'
 import type { Cell } from '@antv/x6'
 import { defineComponent, onMounted, PropType, inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -89,17 +89,16 @@ export default defineComponent({
     }
 
     const handleCopy = () => {
-      const genNums = 1
       const type = props.cell?.data.taskType
-      const taskName = uuid(props.cell?.data.taskName + '_')
       const targetCode = Number(props.cell?.id)
       const flag = props.cell?.data.flag
 
-      genTaskCodeList(genNums, projectCode).then((res) => {
-        const [code] = res
+      genTaskCodeAndCopy(targetCode, props.processCode, projectCode).then((res: any) => {
+        const code = res.code
+        const taskName = res.name
         ctx.emit('copyTask',projectCode, !!props.processCode ? props.processCode : Number(route.query.code), taskName, code, targetCode, type, flag, {
-          x: props.left + 10,
-          y: props.top + 10
+          x: JSON.parse(JSON.stringify(props.cell)).position.x + 10,
+          y: JSON.parse(JSON.stringify(props.cell)).position.y + 10
         })
       })
     }
