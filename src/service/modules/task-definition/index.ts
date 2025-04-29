@@ -62,6 +62,21 @@ export function genTaskCodeList(num: number, projectCode: number) {
   })
 }
 
+export function genTaskCodeAndCopy(
+  code: number,
+  processDefinitionCode: number,
+  projectCode: number
+): any {
+  return axios({
+    url: `/projects/${projectCode}/process-definition/copy`,
+    method: 'post',
+    params: {
+      code: code,
+      processDefinitionCode: processDefinitionCode
+    }
+  })
+}
+
 export function queryTaskDefinitionByCode(
   code: number,
   projectCode: number
