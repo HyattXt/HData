@@ -97,8 +97,8 @@ export default defineComponent({
         const code = res.code
         const taskName = res.name
         ctx.emit('copyTask',projectCode, !!props.processCode ? props.processCode : Number(route.query.code), taskName, code, targetCode, type, flag, {
-          x: JSON.parse(JSON.stringify(props.cell)).position.x + 10,
-          y: JSON.parse(JSON.stringify(props.cell)).position.y + 10
+          x: JSON.parse(JSON.stringify(props.cell)).position.x + 30,
+          y: JSON.parse(JSON.stringify(props.cell)).position.y
         })
       })
     }
