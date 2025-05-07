@@ -46,6 +46,7 @@ export default {
   user_manage: 'User Manage',
   alarm_group_manage: 'Alarm Group Manage',
   alarm_instance_manage: 'Alarm Instance Manage',
+  alarm_task_manage: 'Alarm Task Manage',
   desensitization_manage: 'Desensitization Manage',
   desensitization_rule: 'Desensitization Rule',
   secret_key_manage: 'Secret Key Manage',
