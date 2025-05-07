@@ -46,6 +46,7 @@ export default {
   user_manage: '用户管理',
   alarm_group_manage: '告警组管理',
   alarm_instance_manage: '告警实例管理',
+  alarm_task_manage: '告警任务管理',
   desensitization_manage: '脱敏管理',
   desensitization_rule: '脱敏规则',
   secret_key_manage: '加密密钥',

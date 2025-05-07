@@ -52,7 +52,7 @@ import {
 } from '@vicons/antd'
 import {SecurityFilled, DesignServicesFilled, PlaylistAddCheckTwotone} from '@vicons/material'
 import { RuleDraft, UserAvatarFilled, UserMultiple} from '@vicons/carbon'
-import { TextBulletListSquareEdit24Regular, DocumentBulletListClock20Regular, MyLocation16Filled, EditSettings24Regular} from '@vicons/fluent'
+import { TextBulletListSquareEdit24Regular, DocumentBulletListClock20Regular, MyLocation16Filled, EditSettings24Regular, ClockAlarm16Regular} from '@vicons/fluent'
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/store/user/user'
 import { timezoneList } from '@/common/timezone'
@@ -255,6 +255,11 @@ export function useDataList() {
                   label: t('menu.alarm_instance_manage'),
                   key: '/security/alarm-instance-manage',
                   icon: renderIcon(InfoCircleOutlined)
+                },
+                {
+                  label: t('menu.alarm_task_manage'),
+                  key: '/security/alarm-task-manage',
+                  icon: renderIcon(ClockAlarm16Regular)
                 },
                 {
                   label: t('menu.desensitization_manage'),

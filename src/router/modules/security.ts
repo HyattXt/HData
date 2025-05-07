@@ -118,6 +118,17 @@ export default {
       }
     },
     {
+      path: '/security/alarm-task-manage',
+      name: 'alarm-task-manage',
+      component: import('@/views/security/alarm-task-manage/index.vue'),
+      meta: {
+        title: '告警任务管理',
+        activeMenu: 'security',
+        showSide: true,
+        auth: ['ADMIN_USER']
+      }
+    },
+    {
       path: '/security/k8s-namespace-manage',
       name: 'k8s-namespace-manage',
       component: components['security-k8s-namespace-manage'],
