@@ -131,9 +131,6 @@ export const TASK_TYPES_MAP_OFFLINE = {
   },
   SQOOP: {
     alias: 'SQOOP',
-  },
-  SEATUNNEL: {
-    alias: 'SeaTunnel',
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
 
