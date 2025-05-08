@@ -969,20 +969,20 @@ async function updateSourceTableList(dataSource) {
       taskData.value.splitPk = null
     }
   }
-  getConnect(dataSource, 'dataSource', type)
+  getConnect(dataSource, 'dataSource', datasourceTypes.find(datasource => datasource.value === taskData.value.dsType)?.id)
 }
 
-async function initSourceTableList(dataSource, type) {
+async function initSourceTableList(dataSource, dtype) {
   if(dataSource) {
     try {
       sourceLoading.value = true
-      sourceTableList.value = await getDatasourceTables(dataSource, type)
+      sourceTableList.value = await getDatasourceTables(dataSource, dtype)
     } catch (err) {
       sourceTableList.value = []
     }
     sourceLoading.value = false
   }
-  getConnect(dataSource, 'dataSource', type)
+  getConnect(dataSource, 'dataSource', dtype)
 }
 
 async function updateTargetTableList(dataSource) {
@@ -1004,20 +1004,20 @@ async function updateTargetTableList(dataSource) {
       taskData.value.targetTable = null
     }
   }
-  getConnect(dataSource, 'dataTarget', type)
+  getConnect(dataSource, 'dataTarget', datasourceTypes.find(datasource => datasource.value === taskData.value.dtType)?.id)
 }
 
-async function initTargetTableList(dataSource, type) {
+async function initTargetTableList(dataSource, dtype) {
   if(dataSource) {
     try {
       targetLoading.value = true
-      targetTableList.value = await getDatasourceTables(dataSource, type)
+      targetTableList.value = await getDatasourceTables(dataSource, dtype)
     } catch (err) {
       targetTableList.value = []
     }
     targetLoading.value = false
   }
-  getConnect(dataSource, 'dataTarget', type)
+  getConnect(dataSource, 'dataTarget', dtype)
 }
 
 async function getDatasourceTableColumns(dataSource, table) {
@@ -1036,7 +1036,8 @@ async function getDatasourceTableColumns(dataSource, table) {
 }
 
 async function updateSplitPk() {
-  if(taskData.value.dsType === 'HIVE') {
+  console.log(taskData.value.dsType)
+  if(taskData.value.dsType === 'MYSQL') {
     taskData.value.hiveDs.path = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsPath + taskData.value.sourceTable
     taskData.value.hiveDs.defaultFS = jdbcConnectInfo.value.hiveDs.dataWareHouseHdfsUrl
     taskData.value.hiveDs.fieldDelimiter = '\\u0001'
