@@ -246,7 +246,7 @@ export function useDataList() {
                   key: '/security/user-manage',
                   icon: renderIcon(UserAddOutlined)
                 },
-                {
+/*                {
                   label: t('menu.alarm_group_manage'),
                   key: '/security/alarm-group-manage',
                   icon: renderIcon(WarningOutlined)
@@ -255,7 +255,7 @@ export function useDataList() {
                   label: t('menu.alarm_instance_manage'),
                   key: '/security/alarm-instance-manage',
                   icon: renderIcon(InfoCircleOutlined)
-                },
+                },*/
                 {
                   label: t('menu.alarm_task_manage'),
                   key: '/security/alarm-task-manage',

@@ -43,9 +43,9 @@ const json = [
   ...Fields.useFailed()
 ]
 
-if(props.formModel.taskType !== 'DEPENDENT'){
+/*if(props.formModel.taskType !== 'DEPENDENT'){
   json.push(...Fields.useTimeoutAlarm(taskProperModel.value))
-}
+}*/
 
 if(props.formModel.taskType === 'SQL'){
   json.push(...Fields.useSqlIndicator(taskProperModel.value))
