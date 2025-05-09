@@ -137,7 +137,8 @@ export function useColumns(onCallback: Function) {
                             circle: true,
                             type: 'error',
                             size: 'small',
-                            class: 'btn-delete'
+                            class: 'btn-delete',
+                            disabled: rowData.id === 1 || rowData.id === 2,
                           },
                           {
                             default: () =>
