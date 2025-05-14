@@ -206,6 +206,7 @@ function nextStep2_1(value) {
     formValue.value.codeValue = 'SELECT tag_id,tag_value,dw FROM ' + value.apiDatasourceTable
     formValue.value.dataBaseLabelClassTypeNum = value.dataBaseLabelClassTypeNum
     formValue.value.dataBaseLabelId = value.dataBaseLabelId
+    formValue.value.dataBaseLabelType = value.dataBaseLabelType
   }
 }
 
