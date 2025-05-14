@@ -242,7 +242,7 @@
       label: '规则',
       prop: 'policyRule',
       slots: (row) => {
-        switch (row.policyType) {
+        switch (row.policyRule) {
           case 1: return h("div",'黑名单')
           case 2: return h("div",'白名单')
         }
