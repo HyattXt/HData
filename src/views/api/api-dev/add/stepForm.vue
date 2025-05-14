@@ -119,6 +119,7 @@
     params2.value.apiDatasourceId = value.apiDatasourceId
     params2.value.apiDatasourceTable = value.apiDatasourceTable
     params2.value.apiDatasourceType = value.apiDatasourceType
+    params2.value.dataBaseLabelType = value.dataBaseLabelType
     params2.value.dataBaseLabelClassTypeNum = value.dataBaseLabelClassTypeNum
     params2.value.dataBaseLabelId = value.dataBaseLabelId
     params2.value.bodyArray = value.bodyArray
