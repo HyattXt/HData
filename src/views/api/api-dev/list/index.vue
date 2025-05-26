@@ -761,7 +761,7 @@
     }
     startTime.value = Date.now()
     if (url.indexOf('proxy') > 0) {
-      let regUrl = utils.getUrl(url.replace('/proxy', '/debug/proxy'))
+      let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
       if (drawMethod.value === 'GET') {
         axios
           .get(regUrl)
