@@ -365,12 +365,13 @@
     drawId.value = row.apiId
     drawScript.value = row.apiScript
     drawMethod.value = row.apiMethod
-    drawParam.value = JSON.parse(row.apiSample)
-    drawParam.value = JSON.parse(drawParam.value.requestBody)
-    paramList.value = Object.entries(drawParam.value).map(([key, value]) => ({
-      key,
-      value
-    }))
+    paramList.value = JSON.parse(row.bodyArrayNew).map(item => {
+      return {
+        key: item.paramTitle.trim(),
+        value: item.demoValue,
+        type: item.paramType
+      }
+    })
   }
   const message = useMessage()
 
@@ -757,7 +758,11 @@
     let list = paramList.value
     let requestBody = {}
     for (let i = 0; i < list.length; i++) {
-      requestBody[list[i].key] = list[i].value
+      requestBody[list[i].key] = list[i].type === '数组'
+        ? JSON.parse(list[i].value.replace(/\s+/g, ''))
+        : (list[i].type === '数字' || list[i].type === 'number')
+          ? Number(list[i].value)
+          : list[i].value;
     }
     startTime.value = Date.now()
     if (url.indexOf('proxy') > 0) {

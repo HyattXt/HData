@@ -240,6 +240,20 @@ function formSubmit() {
   }
   else{
     loading.value = true
+    requestParams.value.push({
+      paramTitle: 'pageNo',
+      paramNotes: '页码',
+      paramType: 'number',
+      paramIsNull: 'N',
+      demoValue: 1
+    })
+    requestParams.value.push({
+      paramTitle: 'pageSize',
+      paramNotes: '页数',
+      paramType: 'number',
+      paramIsNull: 'N',
+      demoValue: 30
+    })
     let tmpRequestBody = requestParams.value.reduce((obj, item) => {
       obj[item.paramTitle] = item.demoValue
       return obj;

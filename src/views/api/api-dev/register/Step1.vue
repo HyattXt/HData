@@ -65,6 +65,36 @@
         placeholder="描述"
       />
     </n-form-item>
+    <n-form-item label="是否请求token">
+      <n-switch
+        v-model:value="formValue.dynamicTokenState"
+        :checked-value="1"
+        :unchecked-value="2"
+      />
+    </n-form-item>
+    <n-grid :cols="24" :x-gap="24">
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token位置" path="dynamicTokenPosition">
+        <n-select v-model:value="formValue.dynamicTokenPosition" :options="[{label: 'HEADER',value: 1},{label: 'BODY',value: 2}]"/>
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token名称" path="dynamicTokenKey">
+        <n-input v-model:value="formValue.dynamicTokenKey"/>
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token地址" path="dynamicTokenUrl">
+        <n-input v-model:value="formValue.dynamicTokenUrl" />
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="接口类型" path="dynamicTokenHttpType">
+        <n-select v-model:value="formValue.dynamicTokenHttpType" :options="[{label: 'POST',value: 1},{label: 'GET',value: 2}]"/>
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="接口请求头" path="dynamicTokenHeaderParam">
+        <n-input v-model:value="formValue.dynamicTokenHeaderParam" />
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="接口请求体" path="dynamicTokenBodyParam">
+        <n-input v-model:value="formValue.dynamicTokenBodyParam" />
+      </n-form-item-gi>
+      <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="接口返回token字段" path="dynamicTokenHttpTokenKey">
+        <n-input v-model:value="formValue.dynamicTokenHttpTokenKey" />
+      </n-form-item-gi>
+    </n-grid>
     <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane name="请求参数" label="请求参数">
         <div style="float: right">
@@ -141,7 +171,15 @@ const formValue = ref({
   headersArray: [],
   bodyArray: [],
   requestDemo: [],
-  responseDemo: ''
+  responseDemo: '',
+  dynamicTokenState: 2,
+  dynamicTokenBodyParam: '',
+  dynamicTokenHeaderParam: '',
+  dynamicTokenHttpTokenKey: '',
+  dynamicTokenHttpType: '',
+  dynamicTokenKey: '',
+  dynamicTokenPosition: '',
+  dynamicTokenUrl: ''
 })
 
 const returnColumns = [
@@ -259,9 +297,11 @@ const requestColumns = [
     title: "类型",
     key: "paramType",
     align: 'center',
+    width: 120,
     render(row, index) {
-      return h(NInput, {
+      return h(NSelect, {
         value: row.paramType,
+        options: [{ label: '字符', value: '字符' }, { label: '数字', value: '数字' }, { label: '数组', value: '数组' }],
         onUpdateValue(v) {
           requestParams.value[index].paramType = v;
         }
@@ -276,7 +316,6 @@ const requestColumns = [
     render(row, index) {
       return h(NSelect, {
         value: row.paramPosition,
-        defaultValue: 'BODY',
         options: [{ label: 'BODY', value: 'BODY' }, { label: 'HEADER', value: 'HEADER' }],
         onUpdateValue(v) {
           requestParams.value[index].paramPosition = v;
@@ -557,7 +596,7 @@ function addRequest () {
   requestParams.value.push({
     paramTitle: '',
     paramNotes: '',
-    paramType: '',
+    paramType: '字符',
     paramIsNull: '',
     demoValue: '',
     paramPosition: 'BODY'

@@ -54,7 +54,7 @@
     '    "code": 0,\n' +
     '    "lifeCycleTime": "@timeLifeCycle",\n' +
     '    "executionTime": "@timeExecution",\n' +
-    '    "data": "@resultData"\n' +
+    '    "response": "@resultData"\n' +
     '    }'
 
   const failure =
