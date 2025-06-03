@@ -45,6 +45,13 @@
             :columnData="apiData.requestParamBodyTable.columns"
         />
       </n-card>
+      <n-card size="small" style="height: 200px">
+        <CrudSplit class='titleSplit' title="返回字段"/>
+        <CrudTable
+          :tableData="apiData.responseTable.data"
+          :columnData="apiData.responseTable.columns"
+        />
+      </n-card>
       <n-card size="small">
         <CrudSplit class='titleSplit' title="自定义SQL"/>
         <n-descriptions label-placement="left" column="1" separator="" style="padding: 18px">
@@ -119,15 +126,10 @@ const apiData =ref({
       responseTable: {
         data: [],
         columns: [
-          {
-            title: '#',
-            type: 'index',
-            data: ''
-          },
-          { data: 'paramValue', title: '参数' },
-          { data: 'paramType', title: '类型' },
-          { data: 'paramNotes', title: '说明' },
-          { data: 'demoValue', title: '示例值' }
+          { prop: 'paramTitle', label: '字段' },
+          { prop: 'paramType', label: '类型' },
+          { prop: 'paramNotes', label: '说明' },
+          { prop: 'demoValue', label: '示例值' }
         ]
       },
       responseCodeInfoTable: {
@@ -243,6 +245,7 @@ function queryBasic(apiParam, type) {
     apiData.value.requestParamBodyTable.data.map(item => {
       return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
     })
+    apiData.value.responseTable.data = basicInfo.value.fieldsInfo
     queryUser()
   })
 }

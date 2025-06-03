@@ -252,10 +252,13 @@ async function analysisSql() {
 }
 
 function formSubmit() {
-  if((history.state.type === '自定义SQL' && !formValue.value.apiDatasourceTable) || (history.state.type === '标签API' && !formValue.value.dataBaseLabelId)){
+  if(
+    (history.state.type === '自定义SQL' && !formValue.value.apiDatasourceTable) || (history.state.type === '标签API' && !formValue.value.dataBaseLabelId)
+  ){
     message.error('请先配置数据源!')
-  }
-  else{
+  } else if(history.state.type === '自定义SQL' && (returnParams.value.length === 0 || returnParams.value.some(item => item.paramTitle === "*"))) {
+    message.error('请先解析SQL，字段不能包括*')
+  } else{
     loading.value = true
     let tmpRequestBody = requestParams.value.reduce((obj, item) => {
       obj[item.paramTitle] = item.demoValue
