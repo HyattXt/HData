@@ -16,6 +16,14 @@
                 </n-icon>
                 解析
             </n-button>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <NIcon style="padding-left: 10px">
+                    <QuestionCircleTwotone/>
+                  </NIcon>
+                </template>
+                <p>在sql最外层请不要写SELECT *,请求参数由where后的#{x}标识进行识别。</p>
+              </n-tooltip>
           </template>
         </crudSplit>
         <codemirror
@@ -45,12 +53,12 @@
 
 <script setup>
 import {onMounted, ref, h } from 'vue'
-import {NInput, NCheckbox, useMessage} from 'naive-ui'
+import { NInput, NCheckbox, useMessage, NIcon } from 'naive-ui'
 import { Codemirror } from 'vue-codemirror'
 import { sql } from '@codemirror/lang-sql'
 import StepSql from './Step2-1.vue'
 import StepLabel from './Step2-1-label.vue'
-import { PlayCircleOutlined } from '@vicons/antd'
+import { PlayCircleOutlined, QuestionCircleTwotone } from '@vicons/antd'
 import {useRoute} from "vue-router";
 import axios from "axios";
 import CrudSplit from "@/components/cue/crud-split.vue";
@@ -63,7 +71,6 @@ const route = useRoute()
 const activeName = ref('请求参数')
 const returnParams = ref([])
 const requestParams = ref([])
-const currentStep = ref('step1')
 const componentMap = {
   自定义SQL: StepSql,
   标签API: StepLabel,
@@ -77,13 +84,7 @@ const formValue = ref({
   apiDatasourceTable: '',
   apiDatasourceType: ''
 })
-const rules = {
-  code: {
-    required: true,
-    message: '请输入代码',
-    trigger: 'blur'
-  }
-}
+
 const emit = defineEmits(['prevStep', 'nextStep'])
 const returnColumns = [
   {
@@ -232,14 +233,13 @@ async function analysisSql() {
     paramIsNull: 'Y',
     demoValue: ''
   }))
-  console.log(requestParams.value)
   requestParams.value.push(
     {
-    paramTitle: 'pageNo',
-    paramNotes: '页码',
-    paramType: 'number',
-    paramIsNull: 'N',
-    demoValue: 1
+      paramTitle: 'pageNo',
+      paramNotes: '页码',
+      paramType: 'number',
+      paramIsNull: 'N',
+      demoValue: 1
     },
     {
       paramTitle: 'pageSize',
@@ -252,13 +252,11 @@ async function analysisSql() {
 }
 
 function formSubmit() {
-  if(
-    (history.state.type === '自定义SQL' && !formValue.value.apiDatasourceTable) || (history.state.type === '标签API' && !formValue.value.dataBaseLabelId)
-  ){
+  if((history.state.type === '自定义SQL' && !formValue.value.apiDatasourceTable) || (history.state.type === '标签API' && !formValue.value.dataBaseLabelId)) {
     message.error('请先配置数据源!')
-  } else if(history.state.type === '自定义SQL' && (returnParams.value.length === 0 || returnParams.value.some(item => item.paramTitle === "*"))) {
+  } else if(history.state.type === '自定义SQL' && (!formValue.value.codeValue || returnParams.value.length === 0 || returnParams.value.some(item => item.paramTitle === "*"))) {
     message.error('请先解析SQL，字段不能包括*')
-  } else{
+  } else {
     loading.value = true
     let tmpRequestBody = requestParams.value.reduce((obj, item) => {
       obj[item.paramTitle] = item.demoValue
