@@ -1,7 +1,7 @@
 <template>
   <n-form
     ref="form1Ref"
-    :label-width="90"
+    :label-width="134"
     :model="formValue"
     :rules="rules"
     label-placement="left"
@@ -75,9 +75,25 @@
     <n-grid :cols="24" :x-gap="24">
       <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token位置" path="dynamicTokenPosition">
         <n-select v-model:value="formValue.dynamicTokenPosition" :options="[{label: 'HEADER',value: 1},{label: 'BODY',value: 2}]"/>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <NIcon style="padding-left: 10px">
+              <QuestionCircleTwotone/>
+            </NIcon>
+          </template>
+          <p>需要在下方请求参数中维护相应的字段，程序会匹配参数名称和位置进行token值的替换。</p>
+        </n-tooltip>
       </n-form-item-gi>
       <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token名称" path="dynamicTokenKey">
         <n-input v-model:value="formValue.dynamicTokenKey"/>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <NIcon style="padding-left: 10px">
+              <QuestionCircleTwotone/>
+            </NIcon>
+          </template>
+          <p>需要在下方请求参数中维护相应的字段，程序会匹配参数名称和位置进行token值的替换。</p>
+        </n-tooltip>
       </n-form-item-gi>
       <n-form-item-gi :span="formValue.dynamicTokenState === 1 ? 12 : 0" label="token地址" path="dynamicTokenUrl">
         <n-input v-model:value="formValue.dynamicTokenUrl" />
@@ -142,7 +158,7 @@ import {h, onMounted, ref} from 'vue'
 import {NButton, NCheckbox, NIcon, NInput, NSelect, useMessage} from 'naive-ui'
 import axios from 'axios'
 import {useRoute} from "vue-router";
-import {PlusSquareOutlined} from "@vicons/antd";
+import { PlusSquareOutlined, QuestionCircleTwotone } from '@vicons/antd'
 import utils from "@/utils";
 
 const form1Ref = ref(null)

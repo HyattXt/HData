@@ -232,6 +232,23 @@ async function analysisSql() {
     paramIsNull: 'Y',
     demoValue: ''
   }))
+  console.log(requestParams.value)
+  requestParams.value.push(
+    {
+    paramTitle: 'pageNo',
+    paramNotes: '页码',
+    paramType: 'number',
+    paramIsNull: 'N',
+    demoValue: 1
+    },
+    {
+      paramTitle: 'pageSize',
+      paramNotes: '页数',
+      paramType: 'number',
+      paramIsNull: 'N',
+      demoValue: 30
+    }
+  )
 }
 
 function formSubmit() {
@@ -240,20 +257,6 @@ function formSubmit() {
   }
   else{
     loading.value = true
-    requestParams.value.push({
-      paramTitle: 'pageNo',
-      paramNotes: '页码',
-      paramType: 'number',
-      paramIsNull: 'N',
-      demoValue: 1
-    })
-    requestParams.value.push({
-      paramTitle: 'pageSize',
-      paramNotes: '页数',
-      paramType: 'number',
-      paramIsNull: 'N',
-      demoValue: 30
-    })
     let tmpRequestBody = requestParams.value.reduce((obj, item) => {
       obj[item.paramTitle] = item.demoValue
       return obj;
@@ -299,6 +302,7 @@ function findTextInsideHashBrackets(text) {
   let matches = text.match(regex);
 
   // matches数组包含了所有匹配的结果，但是它们还包含了#{}。我们需要去掉这些字符。
+  if (!matches) return [];
   matches = matches.map(match => match.slice(2, -1)); // 从第三个字符开始，到倒数第二个字符结束（不包括#{}）
   return matches;
 }
