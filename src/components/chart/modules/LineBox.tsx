@@ -123,7 +123,7 @@ const lineChart = defineComponent({
         left: '0%',
         top: '6%',
         right: '4%',
-        bottom: '3%',
+        bottom: '9%',
         containLabel: true,
         backgroundColor: 'rgba(255, 255, 255, 0)', // 设置为透明或其他颜色
         borderColor: 'transparent', // 边框色设置为透明

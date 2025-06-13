@@ -130,6 +130,7 @@ export default defineComponent({
                             <NButton
                                 tag='div'
                                 type='primary'
+                                color='#0099CB'
                                 disabled={this.checkedRowKeys.length <= 0}
                                 style='position: absolute; bottom: 5px; left: 10px;'
                                 class='btn-delete-all'

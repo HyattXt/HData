@@ -182,6 +182,7 @@ export default defineComponent({
                                       <NButton
                                           tag='div'
                                           type='primary'
+                                          color='#0099CB'
                                           disabled={this.checkedRowKeys.length <= 0}
                                           class='btn-delete-all'
                                       >
@@ -200,6 +201,7 @@ export default defineComponent({
                               <NButton
                                   tag='div'
                                   type='primary'
+                                  color='#0099CB'
                                   disabled={this.checkedRowKeys.length <= 0}
                                   onClick={this.batchExportWorkflow}
                                   class='btn-delete-all'
