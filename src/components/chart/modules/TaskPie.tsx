@@ -66,8 +66,9 @@ const PieChart = defineComponent({
                     fill: 'black', //文字的颜色
                     width: 30,
                     height: 30,
-                    fontSize: 14,
-                    fontFamily: "Microsoft YaHei"
+                    fontSize: 16,
+                    fontFamily: "Microsoft YaHei",
+                    lineHeight: 20
                 }
             }],
             series: [
