@@ -211,7 +211,7 @@ const topImagePath = {
   three: `${import.meta.env.BASE_URL}images/home/3.png`,
   four: `${import.meta.env.BASE_URL}images/home/4.png`,
   five: `${import.meta.env.BASE_URL}images/home/5.png`,
-  six: `${import.meta.env.BASE_URL}images/home/5.png`,
+  six: `${import.meta.env.BASE_URL}images/home/6.png`,
   seven: `${import.meta.env.BASE_URL}images/home/7.png`
 }
 
