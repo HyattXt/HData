@@ -30,7 +30,7 @@
       <template #1>
         <div class="build-form">
           <NForm v-if="!taskData.jsonConfig" :disabled="props.readOnly" size="small" label-placement="left" require-mark-placement="left" label-align="right" label-width="100" :model="taskData" :rules="rules" ref="formRef">
-            <n-collapse :default-expanded-names="['1', '2', '3', '4']">
+            <n-collapse :default-expanded-names="['1', '2', '3', '4']" display-directive="show">
               <n-collapse-item  name="1">
                 <template #header>
                   <n-text type="info">
