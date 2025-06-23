@@ -835,3 +835,7 @@ dt {
     /* 例如：text-align: center; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.1); */
   }
 }
+
+.el-table__empty-text {
+  line-height: inherit;
+}

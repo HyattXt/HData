@@ -18,7 +18,7 @@
 import { h, ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { NSpace, NTooltip, NButton, NPopconfirm } from 'naive-ui'
+import { NSpace, NTooltip, NButton, NPopconfirm, NTag } from 'naive-ui'
 import {
   deleteScheduleById,
   offline,
@@ -122,8 +122,17 @@ export function useTable() {
         ...COLUMN_WIDTH_CONFIG['state'],
         render: (row: any) =>
           row.releaseState === 'ONLINE'
-            ? t('project.workflow.up_line')
-            : t('project.workflow.down_line')
+            ?  h(NTag,
+          { type: 'success', size: 'small' },
+          {
+            default: () => t('project.workflow.up_line')
+          }
+        ) : h(NTag,
+              { type: 'warning', size: 'small' },
+              {
+                default: () => t('project.workflow.down_line')
+              }
+            )
       },
       {
         title: t('project.workflow.create_time'),
