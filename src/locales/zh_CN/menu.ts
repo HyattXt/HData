@@ -73,6 +73,7 @@ export default {
   data_customAnalyse: '自定义场景',
   data_userPortrayal: '用户画像',
   api_manager: 'API管理',
+  api_log: '调用日志',
   api_strategy: '服务策略',
   data_assets: '数据资产',
   assets: '资产概览',

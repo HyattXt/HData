@@ -32,7 +32,6 @@ import {
   AppstoreOutlined,
   UsergroupAddOutlined,
   UserAddOutlined,
-  WarningOutlined,
   InfoCircleOutlined,
   ControlOutlined,
   SlackOutlined,
@@ -51,7 +50,7 @@ import {
   VerifiedOutlined, UnorderedListOutlined, TagsOutlined, AppstoreTwotone
 } from '@vicons/antd'
 import {SecurityFilled, DesignServicesFilled, PlaylistAddCheckTwotone} from '@vicons/material'
-import { RuleDraft, UserAvatarFilled, UserMultiple} from '@vicons/carbon'
+import { RuleDraft, UserAvatarFilled, UserMultiple, Catalog} from '@vicons/carbon'
 import { TextBulletListSquareEdit24Regular, DocumentBulletListClock20Regular, MyLocation16Filled, EditSettings24Regular, ClockAlarm16Regular} from '@vicons/fluent'
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/store/user/user'
@@ -390,6 +389,11 @@ export function useDataList() {
             label: t('menu.api_manager'),
             key: '/service/api-manager',
             icon: renderIcon(BarsOutlined)
+          },
+          {
+            label: t('menu.api_log'),
+            key: '/service/api-log',
+            icon: renderIcon(Catalog)
           }
         ]
       },

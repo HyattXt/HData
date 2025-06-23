@@ -86,6 +86,17 @@ export default {
         showSide: true,
         auth: []
       }
+    },
+    {
+      path: '/service/api-log',
+      name: 'api-log',
+      component: () => import('@/views/api/api-log/index.vue'),
+      meta: {
+        title: '服务日志-api-log',
+        activeMenu: 'service',
+        showSide: true,
+        auth: []
+      }
     }
   ]
 }
