@@ -448,6 +448,12 @@ export default defineComponent({
             }
         }
 
+        const renderSuffix = ({ option }: { option: TreeOption }) => {
+          switch (option.type){
+            case 1 : return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
+          }
+        }
+
         const dropdownConfirm = ({ node, option }: { node: VNode, option: DropdownOption|DropdownGroupOption }) => {
             if (variables.value.readOnly || (option.key !== 'deleteMenu' && option.key !== 'deleteWorkflow')) {
                 return node
@@ -661,6 +667,7 @@ export default defineComponent({
                                                         expanded-keys={expandedKeys.value}
                                                         node-props={menu}
                                                         render-prefix={menuIcon}
+                                                        render-suffix={renderSuffix}
                                                     />
                                                     </n-spin>
                                                     <n-dropdown

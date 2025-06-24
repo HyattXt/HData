@@ -819,16 +819,18 @@ function renderSuffix({ option }) {
           trigger: () =>
               h(
                   NButton,
-                  { text: true, type: "primary", color: "#000" },
+                  { text: true, type: "primary", color: "#000", style:{padding: '5px'} },
                   { default: () => "┄" }
               ),
           default: () =>
               h('div', [
                 h('div', h(NButton, { onClick: () => updateTree(option.id, option.parentId), quaternary: true, style: {width: '100px', 'font-size': '12px', 'justify-content': 'left'}},{icon: () => h(NIcon,{ text: true ,size: '12'}, {default: () => h(PencilAlt)} ),default: () =>"修改"} )),
-                h('div', h(NButton, { onClick: () => delTreeConfirm(option.id, option.titleName), disabled: option.children.length !== 0, quaternary: true, style: {width: '100px', 'font-size': '12px', 'justify-content': 'left'}},{icon: () => h(NIcon,{ text: true ,size: '12'}, {default: () => h(TrashAlt)} ),default: () =>"删除"} ))
+                h('div', h(NButton, { onClick: () => delTreeConfirm(option.id, option.titleName), disabled: !!option.children, quaternary: true, style: {width: '100px', 'font-size': '12px', 'justify-content': 'left'}},{icon: () => h(NIcon,{ text: true ,size: '12'}, {default: () => h(TrashAlt)} ),default: () =>"删除"} ))
               ])
         }
     )
+  } else {
+    return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
   }
 
 }

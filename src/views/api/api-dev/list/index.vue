@@ -492,7 +492,7 @@
           trigger: () =>
             h(
               NButton,
-              { text: true, type: 'primary', color: '#000' },
+              { text: true, type: 'primary', color: '#000', style:{padding: '5px'} },
               { default: () => '┄' }
             ),
           default: () =>
@@ -523,7 +523,7 @@
                   NButton,
                   {
                     onClick: () => delTreeConfirm(option.id, option.titleName),
-                    disabled: option.children.length !== 0,
+                    disabled: !!option.children,
                     quaternary: true,
                     style: {
                       width: '100px',
@@ -541,6 +541,8 @@
             ])
         }
       )
+    } else {
+      return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
     }
   }
 

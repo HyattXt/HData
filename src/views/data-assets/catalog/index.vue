@@ -35,6 +35,7 @@
                   @update:expanded-keys="onExpandedKeys"
                   :expanded-keys="expandedKeys"
                   :render-prefix="menuIcon"
+                  :render-suffix="renderSuffix"
                   :nodeProps="nodeProps"
               />
             </n-spin>
@@ -181,9 +182,9 @@ import {
   SearchOutlined,
   TableOutlined
 } from '@vicons/antd'
-import { NIcon, useMessage } from "naive-ui";
+import { NButton, NIcon, NPopover, useMessage } from 'naive-ui'
 import {useRoute, useRouter} from "vue-router";
-import { CaretUp, CaretDown } from "@vicons/fa";
+import { CaretUp, CaretDown, PencilAlt, TrashAlt } from '@vicons/fa'
 import CrudHead from "@/components/cue/crud-header.vue"
 import {Add12Filled} from "@vicons/fluent";
 import utils from "@/utils";
@@ -404,6 +405,10 @@ function menuIcon({ option }) {
           { default: () => h(TableOutlined) }
       )
   }
+}
+
+function renderSuffix({ option }) {
+    return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
 }
 
 onMounted(() => {
