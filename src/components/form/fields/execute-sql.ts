@@ -33,8 +33,7 @@ export function renderExecuteSql( item: IJsonItem, fields: { [field: string]: an
         let getSql = utils.getUrl('createTable/excuteSql')
         formValue.value.id = fields.dataTarget
         formValue.value.sqlStr = fields.tableSql
-            axios
-            .post(getSql, formValue.value)
+            apiAxios.post(getSql, formValue.value)
             .then(function (response) {
                 if(response.data.status ==0 ){
                     message.error(response.data.error)

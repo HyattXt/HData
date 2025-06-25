@@ -20,7 +20,7 @@
 </template>
 <script setup>
 
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import { onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useMessage} from "naive-ui";
@@ -36,8 +36,7 @@ onMounted(() => {
   let params ={
     tableName: history.state.tableName
   }
-  axios
-      .post(url,params)
+  apiAxios.post(url,params)
       .then(function (response) {
 
         dataInfo.value = response.data.data

@@ -39,7 +39,7 @@
   import step2 from './Step2.vue'
   import step3 from './Step3.vue'
   import step4 from './Step4.vue'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import {useMessage} from "naive-ui";
   import {useRoute} from "vue-router";
   import CrudHeader from "@/components/cue/crud-header.vue";
@@ -133,8 +133,7 @@
   function updateApi(apiId) {
     const urlUpdate = utils.getUrl('interface/update')
     params2.value.apiId = apiId
-    axios
-        .post(urlUpdate, params2.value)
+    apiAxios.post(urlUpdate, params2.value)
         .then(function (response) {
             response.data.status
         })
@@ -148,8 +147,7 @@
       const url = utils.getUrl('interface-ui/api/save-api?id=-1')
       if (route.query.apiId === undefined) {
         let apiId = ''
-        axios
-            .post(url, params.value)
+        apiAxios.post(url, params.value)
             .then(function (response) {
 
               if (!response.data.success){message.error(response.data.message)}

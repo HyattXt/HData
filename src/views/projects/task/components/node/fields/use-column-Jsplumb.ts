@@ -64,8 +64,7 @@ export function useColumnJsplumb(
         formTarget.value.tableName = model['dtType'] == 'ORACLE' || model['dtType'] == 'SQLSERVER' || model['dtType'] == 'POSTGRESQL' ? model['targetDatabase'] + '.' + model['targetTable'] : model['targetTable']
         if ( (model['executeMode'] == 0 ? !!model['sourceTable'] : !!model['sql']) && !!model['targetTable'] )
         {
-            axios
-                .post(getCol, formTarget.value)
+            apiAxios.post(getCol, formTarget.value)
                 .then(async function (response) {
 
                     if (response.data.status == 0) {
@@ -88,8 +87,7 @@ export function useColumnJsplumb(
                         formSource.value.id = model['dataSource']
                         formSource.value.type = parseInt(model['dsType'].replace('MYSQL', 0).replace('ORACLE', 5).replace('SQLSERVER', 6).replace('POSTGRESQL', 1))
                         formSource.value.tableName = model['dsType'] == 'ORACLE' || model['dsType'] == 'SQLSERVER' || model['dsType'] == 'POSTGRESQL' ? model['sourceDatabase'] + '.' + model['sourceTable'] : model['sourceTable']
-                        axios
-                            .post(getCol, formSource.value)
+                        apiAxios.post(getCol, formSource.value)
                             .then(function (response) {
 
                                 if (response.data.status == 0) {

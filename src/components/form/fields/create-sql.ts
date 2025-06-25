@@ -35,8 +35,7 @@ export function renderCreateSql( item: IJsonItem, fields: { [field: string]: any
         formValue.value.id = fields.dataSource
         formValue.value.type = parseInt(fields.dsType.replace('MYSQL',0).replace('ORACLE',5))
         formValue.value.tableName = fields.dsType=='ORACLE' || fields.dsType=='SQLSERVER' ? fields.sourceDatabase+'.'+fields.sourceTable : fields.sourceTable
-        axios
-        .post(getSql, formValue.value)
+        apiAxios.post(getSql, formValue.value)
         .then(function (response) {
             if(response.data.status ==0 ){
                 message.error(response.data.error)

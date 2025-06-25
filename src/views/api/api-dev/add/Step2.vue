@@ -285,8 +285,7 @@ function getInitData() {
   let url = utils.getUrl('interface/getInterfaceInfoById')
   let params = { apiId: '' }
   params.apiId = route.query.apiId
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         formValue.value.codeValue = response.data.obj.apiScript.substring(response.data.obj.apiScript.indexOf("HD688296")+8)
         requestParams.value = response.data.obj.bodyArray

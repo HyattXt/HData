@@ -198,7 +198,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue'
 import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {useRoute, useRouter} from "vue-router";
 import CrudHeader from "@/components/cue/crud-header.vue";
 import utils from "@/utils";
@@ -241,8 +241,7 @@ let validatePath = (rule: any, value: any, callback: any) => {
     let body = { taskName: value }
 
     //0存在，1不存在
-    axios
-        .post(url, body)
+    apiAxios.post(url, body)
         .then(function (response) {
 
           if (response.data.status == 0) {
@@ -354,8 +353,7 @@ function formSubmit() {
     formValue.value.dynamicParameterStatus=2
   }
 
-  axios
-      .post(insUrl, formValue.value)
+  apiAxios.post(insUrl, formValue.value)
       .then(function (response) {
 
         message.info(response.data.info)
@@ -375,7 +373,7 @@ function formSubmit() {
 function queryDataSource() {
   let queryUrl = utils.getUrl('httpHandle/getDataSource?type=0')
 
-  axios.get(queryUrl).then(function (response) {
+  apiAxios.get(queryUrl).then(function (response) {
 
     listSource.value = response.data.data
   })
@@ -390,8 +388,7 @@ onMounted(() => {
     formValue.value.id = route.query.id
     queryDataSource()
 
-    axios
-        .post(url, params)
+    apiAxios.post(url, params)
         .then(function (response) {
 
           formValue.value = response.data.obj

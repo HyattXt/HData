@@ -142,7 +142,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, h} from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {
   UserOutlined,
   ToTopOutlined,
@@ -349,7 +349,7 @@ const menuIcon = () => {
 function queryUser() {
   const listUrl = utils.getUrl('interface/getUser')
   const authListUrl = utils.getUrl('interface/getAuthorizeInfo')
-  axios.get(listUrl).then(function (response) {
+  apiAxios.get(listUrl).then(function (response) {
     userList.value = response.data.data
     userList.value = userList.value.map((item) => {
       let tempList = {}
@@ -362,7 +362,7 @@ function queryUser() {
     'apiId': ''
   }
   authBody.apiId = drawId.value
-  axios.post(authListUrl, authBody).then(function (response) {
+  apiAxios.post(authListUrl, authBody).then(function (response) {
     let list = response.data.data
     apiAuthorizer.value = list.map((item) => {
       let authList
@@ -441,7 +441,7 @@ function query(page, pageSize = 30, apiName = '', apiFlag = '', apiStatus = '', 
       pageNum: page, 'pageSize': pageSize, 'apiName': apiName, 'apiFlag': apiFlag, 'apiStatus': apiStatus, 'apiPath': apiPath, 'apiTreeId': apiTreeId,
       order: 'api_create_time', 'sort': 'desc'
     }
-    axios.post(url, params).then(function (response) {
+    apiAxios.post(url, params).then(function (response) {
       TableData.apiList = response.data.data
       TableData.totalNum = response.data.totalNum
       const copiedData = TableData.apiList.map((v) => v)
@@ -478,8 +478,7 @@ function subAuth() {
     apiId: drawId.value,
     'authorizeId': apiAuthorizer.value
   }
-  axios
-      .post(subUrl, requestBody)
+  apiAxios.post(subUrl, requestBody)
       .then(function (response) {
         message.info('授权成功')
         showModal.value = false
@@ -519,7 +518,7 @@ const columnsRef = ref(
                     id: ''
                   }
                   pubPar.id = row.apiId
-                  axios.post(urlPub, pubPar).then(function (response) {
+                  apiAxios.post(urlPub, pubPar).then(function (response) {
                     message.info(`成功发布 ${row.apiName}`)
                     handlePageChange(paginationReactive.page, paginationReactive.pageSize)
                   }).catch(function (error) {
@@ -533,7 +532,7 @@ const columnsRef = ref(
                     apiStatus: 1
                   }
                   pubPar.apiId = row.apiId
-                  axios.post(urlPub, pubPar).then(function (response) {
+                  apiAxios.post(urlPub, pubPar).then(function (response) {
                     message.info(`成功发布 ${row.apiName}`)
                     handlePageChange(paginationReactive.page, paginationReactive.pageSize)
                   }).catch(function (error) {
@@ -548,7 +547,7 @@ const columnsRef = ref(
                   apiStatus: 0
                 }
                 pubPar.apiId = row.apiId
-                axios.post(urlPub, pubPar).then(function (response) {
+                apiAxios.post(urlPub, pubPar).then(function (response) {
                   message.info(`成功下线 ${row.apiName}`)
                   handlePageChange(paginationReactive.page, paginationReactive.pageSize)
                 }).catch(function (error) {
@@ -579,7 +578,7 @@ const paginationReactive = reactive({
 
 })
 function getTreeFolder ()  {
-  axios.get(getApiTreeUrl).then((res) => {
+  apiAxios.get(getApiTreeUrl).then((res) => {
     folderData.value = res.data.data
   })
 }

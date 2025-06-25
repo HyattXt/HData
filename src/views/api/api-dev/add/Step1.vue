@@ -76,7 +76,7 @@
 
   import {h, onMounted, ref} from 'vue'
   import { useMessage } from 'naive-ui'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import utils from "@/utils";
   const emit = defineEmits(['nextStep'])
   const form1Ref: any = ref(null)
@@ -107,12 +107,11 @@
         let url = utils.getUrl('interface/getApiPath')
         let body = { apiPath: value }
 
-        //0存在，1不存在
-        axios
-            .post(url, body)
+        //1存在，0不存在
+        apiAxios.post(url, body)
             .then(function (response) {
 
-              if (response.data.status == 0) {
+              if (response.data.status == 1) {
                 reject(Error('该路径与已有路径重复')) // reject with error message
               } else {
                 resolve()
@@ -132,8 +131,7 @@
         let body = { apiName: value }
 
         //0存在，1不存在
-        axios
-            .post(url, body)
+        apiAxios.post(url, body)
             .then(function (response) {
               console.log(response.data.obj)
               if (!!response.data.obj) {
@@ -230,8 +228,7 @@
     let params = { apiId: '' }
     params.apiId = route.query.apiId
 
-    axios
-        .post(url, params)
+    apiAxios.post(url, params)
         .then(function (response) {
           formValue.value = response.data.obj
           formValue.value.apiTimeout = parseInt(formValue.value.apiTimeout)
@@ -243,7 +240,7 @@
   }
 
 function getTreeFolder ()  {
-  axios.get(getApiTreeUrl).then((res) => {
+  apiAxios.get(getApiTreeUrl).then((res) => {
     folderData.value = res.data.data
   })
 }

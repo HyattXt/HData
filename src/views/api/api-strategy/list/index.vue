@@ -169,7 +169,7 @@
 <script setup>
   import { ref, reactive, onMounted, h } from 'vue'
   import { useRouter } from 'vue-router'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import { NButton, useMessage, NIcon, NPopover } from 'naive-ui'
   import CrudTable from '@/components/cue/crud-table.vue'
   import { ElButton, ElMessageBox } from 'element-plus'
@@ -350,8 +350,7 @@
         policyType: policyType
       }
 
-      axios
-          .post(url, params)
+      apiAxios.post(url, params)
           .then(function (response) {
             TableData.apiList = response.data.data
             TableData.totalNum = response.data.totalNum
@@ -392,8 +391,7 @@
         servicePolicyId: policyId
       }
 
-      axios
-          .post(url, params)
+      apiAxios.post(url, params)
           .then(function (response) {
             ApiTableData.apiList = response.data.data
             ApiTableData.totalNum = response.data.totalNum
@@ -472,8 +470,7 @@
     let params = {
       servicePolicyId: servicePolicyId
     }
-    axios
-        .post(queryApiInfoUrl, params)
+    apiAxios.post(queryApiInfoUrl, params)
         .then(function (response) {
           if (response.data.data) {
             response.data.data.forEach((row) => {
@@ -490,7 +487,7 @@
         apiId: addDataSetRef.value.map(item => item.apiId).join(','),
         servicePolicyId: drawId.value
       }
-      axios.post(bindingPolicyUrl,params).then((res) => {
+      apiAxios.post(bindingPolicyUrl,params).then((res) => {
         message.info(res.data.info)
         active.value = false
         Object.assign(detailPaginationReactive, defaultPagination);
@@ -528,8 +525,7 @@
 
   function deleteApi(row) {
     let urlDel = utils.getUrl('ServicePolicy/delete')
-    axios
-      .post(urlDel, undefined, {params: {id: row.id}})
+    apiAxios.post(urlDel, undefined, {params: {id: row.id}})
       .then(function (response) {
         message.info(response.data.info)
         handlePageChange(paginationReactive.page, paginationReactive.pageSize)

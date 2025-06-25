@@ -191,7 +191,7 @@
 <script setup>
   import { ref, reactive, onMounted, h } from 'vue'
   import { useRouter } from 'vue-router'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import { BoxPlotOutlined } from '@vicons/antd'
   import { NButton, useMessage, NIcon, NPopover } from 'naive-ui'
   import hljs from 'highlight.js/lib/core'
@@ -295,8 +295,7 @@
         sort: 'desc'
       }
 
-      axios
-        .post(url, params)
+      apiAxios.post(url, params)
         .then(function (response) {
           TableData.apiList = response.data.data
           TableData.totalNum = response.data.totalNum
@@ -412,8 +411,7 @@
     }
   ]
   function getTreeFolder() {
-    axios
-      .get(getApiTreeUrl)
+    apiAxios.get(getApiTreeUrl)
       .then((res) => {
         folderData.value = res.data.data
       })
@@ -423,8 +421,7 @@
   }
   function getApiFolder() {
     showSpin.value = true
-    axios
-      .get(getApiFolderUrl)
+    apiAxios.get(getApiFolderUrl)
       .then((res) => {
         treeFolder.value = res.data.data
         showSpin.value = false
@@ -657,8 +654,7 @@
     let params = {
       id: id
     }
-    axios
-      .post(delApiTreeUrl, params)
+    apiAxios.post(delApiTreeUrl, params)
       .then((res) => {
         message.info(res.data.info)
         showDropdownRef.value = false
@@ -675,8 +671,7 @@
     let delPar = {
       apiId: row.apiId
     }
-    axios
-      .post(urlDel, delPar)
+    apiAxios.post(urlDel, delPar)
       .then(function (response) {
         message.info(`成功删除 ${row.apiName}`)
         handlePageChange(paginationReactive.page, paginationReactive.pageSize)
@@ -692,8 +687,7 @@
       titleName: updateFormValue.value.titleName,
       parentId: updateFormValue.value.parentId
     }
-    axios
-      .post(updateApiTreeUrl, params)
+    apiAxios.post(updateApiTreeUrl, params)
       .then((res) => {
         message.info(res.data.info)
         showUpdateRef.value = false
@@ -710,8 +704,7 @@
       titleName: addFormValue.value.titleName,
       type: 1
     }
-    axios
-      .post(addApiTreeUrl, params)
+    apiAxios.post(addApiTreeUrl, params)
       .then((res) => {
         message.info(res.data.info)
         showAddRef.value = false
@@ -770,8 +763,7 @@
     if (url.indexOf('proxy') > 0) {
       let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
       if (drawMethod.value === 'GET') {
-        axios
-          .get(regUrl)
+        apiAxios.get(regUrl)
           .then(function (response) {
             code.value = JSON.stringify(response.data, null, 2)
             executionTime.value = Date.now() - startTime.value
@@ -782,8 +774,7 @@
             console.log(error)
           })
       } else {
-        axios
-          .post(regUrl, requestBody)
+        apiAxios.post(regUrl, requestBody)
           .then(function (response) {
             code.value = JSON.stringify(response.data, null, 2)
             executionTime.value = Date.now() - startTime.value
@@ -809,8 +800,7 @@
             '{\n "success" : "@resultStatus",\n "message" : "@resultMessage",\n "code" : "@resultCode",\n "lifeCycleTime": "@timeLifeCycle",\n "executionTime": "@timeExecution",\n "value" : "@resultData"\n}'
         }
       }
-      axios
-        .post(sqlUrl, sqlBody)
+      apiAxios.post(sqlUrl, sqlBody)
         .then(function (response) {
           code.value = JSON.stringify(response.data, null, 2)
           executionTime.value = response.data.executionTime
@@ -829,8 +819,7 @@
       apiId: id,
       apiTimeConsuming: executeTime
     }
-    axios
-      .post(url, param)
+    apiAxios.post(url, param)
       .then(function (response) {})
       .catch(function (error) {
         console.log(error)

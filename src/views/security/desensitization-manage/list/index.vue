@@ -497,7 +497,7 @@ async function getDatasourceTables(dataSource ,type) {
     id: dataSource
   }
   try {
-    const response = await axios.post(url, params);
+    const response = await apiAxios.post(url, params);
     return response.data.data;
   } catch (error) {
     message.error(error);
@@ -512,7 +512,7 @@ async function getDatasourceTableColumns(dataSource, table) {
     tableName: table
   }
   try {
-    const response = await axios.post(url, params);
+    const response = await apiAxios.post(url, params);
     return response.data.data;
   } catch (error) {
     message.error(error);

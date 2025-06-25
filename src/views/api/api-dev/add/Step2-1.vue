@@ -53,7 +53,7 @@
 <script lang="ts" setup>
   import {onMounted, ref} from 'vue'
   import { useMessage } from 'naive-ui'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import {useRoute} from "vue-router";
   import utils from "@/utils";
 
@@ -91,7 +91,7 @@
       formValue.value.apiDatasourceTable = ''
       colList.value = []
       const url = utils.getUrl('apiService/getDataSource?type='+formValue.value.apiDatasourceType)
-      axios.get(url).then(function (response) {
+      apiAxios.get(url).then(function (response) {
         sList.value = response.data.data
         emit('nextStep2_1', formValue.value)
     })
@@ -99,11 +99,12 @@
 
   function queryTab() {
     const url = utils.getUrl('apiService/getTables')
+    tList.value = []
     let params = {
       type : formValue.value.apiDatasourceType,
       id : formValue.value.apiDatasourceId
     }
-    axios.post(url,params).then(function (response) {
+    apiAxios.post(url,params).then(function (response) {
 
       tList.value = response.data.data
     })
@@ -116,7 +117,7 @@
       id : formValue.value.apiDatasourceId,
       tableName: table
     }
-    axios.post(url, params).then(function (response) {
+    apiAxios.post(url, params).then(function (response) {
 
       colList.value = response.data.data
     })
@@ -132,8 +133,7 @@
     let params = { apiId: '' }
     params.apiId = route.query.apiId as string
 
-    axios
-        .post(url, params)
+    apiAxios.post(url, params)
         .then(function (response) {
           formValue.value.apiDatasourceType = response.data.obj.apiDatasourceType
           queryDataSource()

@@ -351,7 +351,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, h, unref} from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {
   ApartmentOutlined,
   SearchOutlined,
@@ -601,8 +601,7 @@ function query(
     'apiTreeId': apiTreeId
   }
   loadingRef.value = true
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         dataRef.value = []
         TableData.tableList = response.data.data
@@ -673,7 +672,7 @@ function delMenu(id) {
   let params ={
     id: id,
   }
-  axios.post(delCatalogTreeUrl, params).then((res) => {
+  apiAxios.post(delCatalogTreeUrl, params).then((res) => {
     message.info(res.data.info)
     showDropdownRef.value = false
     getApiFolder()
@@ -687,7 +686,7 @@ function createMenu(ruleFormRef) {
         titleName: formValue.value.titleName,
         type:1
       }
-      axios.post(addCatalogTreeUrl, params).then((res) => {
+      apiAxios.post(addCatalogTreeUrl, params).then((res) => {
         message.info(res.data.info)
         showAddRef.value = false
         getApiFolder()
@@ -715,7 +714,7 @@ function updateMenu(ruleFormRef) {
         titleName: updateFormValue.value.titleName,
         parentId: updateFormValue.value.parentId
       }
-      axios.post(updateIndexTreeUrl, params).then((res) => {
+      apiAxios.post(updateIndexTreeUrl, params).then((res) => {
         message.info(res.data.info)
         showUpdateRef.value = false
         getApiFolder()
@@ -804,7 +803,7 @@ function handleCurrentChange(val) {
 function getApiFolder ()  {
   showSpin.value = true
   let params ={}
-  axios.post(getCatalogFolderUrl,params).then((res) => {
+  apiAxios.post(getCatalogFolderUrl,params).then((res) => {
     treeFolder.value = res.data.data
     showSpin.value = false
   })
@@ -899,7 +898,7 @@ function createIndex () {
         case '年' : params.timeDimension = '6'
           break;
       }
-      axios.post(url, params).then((res) => {
+      apiAxios.post(url, params).then((res) => {
         message.info(res.data.info)
         query(
             paginationReactive.indicatorDefiner,
@@ -924,7 +923,7 @@ function deleteIndex (id) {
   let params ={
     id: id
   }
-  axios.post(deleteIndexUrl, params).then((res) => {
+  apiAxios.post(deleteIndexUrl, params).then((res) => {
     message.info(res.data.info)
     showDropdownRef.value = false
     query(
@@ -944,7 +943,7 @@ function pubIndex (id) {
   let params ={
     id: id
   }
-  axios.post(pubIndexUrl, params).then((res) => {
+  apiAxios.post(pubIndexUrl, params).then((res) => {
     message.info(res.data.info)
     showDropdownRef.value = false
     query(
@@ -967,7 +966,7 @@ function offIndex () {
         id: indexFormValue.value.id,
         indicatorRemovalInfo: indexFormValue.value.indicatorRemovalInfo
       }
-      axios.post(offIndexUrl, params).then((res) => {
+      apiAxios.post(offIndexUrl, params).then((res) => {
         message.info(res.data.info)
         showDropdownRef.value = false
         showPubRef.value = false

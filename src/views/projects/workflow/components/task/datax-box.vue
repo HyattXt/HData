@@ -937,7 +937,7 @@ async function getDatasourceTables(dataSource ,type) {
     id: dataSource
   }
   try {
-    const response = await axios.post(url, params);
+    const response = await apiAxios.post(url, params);
     if (response.data.status === 0) {
       message.error(response.data.error);
       return response.data.data;
@@ -1028,7 +1028,7 @@ async function getDatasourceTableColumns(dataSource, table) {
     tableName: table
   }
   try {
-    const response = await axios.post(url, params);
+    const response = await apiAxios.post(url, params);
     return response.data.data;
   } catch (error) {
     message.error(error);
@@ -1081,8 +1081,7 @@ function getTableSql() {
       type : datasourceTypes.find(datasource => datasource.value === taskData.value.dsType)?.id,
       tableName: taskData.value.sourceTable
     }
-    axios
-        .post(getSql, body)
+    apiAxios.post(getSql, body)
         .then(function (response) {
           if(response.data.status === 0 ){
             message.error(response.data.error)
@@ -1103,8 +1102,7 @@ function executeTableSql() {
     id: taskData.value.dataTarget,
     sqlStr: taskData.value.createSql
   }
-  axios
-      .post(getSql, body)
+  apiAxios.post(getSql, body)
       .then(function (response) {
         if(response.data.status ===0 ){
           message.error(response.data.error)
@@ -1134,8 +1132,7 @@ function getTableColumn() {
   {
     taskData.value.leftData = []
     taskData.value.rightData = []
-    axios
-        .post(getCol, targetBody)
+    apiAxios.post(getCol, targetBody)
         .then(async function (response) {
           if (response.data.status === 0) {
             message.error(response.data.error)
@@ -1159,8 +1156,7 @@ function getTableColumn() {
                 type: datasourceTypes.find(datasource => datasource.value === taskData.value.dsType)?.id,
                 tableName: taskData.value.sourceTable
               }
-              axios
-                  .post(getCol, sourceBody)
+              apiAxios.post(getCol, sourceBody)
                   .then(function (response) {
                     if (response.data.status === 0) {
                       message.error(response.data.error)

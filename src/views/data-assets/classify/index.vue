@@ -317,7 +317,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, h, unref} from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {
   ApartmentOutlined,
   SearchOutlined,
@@ -515,8 +515,7 @@ function query(
     'dataCatalogType': apiTreeId===2 || apiTreeId===3 || apiTreeId===4 ? 1 : 2
 }
   loadingRef.value = true
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         dataRef.value = []
         TableData.tableList = response.data.data
@@ -569,8 +568,7 @@ function detailQuery(
     'pageNum': page,
     'pageSize': pageSize
   }
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         detailDataRef.value = []
         detailTableData.tableList = response.data.data
@@ -621,8 +619,7 @@ function apiDetailQuery(
     'pageNum': page,
     'pageSize': pageSize
   }
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         apiDetailDataRef.value = []
         apiDetailTableData.tableList = response.data.data
@@ -665,7 +662,7 @@ function delMenu(id) {
   let params ={
     id: id,
   }
-  axios.post(delCatalogTreeUrl, params).then((res) => {
+  apiAxios.post(delCatalogTreeUrl, params).then((res) => {
     message.info(res.data.info)
     showDropdownRef.value = false
     getApiFolder()
@@ -679,7 +676,7 @@ function updateMenu(ruleFormRef) {
         titleName: updateFormValue.value.titleName,
         parentId: updateFormValue.value.parentId
       }
-      axios.post(updateCatalogTreeUrl, params).then((res) => {
+      apiAxios.post(updateCatalogTreeUrl, params).then((res) => {
         message.info(res.data.info)
         showUpdateRef.value = false
         getApiFolder()
@@ -697,7 +694,7 @@ function createMenu(ruleFormRef) {
         titleName: formValue.value.titleName,
         type:1
       }
-      axios.post(addCatalogTreeUrl, params).then((res) => {
+      apiAxios.post(addCatalogTreeUrl, params).then((res) => {
         message.info(res.data.info)
         showAddRef.value = false
         getApiFolder()
@@ -774,7 +771,7 @@ function delMetadata(id, assetName, dataCatalogAddFlag, dataSourceAddFlag) {
     dataCatalogAddFlag: dataCatalogAddFlag,
     dataSourceAddFlag: dataSourceAddFlag
   }
-  axios.post(delCatalogDetailUrl, params).then((res) => {
+  apiAxios.post(delCatalogDetailUrl, params).then((res) => {
     message.info(res.data.info)
     query(
         paginationReactive.page,
@@ -788,7 +785,7 @@ function delMetadata(id, assetName, dataCatalogAddFlag, dataSourceAddFlag) {
 function getApiFolder ()  {
   showSpin.value = true
   let params ={}
-  axios.post(getCatalogFolderUrl,params).then((res) => {
+  apiAxios.post(getCatalogFolderUrl,params).then((res) => {
     treeFolder.value = res.data.data
     // 深拷贝
     let tmpApiFolder = JSON.parse(JSON.stringify(treeFolder.value))
@@ -868,7 +865,7 @@ function submitSelect(ruleFormRef, ruleApiFormRef) {
         let dataCatalogListPost = {
           dataCatalogList: addDataSetRefTemp
         }
-        axios.post(insertCatalogDetailUrl,dataCatalogListPost).then((res) => {
+        apiAxios.post(insertCatalogDetailUrl,dataCatalogListPost).then((res) => {
           message.info(res.data.info)
           active.value = false
           Object.assign(detailPaginationReactive, initialDetailPagination)
@@ -895,7 +892,7 @@ function submitSelect(ruleFormRef, ruleApiFormRef) {
         let dataCatalogListPost = {
           dataCatalogList: addApiRefTemp
         }
-        axios.post(insertCatalogDetailUrl,dataCatalogListPost).then((res) => {
+        apiAxios.post(insertCatalogDetailUrl,dataCatalogListPost).then((res) => {
           message.info(res.data.info)
           active.value = false
           Object.assign(apiDetailPaginationReactive, initialApiDetailPagination)

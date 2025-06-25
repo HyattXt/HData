@@ -276,7 +276,7 @@
 
 <script setup>
   import { ref, reactive, onMounted } from 'vue'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import { useMessage, NGrid } from 'naive-ui'
   import zhCn from 'element-plus/es/locale/lang/zh-cn'
   import CrudHead from '@/components/cue/crud-header.vue'
@@ -444,8 +444,7 @@
       alarmMethod: alarmMethod
     }
     loadingRef.value = true
-    axios
-      .post(url, params)
+    apiAxios.post(url, params)
       .then(function (response) {
         dataRef.value = []
         dataRef.value = response.data.data
@@ -465,8 +464,7 @@
       pageNum: page,
       pageSize: pageSize
     }
-    axios
-      .post(url, params)
+    apiAxios.post(url, params)
       .then(function (response) {
         detailDataRef.value = []
         detailDataRef.value = response.data.data
@@ -517,7 +515,7 @@
       dataCatalogAddFlag: dataCatalogAddFlag,
       dataSourceAddFlag: dataSourceAddFlag
     }
-    axios.post(delCatalogDetailUrl, params).then((res) => {
+    apiAxios.post(delCatalogDetailUrl, params).then((res) => {
       message.info(res.data.info)
       query(
         paginationReactive.page,
@@ -592,8 +590,7 @@
           formValues.value.operate === '新增'
             ? utils.getUrl('Alarm/insert')
             : utils.getUrl('Alarm/update')
-        axios
-          .post(url, params)
+        apiAxios.post(url, params)
           .then(function (response) {
             message.info(response.data.info)
             dialogFormVisible()
@@ -621,8 +618,7 @@
       id: row.id
     }
     let url = utils.getUrl('Alarm/update')
-    axios
-      .post(url, params)
+    apiAxios.post(url, params)
       .then(function () {
         query(
           paginationReactive.page,
@@ -688,7 +684,7 @@
   function queryUser(id) {
     const listUrl = utils.getUrl('Alarm/getUser')
     const authListUrl = utils.getUrl('Alarm/getAuthorizeInfo')
-    axios.get(listUrl).then(function (response) {
+    apiAxios.get(listUrl).then(function (response) {
       userList.value = response.data.data
       userList.value = userList.value.map((item) => {
         let tempList = {}
@@ -700,7 +696,7 @@
     let authBody = {
       alarmId: id
     }
-    axios.post(authListUrl, authBody).then(function (response) {
+    apiAxios.post(authListUrl, authBody).then(function (response) {
       let list = response.data.data
       apiAuthorizer.value = list.map((item) => {
         let authList
@@ -716,8 +712,7 @@
       alarmId: drawId.value,
       authorizeId: apiAuthorizer.value
     }
-    axios
-      .post(subUrl, requestBody)
+    apiAxios.post(subUrl, requestBody)
       .then(function (response) {
         message.info(response.data.info)
         showModal.value = false

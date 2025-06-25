@@ -175,7 +175,7 @@
 <script setup>
 import {Search} from '@element-plus/icons-vue'
 import { ref, reactive, onMounted, h, unref} from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import {
   ApartmentOutlined,
@@ -242,8 +242,7 @@ function query(
     'likeState': likeState,
     'collectionState': collectionState,
   }
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         TableData.tableList = response.data.data
         TableData.totalNum = response.data.totalNum
@@ -306,8 +305,7 @@ function handleMetadata() {
   let url = utils.getUrl('interface_lineage/sqlLineageExcute')
   loadingMeta.value = true
   message.info('采集中，请稍后查看')
-  axios
-      .get(url)
+  apiAxios.get(url)
       .then(function () {
         loadingMeta.value = false
       })
@@ -318,7 +316,7 @@ function handleMetadata() {
 function getApiFolder ()  {
   showSpin.value = true
   let params ={}
-  axios.post(getApiFolderUrl,params).then((res) => {
+  apiAxios.post(getApiFolderUrl,params).then((res) => {
     treeFolder.value = res.data.data
     showSpin.value = false
   })

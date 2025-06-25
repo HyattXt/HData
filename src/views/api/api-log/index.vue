@@ -59,7 +59,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import moment from 'moment'
 import CrudHeader from "@/components/cue/crud-header.vue";
 import {ElButton} from "element-plus";
@@ -162,7 +162,7 @@ function query(page, pageSize = 30, interfaceIp = '', interfaceUrl = '') {
     const params = {
       pageNum: page, 'pageSize': pageSize, 'interfaceIp': interfaceIp, 'interfaceUrl': interfaceUrl
     }
-    axios.post(url, params).then(function (response) {
+    apiAxios.post(url, params).then(function (response) {
       TableData.apiList = response.data.data
       TableData.totalNum = response.data.totalNum
       const copiedData = TableData.apiList.map((v) => v)

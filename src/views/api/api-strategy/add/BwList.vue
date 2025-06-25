@@ -70,7 +70,7 @@
 <script setup>
 import {h, onMounted, ref} from 'vue'
 import {NButton, NCheckbox, NFormItem, NIcon, NInput, NSelect, NTooltip, useMessage} from 'naive-ui'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {useRoute, useRouter} from "vue-router";
 import {PlusSquareOutlined, QuestionCircleTwotone} from "@vicons/antd";
 import utils from "@/utils";
@@ -230,8 +230,7 @@ const validateIp = (ip, type, index) => {
       ipType: type
     }
 
-    axios
-        .post(url, body)
+    apiAxios.post(url, body)
         .then(function (response) {
 
           if (!response.data.status) {
@@ -261,8 +260,7 @@ function formSubmit() {
           policySubmitUrl = utils.getUrl('ServicePolicy/update')
           body.id = Number(route.query.id)
         }
-        axios
-            .post(policySubmitUrl, body)
+        apiAxios.post(policySubmitUrl, body)
             .then(function (response) {
               message.info(response.data.info)
               if(response.data.status) {
@@ -284,8 +282,7 @@ function getInitData() {
   let url = utils.getUrl('ServicePolicy/queryServicePolicyById')
   let params = {id: route.query.id}
 
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         formValue.value = response.data.obj
         requestParams.value = response.data.obj.servicePolicyIpInfo

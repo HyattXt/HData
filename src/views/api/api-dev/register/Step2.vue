@@ -155,8 +155,7 @@ function getInitData ()  {
   let params = { apiId: '' }
   params.apiId = route.query.apiId
 
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         success.value = JSON.parse(response.data.obj.responseDemo)
         responseStatusArray.value = response.data.obj.responseStatusArray

@@ -52,8 +52,7 @@ export function useHttp(model: { [field: string]: any }): IJsonItem[] {
       'pageSize': 100,
       'taskName': ''
     }
-    axios
-        .post(restOptionUrl, params)
+    apiAxios.post(restOptionUrl, params)
         .then(function (response) {
           restOptions.value = response.data.data.map((item: any) => ({
             label: item.taskName,

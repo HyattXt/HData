@@ -79,7 +79,7 @@
 <script lang="ts" setup>
   import { onMounted, ref } from 'vue'
   import { useMessage } from 'naive-ui'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import { useRoute } from 'vue-router'
   import utils from '@/utils'
 
@@ -116,7 +116,7 @@
 
   function getDataWarehouse() {
     const url = utils.getUrl('apiService/getDataWarehouse')
-    axios.post(url).then(function (response) {
+    apiAxios.post(url).then(function (response) {
       formValue.value.apiDatasourceType = response.data.data[0].type
       formValue.value.apiDatasourceId = response.data.data[0].id
     })
@@ -124,7 +124,7 @@
 
   function querySourceType() {
     const url = utils.getUrl('interface/getDataBaseLabelClass')
-    axios.post(url).then(function (response) {
+    apiAxios.post(url).then(function (response) {
       sourceType.value = response.data.data
     })
   }
@@ -137,7 +137,7 @@
     let params = {
       labelClassNum: formValue.value.dataBaseLabelClassTypeNum
     }
-    axios.post(url, params).then(function (response) {
+    apiAxios.post(url, params).then(function (response) {
       sList.value = response.data.data
       emit('nextStep2_1', formValue.value)
     })
@@ -150,7 +150,7 @@
       id: formValue.value.apiDatasourceId,
       tableName: formValue.value.apiDatasourceTable
     }
-    axios.post(url, params).then(function (response) {
+    apiAxios.post(url, params).then(function (response) {
       colList.value = response.data.data
       emit('nextStep2_1', formValue.value)
     })
@@ -168,8 +168,7 @@
     let params = { apiId: '' }
     params.apiId = route.query.apiId as string
 
-    axios
-      .post(url, params)
+    apiAxios.post(url, params)
       .then(function (response) {
         formValue.value.dataBaseLabelType =
           response.data.obj.dataBaseLabelType

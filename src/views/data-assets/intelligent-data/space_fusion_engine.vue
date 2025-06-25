@@ -91,7 +91,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {
   NButton,
   useMessage,
@@ -151,8 +151,7 @@ function query(
     'spatialDataName': spatialDataName,
   }
   loadingRef.value = true
-  axios
-      .post(url, params)
+  apiAxios.post(url, params)
       .then(function (response) {
         TableData.tableList = response.data.data
         TableData.totalNum = response.data.totalNum
@@ -226,7 +225,7 @@ function createIndex () {
     if (!errors) {
       let params = indexFormValue.value
       let url = indexFormValue.value.opperate === '新增' ? insertIndexUrl : updateIndexUrl
-      axios.post(url, params).then((res) => {
+      apiAxios.post(url, params).then((res) => {
         message.info(res.data.info)
         query(
             paginationReactive.page,
@@ -245,7 +244,7 @@ function deleteIndex (id) {
   let params ={
     id: id
   }
-  axios.post(deleteIndexUrl, params).then((res) => {
+  apiAxios.post(deleteIndexUrl, params).then((res) => {
     message.info(res.data.info)
     showDropdownRef.value = false
     query(

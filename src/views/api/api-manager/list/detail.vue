@@ -176,7 +176,7 @@ const exportPdf = () => {
 function queryUser() {
   const listUrl = utils.getUrl('interface/getUser')
   const authListUrl = utils.getUrl('interface/getAuthorizeInfo')
-  axios.get(listUrl).then(function (response) {
+  apiAxios.get(listUrl).then(function (response) {
 
     userList.value = response.data.data
     userList.value = userList.value.map((item) => {
@@ -191,7 +191,7 @@ function queryUser() {
     'apiId': basicInfo.value.apiId
   }
 
-  axios.post(authListUrl, authBody).then(function (response) {
+  apiAxios.post(authListUrl, authBody).then(function (response) {
 
     let list = response.data.data
     apiAuthorizer.value = list.map((item) => {
@@ -218,7 +218,7 @@ function queryBasic(apiParam, type) {
     basicPar.apiId = apiParam
   }
 
-  axios.post(url, basicPar).then(function (response) {
+  apiAxios.post(url, basicPar).then(function (response) {
 
     basicInfo.value = response.data.obj
     if (basicInfo.value.apiFlag === 1) {

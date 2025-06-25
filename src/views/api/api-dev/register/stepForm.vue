@@ -25,7 +25,7 @@
   import step1 from './Step1.vue'
   import step2 from './Step2.vue'
   import step3 from './Step3.vue'
-  import axios from 'axios'
+  import apiAxios from '@/utils/api-axios'
   import CrudHeader from "@/components/cue/crud-header.vue";
   import {useRoute} from "vue-router";
   import {useMessage} from "naive-ui";
@@ -69,7 +69,7 @@
     params.value.responseDemo = responseDemo
     params.value.responseStatusArray = responseStatusArray
 
-    axios.post(insUrl, params.value).then(function (response) {
+    apiAxios.post(insUrl, params.value).then(function (response) {
       message.info(response.data.info)
       if (currentTab.value < 3) {
         currentTab.value += 1

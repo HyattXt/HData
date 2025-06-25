@@ -45,7 +45,7 @@
 
 <script setup>
 import {ref, reactive, onMounted, h} from 'vue'
-import axios from 'axios'
+import apiAxios from '@/utils/api-axios'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -190,8 +190,7 @@ function query(
       'taskName': taskName
     }
 
-    axios
-        .post(url, params)
+    apiAxios.post(url, params)
         .then(function (response) {
 
           TableData.tableList = response.data.data
@@ -241,7 +240,7 @@ function query(
                   id: null
                 }
                 delPar.id = row.id
-                axios.post(urlDel, delPar).then(function (response) {
+                apiAxios.post(urlDel, delPar).then(function (response) {
 
                   message.info(response.data.info)
                   handlePageChange(paginationReactive.page, paginationReactive.pageSize)
