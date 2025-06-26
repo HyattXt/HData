@@ -182,9 +182,9 @@ import {
   SearchOutlined,
   TableOutlined
 } from '@vicons/antd'
-import { NButton, NIcon, NPopover, useMessage } from 'naive-ui'
+import { NIcon, useMessage } from 'naive-ui'
 import {useRoute, useRouter} from "vue-router";
-import { CaretUp, CaretDown, PencilAlt, TrashAlt } from '@vicons/fa'
+import { CaretUp, CaretDown } from '@vicons/fa'
 import CrudHead from "@/components/cue/crud-header.vue"
 import {Add12Filled} from "@vicons/fluent";
 import utils from "@/utils";

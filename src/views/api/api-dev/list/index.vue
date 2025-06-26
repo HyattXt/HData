@@ -321,7 +321,7 @@
   const active = ref(false)
   const drawTitle = ref('')
   const drawPath = ref('')
-  const drawParam = ref({})
+  ref({})
   const drawId = ref('')
   const drawScript = ref('')
   const drawMethod = ref('')

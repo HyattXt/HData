@@ -16,7 +16,7 @@
  */
 import { computed, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useCustomParams, useDeployMode, useMainJar, useResources } from '.'
+import { useDeployMode } from '.'
 import type { IJsonItem } from '../types'
 
 export function useFlink(model: { [field: string]: any }): IJsonItem[] {

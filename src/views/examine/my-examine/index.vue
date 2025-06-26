@@ -75,7 +75,6 @@
 import {ref, reactive, onMounted, h} from 'vue'
 import { useRouter } from 'vue-router'
 import {
-  useMessage,
   NTag
 } from 'naive-ui'
 import CrudTable from "@/components/cue/crud-table.vue";

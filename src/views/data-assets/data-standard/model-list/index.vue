@@ -138,7 +138,6 @@ import CrudHeader from "@/components/cue/crud-header.vue";
 import CrudPage from "@/components/cue/crud-page.vue";
 import {PencilAlt, TrashAlt} from "@vicons/fa";
 import utils from "@/utils";
-import Editor from "@/components/monaco-editor";
 import {
   queryModelTreeFolder,
   queryModelList,

@@ -43,7 +43,7 @@
 import {h, onMounted, ref} from 'vue'
 import {NButton, NIcon, NInput, useMessage} from 'naive-ui'
 import {useRoute} from "vue-router";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import CrudSplit from "@/components/cue/crud-split.vue";
 import {PlusSquareOutlined} from "@vicons/antd";
 import utils from "@/utils";

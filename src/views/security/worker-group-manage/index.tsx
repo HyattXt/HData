@@ -98,7 +98,6 @@ const workerGroupManage = defineComponent({
   render() {
     const {
       t,
-      requestData,
       onUpdatePage,
       onUpdatePageSize,
       onCancelModal,

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { ref, onMounted, Ref, isRef, h } from 'vue'
+import { ref, onMounted, h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { queryResourceList } from '@/service/modules/resources'
 import { useTaskNodeStore } from '@/store/project/task-node'

@@ -178,7 +178,6 @@
 
 <script setup>
 import {ref, reactive, onMounted, h} from 'vue'
-import { useRouter } from 'vue-router'
 import {BoxPlotOutlined} from '@vicons/antd'
 import {
   NButton,
@@ -190,7 +189,7 @@ import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
 import CrudTree from "@/components/cue/crud-tree.vue";
 import CrudTable from "@/components/cue/crud-table.vue";
-import {ElButton, ElMessageBox, ElSwitch} from "element-plus";
+import {ElButton, ElMessageBox} from "element-plus";
 import CrudForm from "@/components/cue/crud-form.vue";
 import CrudHeader from "@/components/cue/crud-header.vue";
 import CrudPage from "@/components/cue/crud-page.vue";

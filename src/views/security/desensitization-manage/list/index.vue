@@ -184,7 +184,7 @@ import CrudSplit from "@/components/cue/crud-split.vue";
 import {queryDataSourceList} from "@/service/modules/data-source";
 import {find} from "lodash";
 import utils from "@/utils";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import {
   dataLedgerExists,
   deleteDataLedger,

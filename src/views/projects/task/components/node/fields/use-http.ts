@@ -18,7 +18,7 @@ import { useI18n } from 'vue-i18n'
 import { useCustomParams } from '.'
 import type { IJsonItem } from '../types'
 import { onMounted, ref} from "vue";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import utils from "@/utils";
 
 export function useHttp(model: { [field: string]: any }): IJsonItem[] {
@@ -63,9 +63,7 @@ export function useHttp(model: { [field: string]: any }): IJsonItem[] {
           console.log(error)
         })
   }
-  const onChange = () => {
-    queryRestSourceList()
-  }
+
   onMounted( () => {
     queryRestSourceList()
   })

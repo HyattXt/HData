@@ -120,7 +120,7 @@ export function useTaskState() {
           tableData['totalApiInterface'].push(parseInt(res[i].totalApiInterface));
           tableData['time'].push(res[i].createTime.substring(5, 10));
 
-        };
+        }
         const table = [tableData]
 
         return { table }

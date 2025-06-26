@@ -170,7 +170,7 @@
   import { ref, reactive, onMounted, h } from 'vue'
   import { useRouter } from 'vue-router'
   import apiAxios from '@/utils/api-axios'
-  import { NButton, useMessage, NIcon, NPopover } from 'naive-ui'
+  import { NButton, useMessage } from 'naive-ui'
   import CrudTable from '@/components/cue/crud-table.vue'
   import { ElButton, ElMessageBox } from 'element-plus'
   import CrudSplit from '@/components/cue/crud-split.vue'

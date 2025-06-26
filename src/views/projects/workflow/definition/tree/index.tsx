@@ -276,7 +276,7 @@ export default defineComponent({
           <NSpace align='center'>
             {taskTypeNodeOptions
               .filter((option: any) => option.image)
-              .map((option: any, unused: number) => (
+              .map((option: any) => (
                 <NButton text size='tiny' color={option.color}>
                   <NImage width='20' src={option.image} />
                   {option.taskType}

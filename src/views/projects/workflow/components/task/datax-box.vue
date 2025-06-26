@@ -380,7 +380,7 @@
 </template>
 
 <script setup>
-import {computed, inject, nextTick, onMounted, ref, watch, watchEffect} from "vue";
+import {inject, nextTick, onMounted, ref, watch, watchEffect} from "vue";
 import {
   queryHiveConnect,
   querySqlColum,
@@ -410,7 +410,7 @@ import {
 } from "@/service/modules/data-source";
 import {find, lowerCase} from "lodash";
 import Editor from "@/components/monaco-editor";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import {useHeightAdjustment} from "@/views/projects/workflow/components/task/useHeightAdjustment";
 import utils from "@/utils";
 

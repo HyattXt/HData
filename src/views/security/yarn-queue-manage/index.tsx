@@ -98,7 +98,6 @@ const yarnQueueManage = defineComponent({
   render() {
     const {
       t,
-      requestData,
       onUpdatePage,
       onUpdatePageSize,
       onCancelModal,

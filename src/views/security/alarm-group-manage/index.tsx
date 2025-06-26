@@ -98,12 +98,10 @@ const alarmGroupManage = defineComponent({
   render() {
     const {
       t,
-      requestData,
       onUpdatePage,
       onUpdatePageSize,
       onCancelModal,
       onConfirmModal,
-      handleModalChange,
       onSearch,
       loadingRef
     } = this

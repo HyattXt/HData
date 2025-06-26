@@ -24,7 +24,6 @@ import { useLocalesStore } from '@/store/locales/locales'
 import { useRouteStore } from '@/store/route/route'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import {useProjectStore} from "@/store/route/project";
 import {useUserStore} from "@/store/user/user";
 import type {UserInfoRes} from "@/service/modules/users/types";
 import {addListener, launch} from "devtools-detector";
@@ -39,7 +38,6 @@ const Content = defineComponent({
     const localesStore = useLocalesStore()
     const routeStore = useRouteStore()
     const userStore = useUserStore()
-    const ProjectStore = useProjectStore()
     const {
       state,
       changeMenuOption,

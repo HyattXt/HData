@@ -98,7 +98,6 @@ const k8sNamespaceManage = defineComponent({
   render() {
     const {
       t,
-      requestData,
       onUpdatePage,
       onUpdatePageSize,
       onCancelModal,

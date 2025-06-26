@@ -63,11 +63,8 @@
 import basic from './basic.vue'
 import overview from './overview.vue'
 import { onMounted, ref} from "vue";
-import { useRoute, useRouter} from "vue-router";
-import {useMessage} from "naive-ui";
+import { useRouter} from "vue-router";
 import CrudHead from "@/components/cue/crud-header.vue";
-import utils from "@/utils";
-import axios from "axios";
 import {queryListUrl, updateLikeCollection} from "@/service/modules/data-bussiness";
 import {useUserStore} from "@/store/user/user";
 

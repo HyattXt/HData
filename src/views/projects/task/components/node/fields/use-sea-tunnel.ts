@@ -14,15 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {watch, computed, h, ref, onMounted} from 'vue'
+import {watch, computed, h, ref} from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useDeployMode, useResources, useCustomParams } from '.'
-import type {IJsonItem, IResource} from '../types'
+import { useDeployMode, useCustomParams } from '.'
+import type {IJsonItem} from '../types'
 import {NButton, NIcon, NTag} from "naive-ui";
 import {CopyOutlined} from "@vicons/antd";
-import {queryResourceList} from "@/service/modules/resources";
-import utils from "@/utils";
-import {useTaskNodeStore} from "@/store/project/task-node";
 import {useClipboard} from "@vueuse/core";
 
 export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
@@ -53,11 +50,6 @@ export function useSeaTunnel(model: { [field: string]: any }): IJsonItem[] {
       value: 'default'
     }
   ]
-
-  const resourcesOptions = ref([] as IResource[])
-  const resourcesLoading = ref(false)
-
-  const taskStore = useTaskNodeStore()
 
   const source = ref('Hello')
   const { copy } = useClipboard({ source })

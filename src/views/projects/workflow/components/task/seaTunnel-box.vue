@@ -68,11 +68,9 @@ import {useMessage} from "naive-ui";
 import {formatModel, formatParams as formatData} from "@/views/projects/task/components/node/format-data";
 import * as Fields from "@/views/projects/task/components/node/fields";
 import getElementByJson from "@/components/form/get-elements-by-json";
-import UseParameterConfiguration from "@/views/projects/workflow/components/task/items/use-parameter-configuration.vue";
 import {useHeightAdjustment} from "@/views/projects/workflow/components/task/useHeightAdjustment";
-import {queryResourceByProgramType, queryResourceList} from "@/service/modules/resources";
+import {queryResourceList} from "@/service/modules/resources";
 import utils from "@/utils";
-import UseResources from "@/views/projects/workflow/components/task/items/use-resources.vue";
 
 const props = defineProps({
   taskCode: {

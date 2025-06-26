@@ -31,8 +31,6 @@ import security from '@/locales/zh_CN/security'
 import theme from '@/locales/zh_CN/theme'
 import user_dropdown from '@/locales/zh_CN/user-dropdown'
 import api from '@/locales/zh_CN/api'
-import data_assets from '@/locales/zh_CN/dataassets'
-import assets from '@/locales/zh_CN/dataassets'
 import devops from '@/locales/zh_CN/devops'
 
 export default {
@@ -52,7 +50,5 @@ export default {
   data_quality,
   crontab,
   api,
-  data_assets,
-  devops,
-  assets
+  devops
 }

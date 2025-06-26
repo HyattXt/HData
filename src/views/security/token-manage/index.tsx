@@ -98,7 +98,6 @@ const tokenManage = defineComponent({
   render() {
     const {
       t,
-      requestData,
       onUpdatePage,
       onUpdatePageSize,
       onCancelModal,

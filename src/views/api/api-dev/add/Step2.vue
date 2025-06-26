@@ -60,7 +60,7 @@ import StepSql from './Step2-1.vue'
 import StepLabel from './Step2-1-label.vue'
 import { PlayCircleOutlined, QuestionCircleTwotone } from '@vicons/antd'
 import {useRoute} from "vue-router";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import CrudSplit from "@/components/cue/crud-split.vue";
 import {querySqlColum} from "@/service/modules/task-definition";
 import utils from "@/utils";

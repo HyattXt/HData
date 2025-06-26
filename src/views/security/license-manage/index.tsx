@@ -64,12 +64,9 @@ const licenseManager = defineComponent({
   },
   render() {
     const {
-      t,
-      requestData,
       onCancelModal,
       onConfirmModal,
-      handleModalChange,
-      loadingRef
+      handleModalChange
     } = this
 
     return (

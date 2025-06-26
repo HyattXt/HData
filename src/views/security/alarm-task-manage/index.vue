@@ -585,7 +585,7 @@
     ruleFormRef.value.validate(async (errors) => {
       if (!errors) {
         let params = { ...formValues.value }
-        let url = ''
+        let url
         url =
           formValues.value.operate === '新增'
             ? utils.getUrl('Alarm/insert')

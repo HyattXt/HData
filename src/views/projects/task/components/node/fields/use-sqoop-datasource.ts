@@ -28,7 +28,6 @@ export function useDatasource(
 ): IJsonItem[] {
   const { t } = useI18n()
   const dataSourceList = ref([])
-  const loading = ref(false)
 
   const getDataSource = async (type: IDataBase) => {
 

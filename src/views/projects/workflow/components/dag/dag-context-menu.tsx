@@ -15,13 +15,12 @@
  * limitations under the License.
  */
 
-import { genTaskCodeAndCopy, genTaskCodeList } from '@/service/modules/task-definition'
+import { genTaskCodeAndCopy } from '@/service/modules/task-definition'
 import type { Cell } from '@antv/x6'
 import { defineComponent, onMounted, PropType, inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import styles from './menu.module.scss'
-import { uuid } from '@/common/common'
 import { IWorkflowTaskInstance } from './types'
 import {NButton, NTooltip} from 'naive-ui'
 

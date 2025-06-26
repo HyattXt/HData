@@ -40,7 +40,7 @@ const list = defineComponent({
     const { t } = useI18n()
     const showDetailModal = ref(false)
     const selectId = ref()
-    const chat2DbId = ref()
+    ref()
     const columns = ref({
       columns: [] as TableColumns,
       tableWidth: DefaultTableWidth

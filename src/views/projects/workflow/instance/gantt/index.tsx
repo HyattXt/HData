@@ -18,7 +18,6 @@
 import { defineComponent, onMounted, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import Card from '@/components/card'
 import GanttChart from './components/gantt-chart'
 import { useGantt } from './use-gantt'
 import CrudHeader from "@/components/cue/crud-header.vue";

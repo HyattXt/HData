@@ -20,7 +20,7 @@ import type {IJsonItem} from '../types'
 import {useMessage} from "naive-ui";
 import styles from "../index.module.scss";
 import jsPlumb from 'jsplumb'
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import { querySqlColum } from '@/service/modules/task-definition'
 import utils from "@/utils";
 

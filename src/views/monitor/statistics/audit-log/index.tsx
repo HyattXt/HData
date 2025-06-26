@@ -83,7 +83,7 @@ const AuditLog = defineComponent({
     }
   },
   render() {
-    const { t, requestTableData,onUpdatePage, onUpdatePageSize, onSearch, loadingRef } = this
+    const { t, onUpdatePage, onUpdatePageSize, onSearch, loadingRef } = this
 
     return (
       <>

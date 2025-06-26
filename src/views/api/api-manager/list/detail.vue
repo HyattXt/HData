@@ -76,7 +76,7 @@
 
 import {onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 import CrudHead from "@/components/cue/crud-header.vue";
 import moment from "moment/moment";
 import CrudSplit from "@/components/cue/crud-split.vue";
@@ -248,9 +248,6 @@ function queryBasic(apiParam, type) {
     apiData.value.responseTable.data = basicInfo.value.fieldsInfo
     queryUser()
   })
-}
-function goBack(){
-  router.push({ name: backName.value })
 }
 
 onMounted(() => {

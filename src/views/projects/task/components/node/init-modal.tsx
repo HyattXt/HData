@@ -96,7 +96,7 @@ const NodeInitModal = defineComponent({
   props,
   emits: ['cancel', 'submit', 'viewLog'],
   setup(props, { emit }) {
-    const { t, locale } = useI18n()
+    const { t } = useI18n()
     const fromRef = ref()
     const message = useMessage()
     const initForm = ref({

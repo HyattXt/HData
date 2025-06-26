@@ -15,13 +15,12 @@
  * limitations under the License.
  */
 
-import {defineComponent, inject, onMounted, PropType, toRefs, watch} from 'vue'
+import {defineComponent, inject, PropType, toRefs, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
 import Modal from '@/components/modal'
 import { useForm } from './use-form'
 import { useModal } from './use-modal'
-import { NForm, NFormItem, NButton, NUpload, NIcon, NInput } from 'naive-ui'
-import { CloudUploadOutlined } from '@vicons/antd'
+import { NForm, NFormItem, NInput } from 'naive-ui'
 import type {WorkflowDefinition} from "@/views/projects/workflow/components/dag/types";
 
 const props = {

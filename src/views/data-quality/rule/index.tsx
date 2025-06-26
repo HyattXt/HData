@@ -93,12 +93,9 @@ const TaskResult = defineComponent({
   },
   render() {
     const {
-      t,
       showModalRef,
-      requestTableData,
       onUpdatePage,
       onUpdatePageSize,
-      onSearch,
       onCancel,
       onConfirm,
       viewRuleEntry,

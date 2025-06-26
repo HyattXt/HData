@@ -142,12 +142,12 @@ import {
   useMessage
 } from 'naive-ui'
 import CrudTable from "@/components/cue/crud-table.vue";
-import {ElButton, ElMessageBox, ElSwitch} from "element-plus";
+import {ElButton} from "element-plus";
 import CrudForm from "@/components/cue/crud-form.vue";
 import CrudHeader from "@/components/cue/crud-header.vue";
 import CrudPage from "@/components/cue/crud-page.vue";
 import {Search} from "@element-plus/icons-vue";
-import {queryUserApprovalList, queryUserList} from "@/service/modules/users";
+import {queryUserApprovalList} from "@/service/modules/users";
 import {queryApprovalConfig, updateApprovalConfig, userAuthorization} from "@/service/modules/data-bussiness";
 import {useUserStore} from "@/store/user/user";
 

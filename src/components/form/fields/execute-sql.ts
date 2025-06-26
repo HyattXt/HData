@@ -19,7 +19,7 @@ import {h, ref} from 'vue'
 import {NButton, NTooltip,useMessage} from 'naive-ui'
 import { isFunction } from 'lodash'
 import type { IJsonItem } from '../types'
-import axios from "axios";
+import apiAxios from '@/utils/api-axios';
 
 export function renderExecuteSql( item: IJsonItem, fields: { [field: string]: any }) {
     const { props } = isFunction(item) ? item() : item
