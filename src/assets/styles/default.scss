@@ -491,7 +491,11 @@ dt {
   height: calc(100% - 40px);
   overflow: auto;
   white-space: nowrap;
-  font-size: 13px;
+
+  .tree_count {
+    padding-right: 8px;
+    color: #909399;
+  }
 
   &::-webkit-scrollbar {
     /*滚动条整体样式*/
@@ -749,6 +753,14 @@ dt {
   font-size: 12px !important;
 }
 
+.n-base-selection .n-base-selection-label .n-base-selection-input {
+  font-size: 12px !important;
+}
+
+.n-base-select-menu .n-base-select-option .n-base-select-option__content {
+  font-size: 12px !important;
+}
+
 .el-radio-button__inner {
   color: #000000;
   padding: 7px 12px;
@@ -838,9 +850,4 @@ dt {
 
 .el-table__empty-text {
   line-height: inherit;
-}
-
-.tree_count {
-  padding-right: 8px;
-  color: #909399;
 }

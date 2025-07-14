@@ -152,7 +152,7 @@ export function useTable() {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         class: 'edit',
                         onClick: () => {
                           handleEdit(row)
@@ -185,7 +185,7 @@ export function useTable() {
                             {
                               circle: true,
                               type: 'error',
-                              size: 'small',
+                              size: 'tiny',
                               class: 'delete'
                             },
                             {

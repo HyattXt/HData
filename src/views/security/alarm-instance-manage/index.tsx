@@ -134,7 +134,7 @@ const AlarmInstanceManage = defineComponent({
                             <NIcon>
                               <SearchOutlined />
                             </NIcon>
-                            <div style={"font-size: 12px"}>
+                            <div>
                               查询
                             </div>
                           </NButton>

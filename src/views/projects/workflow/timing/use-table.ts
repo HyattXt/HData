@@ -149,7 +149,7 @@ export function useTable() {
         key: 'operation',
         ...COLUMN_WIDTH_CONFIG['operation'](3),
         render: (row: any) => {
-          return h(NSpace, null, {
+          return h(NSpace, { justify: 'center' }, {
             default: () => [
               h(
                 NTooltip,
@@ -161,7 +161,7 @@ export function useTable() {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         disabled: row.releaseState === 'ONLINE',
                         onClick: () => {
                           handleEdit(row)
@@ -185,7 +185,7 @@ export function useTable() {
                         circle: true,
                         type:
                           row.releaseState === 'ONLINE' ? 'error' : 'warning',
-                        size: 'small',
+                        size: 'tiny',
                         onClick: () => {
                           handleReleaseState(row)
                         }
@@ -224,7 +224,7 @@ export function useTable() {
                             {
                               circle: true,
                               type: 'error',
-                              size: 'small'
+                              size: 'tiny'
                             },
                             {
                               icon: () => h(DeleteOutlined)

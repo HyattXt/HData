@@ -938,10 +938,6 @@ async function getDatasourceTables(dataSource ,type) {
   }
   try {
     const response = await apiAxios.post(url, params);
-    if (response.data.status === 0) {
-      message.error(response.data.error);
-      return response.data.data;
-    }
     return response.data.data;
   } catch (error) {
     message.error(error);
@@ -1083,12 +1079,8 @@ function getTableSql() {
     }
     apiAxios.post(getSql, body)
         .then(function (response) {
-          if(response.data.status === 0 ){
-            message.error(response.data.error)
-          }else{
-            taskData.value.createSql = response.data.info
-            showSqlModal.value = true
-          }
+          taskData.value.createSql = response.data.info
+          showSqlModal.value = true
         })
         .catch(function (error) {
           message.error(error)
@@ -1104,14 +1096,9 @@ function executeTableSql() {
   }
   apiAxios.post(getSql, body)
       .then(function (response) {
-        if(response.data.status ===0 ){
-          message.error(response.data.error)
-        }else{
           message.info(response.data.info)
           showSqlModal.value = false
           updateTargetTableList(taskData.value.dataTarget)
-        }
-
       })
       .catch(function (error) {
         message.error(error)
@@ -1134,9 +1121,6 @@ function getTableColumn() {
     taskData.value.rightData = []
     apiAxios.post(getCol, targetBody)
         .then(async function (response) {
-          if (response.data.status === 0) {
-            message.error(response.data.error)
-          } else {
             taskData.value.rightData = response.data.data.map(item => {
                   let res = {
                     id: '',
@@ -1158,9 +1142,6 @@ function getTableColumn() {
               }
               apiAxios.post(getCol, sourceBody)
                   .then(function (response) {
-                    if (response.data.status === 0) {
-                      message.error(response.data.error)
-                    } else {
                       taskData.value.leftData = response.data.data.map(item => {
                             let res = {
                               id: '',
@@ -1173,7 +1154,6 @@ function getTableColumn() {
                             return res
                           }
                       )
-                    }
                     setTimeout(()=>{
                       jsplumbRef.value.init()
                     },1)
@@ -1202,7 +1182,6 @@ function getTableColumn() {
                 jsplumbRef.value.init()
               },1)
             }
-          }
         })
         .catch(function (error) {
           message.error(error)

@@ -151,7 +151,7 @@ export function useTable(onEdit: Function) {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         disabled:
                           ['CONDITIONS', 'SWITCH'].includes(row.taskType) ||
                           (!!row.processDefinitionCode &&
@@ -178,7 +178,7 @@ export function useTable(onEdit: Function) {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         onClick: () => {
                           variables.showVersionModalRef = true
                           variables.row = row
@@ -213,7 +213,7 @@ export function useTable(onEdit: Function) {
                             {
                               circle: true,
                               type: 'error',
-                              size: 'small',
+                              size: 'tiny',
                               disabled:
                                 !!row.processDefinitionCode &&
                                 row.processReleaseState === 'ONLINE'

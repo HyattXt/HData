@@ -65,7 +65,7 @@ const TableAction = defineComponent({
             default: () => t('resource.task_group_queue.modify_priority'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='info'
                 tag='div'
                 onClick={() =>
@@ -85,7 +85,7 @@ const TableAction = defineComponent({
             default: () => t('resource.task_group_queue.start_task'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='primary'
                 tag='div'
                 onClick={() => handleStartTask(this.row.id)}

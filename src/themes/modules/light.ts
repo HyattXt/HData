@@ -38,12 +38,29 @@ const light = {
     tdPaddingSmall: '3px 0 3px 6px',
     tdPaddingMedium: '3px 0 3px 6px',
     tdPaddingLarge: '3px 0 3px 6px',
-    fontSizeSmall: '13px',
-    fontSizeMedium: '13px',
-    fontSizeLarge: '13px',
+    fontSizeSmall: '12px',
+    fontSizeMedium: '12px',
+    fontSizeLarge: '12px',
     thFontWeight: '550',
     borderColor: '#e2e4e8',
     borderRadius: '1px solid'
+  },
+  Button: {
+    fontSizeMedium: '12px',
+    fontSizeSmall: '12px',
+  },
+  Form: {
+    labelFontSizeLeftSmall: '12px',
+  },
+  Input: {
+    fontSizeSmall: '12px',
+  },
+  Select: {
+    fontSizeSmall: '12px',
+    fontSizeMedium: '12px',
+  },
+  Tree: {
+    fontSize: '12px',
   }
 }
 

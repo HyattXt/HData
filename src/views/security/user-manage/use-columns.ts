@@ -118,7 +118,7 @@ export function useColumns(onCallback: Function) {
         key: 'operation',
         ...COLUMN_WIDTH_CONFIG['operation'](3),
         render: (rowData: any, unused: number) => {
-          return h(NSpace, null, {
+          return h(NSpace, { justify: 'center' }, {
             default: () => [
               h(
                 NDropdown,
@@ -159,7 +159,7 @@ export function useColumns(onCallback: Function) {
                           {
                             circle: true,
                             type: 'warning',
-                            size: 'small',
+                            size: 'tiny',
                             class: 'authorize'
                           },
                           {
@@ -180,7 +180,7 @@ export function useColumns(onCallback: Function) {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         class: 'edit',
                         onClick: () => void onCallback({ rowData }, 'edit')
                       },
@@ -206,7 +206,7 @@ export function useColumns(onCallback: Function) {
                             {
                               circle: true,
                               type: 'error',
-                              size: 'small',
+                              size: 'tiny',
                               class: 'delete'
                             },
                             {

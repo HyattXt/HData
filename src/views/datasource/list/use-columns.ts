@@ -109,7 +109,7 @@ export function useColumns(onCallback: Function) {
                     {
                       circle: true,
                       type: 'info',
-                      size: 'small',
+                      size: 'tiny',
                       onClick: () => void onCallback(rowData.id, 'edit')
                     },
                     {
@@ -136,7 +136,7 @@ export function useColumns(onCallback: Function) {
                           {
                             circle: true,
                             type: 'error',
-                            size: 'small',
+                            size: 'tiny',
                             class: 'btn-delete',
                             disabled: rowData.id === 1 || rowData.id === 2,
                           },

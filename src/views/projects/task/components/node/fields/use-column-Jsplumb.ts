@@ -66,10 +66,6 @@ export function useColumnJsplumb(
         {
             apiAxios.post(getCol, formTarget.value)
                 .then(async function (response) {
-
-                    if (response.data.status == 0) {
-                        message.error(response.data.error)
-                    } else {
                         rightData.value = response.data.data.map(item => {
                                 let res = {
                                     id: '',
@@ -82,17 +78,12 @@ export function useColumnJsplumb(
                                 return res
                             }
                         )
-                    }
                     if (model['executeMode'] == 0) {
                         formSource.value.id = model['dataSource']
                         formSource.value.type = parseInt(model['dsType'].replace('MYSQL', 0).replace('ORACLE', 5).replace('SQLSERVER', 6).replace('POSTGRESQL', 1))
                         formSource.value.tableName = model['dsType'] == 'ORACLE' || model['dsType'] == 'SQLSERVER' || model['dsType'] == 'POSTGRESQL' ? model['sourceDatabase'] + '.' + model['sourceTable'] : model['sourceTable']
                         apiAxios.post(getCol, formSource.value)
                             .then(function (response) {
-
-                                if (response.data.status == 0) {
-                                    message.error(response.data.error)
-                                } else {
                                     leftData.value = response.data.data.map(item => {
                                             let res = {
                                                 id: '',
@@ -105,7 +96,6 @@ export function useColumnJsplumb(
                                             return res
                                         }
                                     )
-                                }
                                 setTimeout(() => {
                                     leftData.value.forEach((item, index) => {
                                         initNode(item.id, "source");

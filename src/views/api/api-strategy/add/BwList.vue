@@ -75,6 +75,7 @@ import {useRoute, useRouter} from "vue-router";
 import {PlusSquareOutlined, QuestionCircleTwotone} from "@vicons/antd";
 import utils from "@/utils";
 import CrudHeader from "@/components/cue/crud-header.vue";
+import axios from 'axios'
 
 const form1Ref = ref(null)
 const message = useMessage()
@@ -227,13 +228,14 @@ const validateIp = (ip, type, index) => {
     let url = utils.getUrl('ServicePolicy/ipCheck')
     let body = {
       ipAddr: ip,
-      ipType: type
+      ipType: type,
+      servicePolicyId: Number(route.query.id) || 0
     }
 
-    apiAxios.post(url, body)
+    axios.post(url, body)
         .then(function (response) {
 
-          if (!response.data.status) {
+          if (response.data.status) {
             message.error(response.data.info)
             inputValidationStatus.value[index] = 'error'
           } else {
@@ -263,11 +265,9 @@ function formSubmit() {
         apiAxios.post(policySubmitUrl, body)
             .then(function (response) {
               message.info(response.data.info)
-              if(response.data.status) {
                 router.push({
                   path: '/devops/service/api-strategy',
                 })
-              }
             })
       } else {
         message.error('验证失败，请重新修改输入的ip')

@@ -53,7 +53,7 @@ const TableAction = defineComponent({
             default: () => t('data_quality.rule.view_input_item'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='primary'
                 tag='div'
                 onClick={() => viewRuleEntryDetails(this.row.ruleJson)}

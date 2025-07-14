@@ -442,7 +442,7 @@ export default defineComponent({
 
         const menuIcon = ({ option }: { option: TreeOption }) => {
              switch (option.type){
-                 case 1 : return h(<svg class="icon" viewBox="0 0 1260 1024" xmlns="http://www.w3.org/2000/svg" width="19.688" height="16"><defs><style/></defs><path d="M1171.561 157.538H601.797L570.814 61.44A88.222 88.222 0 00486.794 0H88.747A88.747 88.747 0 000 88.747v846.506A88.747 88.747 0 0088.747 1024H1171.56a88.747 88.747 0 0088.747-88.747V246.285a88.747 88.747 0 00-88.747-88.747zm-1082.814 0V88.747h398.047l22.055 68.791z" fill="#0099CB"/></svg>)
+                 case 1 : return h(<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7209" width="16" height="16"><path d="M0 101.888C0 76.288 17.042286 59.245714 42.642286 59.245714h349.915428c17.042286 0 34.084571 17.042286 42.642286 34.157715l16.457143 51.2H972.8c25.6 0 42.642286 17.042286 42.642286 42.642285v733.842286c8.557714 25.6-8.484571 42.715429-34.084572 42.715429H42.642286c-25.6 0-42.642286-17.115429-42.642286-42.715429v-819.2z" fill="#FFA000" p-id="7210"></path><path d="M904.557714 912.603429H119.442286c-25.6 0-42.642286-17.115429-42.642286-42.715429v-614.4c0-25.6 17.042286-42.642286 42.642286-42.642286h793.6c25.6 0 42.715429 17.042286 42.715428 42.642286v614.4c0 17.115429-25.6 42.715429-51.2 42.715429" fill="#FFFFFF" p-id="7211"></path><path d="M981.357714 963.803429H42.642286c-25.6 0-42.642286-17.115429-42.642286-42.715429V340.845714c0-25.6 17.042286-42.642286 42.642286-42.642285H972.8c34.157714-8.557714 51.2 17.042286 51.2 42.642285v580.242286c0 25.6-17.042286 42.715429-42.642286 42.715429" fill="#FFCA28" p-id="7212"></path><path d="M366.957714 631.003429H119.442286c-8.484571 0-25.6-8.557714-25.6-25.6 0-17.115429 8.557714-25.6 25.6-25.6h247.515428c8.484571 0 25.6 8.484571 25.6 25.6-8.557714 17.042286-17.115429 25.6-25.6 25.6m0-153.6H119.442286c-8.484571 0-25.6-8.557714-25.6-25.6 0-17.115429 8.557714-25.6 25.6-25.6h247.515428c8.484571 0 25.6 8.484571 25.6 25.6 0 17.042286-17.115429 25.6-25.6 25.6" fill="#FFFFFF" p-id="7213"></path></svg>)
                  case 2 : return h(<svg class="icon" viewBox="0 0 1260 1024" xmlns="http://www.w3.org/2000/svg" width="19.688" height="16"><defs><style/></defs><path d="M543.872 480h268.224c52.416 0 94.848 43.008 94.848 96v160h52.8a64 64 0 0 1 64 64V960a64 64 0 0 1-64 64H803.2a64 64 0 0 1-64-64v-160a64 64 0 0 1 64-64h40.512V576c0-17.664-14.144-32-31.616-32h-268.16v192h46.528a64 64 0 0 1 64 64V960a64 64 0 0 1-64 64H433.92a64 64 0 0 1-64-64v-160a64 64 0 0 1 64-64h46.72v-192H211.328a31.808 31.808 0 0 0-31.616 32v160h40.832a64 64 0 0 1 64 64V960a64 64 0 0 1-64 64H64a64 64 0 0 1-64-64v-160a64 64 0 0 1 64-64h52.48V576c0-52.992 42.496-96 94.848-96H480.64v-192h-46.72a64 64 0 0 1-64-64V64a64 64 0 0 1 64-64h156.544a64 64 0 0 1 64 64v160a64 64 0 0 1-64 64h-46.592v192z" fill="#0099CB"/></svg>)
                  default: {
                      let url= `${import.meta.env.BASE_URL}images/task-icons/`+(option.taskType as string).toLocaleLowerCase()+'_hover.png'
@@ -753,6 +753,7 @@ export default defineComponent({
                             label-width="auto"
                             rules={rules}
                             model={variables}
+                            size='small'
                         >
                             <n-form-item label="文件夹名称" path="value.model.titleName">
                                 <n-input
@@ -791,6 +792,7 @@ export default defineComponent({
                                 label-width="auto"
                                 rules={rules}
                                 model={variables}
+                                size='small'
                             >
                                 <n-form-item label="文件夹名称" path="value.renameFolderModel.name">
                                     <n-input
@@ -817,6 +819,7 @@ export default defineComponent({
                                 label-width="auto"
                                 rules={rules}
                                 model={variables}
+                                size='small'
                             >
                                 <n-form-item label="目标文件夹" path="value.moveFolderModel.parentId">
                                     <n-tree-select
@@ -849,6 +852,7 @@ export default defineComponent({
                                 label-width="auto"
                                 rules={rules}
                                 model={workflowModel}
+                                size='small'
                             >
                                 <n-form-item label="工作流名称" path="value.name">
                                     <n-input
@@ -888,6 +892,7 @@ export default defineComponent({
                                 label-width="auto"
                                 rules={rules}
                                 model={variables}
+                                size='small'
                             >
                                 <n-form-item label="工作流名称" path="renameWorkflowModel.name">
                                     <n-input
@@ -914,6 +919,7 @@ export default defineComponent({
                                 label-width="auto"
                                 rules={rules}
                                 model={variables}
+                                size='small'
                             >
                                 <n-form-item label="目标文件夹" path="inputValue">
                                     <n-tree-select

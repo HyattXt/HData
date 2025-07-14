@@ -426,13 +426,9 @@ let validatePath = (rule, value, callback) => {
   return new Promise((resolve, reject) => {
     let url = utils.getUrl('interface/getApiPath')
     let body = { apiPath: '/HData/DevApi/proxy' + value }
-    //1存在，0不存在
+    //0不存在，1存在
     apiAxios.post(url, body).then(function (response) {
-      if (response.data.status == 1) {
-        reject(Error('该路径与已有路径重复')) // reject with error message
-      } else {
         resolve()
-      }
     }).catch(function (error) {
       reject(error)
     })

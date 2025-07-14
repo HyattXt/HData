@@ -243,12 +243,7 @@ let validatePath = (rule: any, value: any, callback: any) => {
     //0存在，1不存在
     apiAxios.post(url, body)
         .then(function (response) {
-
-          if (response.data.status == 0) {
-            reject(Error(response.data.info)) // reject with error message
-          } else {
-            resolve()
-          }
+          resolve()
         })
         .catch(function (error) {
           reject(error)
@@ -355,14 +350,11 @@ function formSubmit() {
 
   apiAxios.post(insUrl, formValue.value)
       .then(function (response) {
-
         message.info(response.data.info)
         setTimeout(() => {
-          if (response.data.status === 1 ) {
             router.push({
               path: '/devops/rest/rest-manager'
             })
-          }
         }, 1000)
       })
       .catch(function (error) {

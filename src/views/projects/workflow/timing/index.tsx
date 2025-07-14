@@ -95,8 +95,8 @@ export default defineComponent({
               ),
               condition: () => (
                   <NForm showFeedback={false} label-placement="left" style="margin-bottom: 3px">
-                    <NGrid cols="18" x-gap="16">
-                      <NFormItemGi label="名称" span="3">
+                    <NGrid cols="22" x-gap="16">
+                      <NFormItemGi label="名称" span="4">
                         <NInput
                             size={'small'}
                             placeholder={t('resource.file.enter_keyword_tips')}
@@ -108,7 +108,7 @@ export default defineComponent({
                           <NIcon>
                             <SearchOutlined />
                           </NIcon>
-                          <div style={"font-size: 12px"}>
+                          <div>
                             查询
                           </div>
                         </NButton>

@@ -118,7 +118,7 @@ export default defineComponent({
             default: () => t('project.workflow.start'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='primary'
                 tag='div'
                 circle
@@ -138,7 +138,7 @@ export default defineComponent({
             default: () => t('project.workflow.timing'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='info'
                 tag='div'
                 circle
@@ -162,7 +162,7 @@ export default defineComponent({
                     : t('project.workflow.up_line'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type={releaseState === 'ONLINE' ? 'warning' : 'error'}
                 tag='div'
                 circle
@@ -186,7 +186,7 @@ export default defineComponent({
             default: () => t('project.workflow.cron_manage'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='info'
                 tag='div'
                 circle
@@ -205,7 +205,7 @@ export default defineComponent({
             default: () => t('project.workflow.delete'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='error'
                 tag='div'
                 circle
@@ -239,7 +239,7 @@ export default defineComponent({
             default: () => t('project.workflow.version_info'),
             trigger: () => (
               <NButton
-                size='small'
+                size='tiny'
                 type='info'
                 tag='div'
                 circle

@@ -139,7 +139,7 @@
           <n-input v-model:value="elementFormValue.englishName"/>
         </n-form-item-gi>
         <n-form-item-gi :span="24" label="字段类型:" path="dataType">
-          <n-select v-model:value="elementFormValue.dataType" :options="typeOptions"/>
+          <n-select v-model:value="elementFormValue.dataType" :options="typeOptions" @update:value="changeLength"/>
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="长度:" path="fieldLength">
           <n-input-number v-model:value="elementFormValue.fieldLength" :min="0"/>
@@ -470,6 +470,18 @@ async function initData() {
   }
   const data = await queryModelColumn(params)
   tableData.value = data.totalList
+}
+
+function changeLength(value) {
+  switch (value) {
+    case 'varchar': elementFormValue.value.fieldLength = 255
+      break
+    case 'char': elementFormValue.value.fieldLength = 10
+      break
+    case 'decimal': elementFormValue.value.fieldLength = 10; elementFormValue.value.fieldAccuracy = 2
+      break
+    default:  elementFormValue.value.fieldLength = elementFormValue.value.fieldAccuracy = null
+  }
 }
 
 function setSort() {

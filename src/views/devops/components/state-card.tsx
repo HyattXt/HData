@@ -193,7 +193,7 @@ const StateCard = defineComponent({
           <CrudHead
               title={"运维概览"}
           />
-          <div style={"background: #fff; padding: 10px; display: flex; align-items: center"}>
+          <div style={"background: #fff; padding: 10px; display: flex; align-items: center; font-size: 12px"}>
             <NSelect
                 size='small'
                 value={ProjFirst}

@@ -107,15 +107,10 @@
         let url = utils.getUrl('interface/getApiPath')
         let body = { apiPath: value }
 
-        //1存在，0不存在
+        //0不存在，1存在
         apiAxios.post(url, body)
             .then(function (response) {
-
-              if (response.data.status == 1) {
-                reject(Error('该路径与已有路径重复')) // reject with error message
-              } else {
                 resolve()
-              }
             })
             .catch(function (error) {
               reject(error)
@@ -130,10 +125,9 @@
         let url = utils.getUrl('interface/getInterfaceInfoByApiName')
         let body = { apiName: value }
 
-        //0存在，1不存在
+        //0不存在，1存在
         apiAxios.post(url, body)
             .then(function (response) {
-              console.log(response.data.obj)
               if (!!response.data.obj) {
                 reject(Error('该名称与已有名称重复')) // reject with error message
               } else {

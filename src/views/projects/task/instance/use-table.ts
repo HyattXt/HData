@@ -198,7 +198,7 @@ export function useTable() {
                         tag: 'div',
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         disabled: !(
                           row.state === 'FAILURE' ||
                           row.state === 'NEED_FAULT_TOLERANCE' ||
@@ -228,7 +228,7 @@ export function useTable() {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         disabled: !row.host,
                         onClick: () => handleLog(row)
                       },
@@ -252,7 +252,7 @@ export function useTable() {
                       {
                         circle: true,
                         type: 'info',
-                        size: 'small',
+                        size: 'tiny',
                         onClick: () => downloadLog(row.id)
                       },
                       {

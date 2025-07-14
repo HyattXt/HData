@@ -113,7 +113,7 @@ const columns = ({ edit }, {del}) => {
                           {
                             circle: true,
                             type: 'info',
-                            size: 'small',
+                            size: 'tiny',
                             class: 'edit',
                             onClick: () => {
                               edit(row)
@@ -146,7 +146,7 @@ const columns = ({ edit }, {del}) => {
                                     {
                                       circle: true,
                                       type: 'error',
-                                      size: 'small',
+                                      size: 'tiny',
                                       class: 'delete'
                                     },
                                     {

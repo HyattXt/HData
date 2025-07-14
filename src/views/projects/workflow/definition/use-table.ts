@@ -186,7 +186,7 @@ export function useTable() {
       {
         title: t('project.workflow.operation'),
         key: 'operation',
-        ...COLUMN_WIDTH_CONFIG['operation'](6),
+        ...COLUMN_WIDTH_CONFIG['operation'](5),
         render: (row) =>
           h(TableAction, {
             row,
