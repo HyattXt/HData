@@ -37,7 +37,7 @@ import {
   queryTaskDefinitionListPaging,
   deleteTaskDefinition
 } from '@/service/modules/task-definition'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   COLUMN_WIDTH_CONFIG,
   calculateTableWidth,
@@ -52,6 +52,7 @@ import type { IRecord } from './types'
 export function useTable(onEdit: Function) {
   const { t } = useI18n()
   const route = useRoute()
+  const router = useRouter()
   const projectCode = Number(route.params.projectCode)
 
   const createColumns = (variables: any) => {
@@ -70,7 +71,12 @@ export function useTable(onEdit: Function) {
           h(
             ButtonLink,
             {
-              onClick: () => void onEdit(row, true)
+              onClick: () =>
+                void router.push({
+                  name: 'workflow-relation',
+                  state: { type: 1, taskCode: row.taskCode, taskName: row.taskName, taskType: row.taskType, state: row.processReleaseState === 'OFFLINE' ? 0 : 1 },
+                  query: { back: 1 },
+                })
             },
             {
               default: () =>
@@ -137,37 +143,10 @@ export function useTable(onEdit: Function) {
       {
         title: t('project.task.operation'),
         key: 'operation',
-        ...COLUMN_WIDTH_CONFIG['operation'](3),
+        ...COLUMN_WIDTH_CONFIG['operation'](2),
         render(row: any) {
-          return h(NSpace, null, {
+          return h(NSpace, {justify: 'center'}, {
             default: () => [
-              h(
-                NTooltip,
-                {},
-                {
-                  trigger: () =>
-                    h(
-                      NButton,
-                      {
-                        circle: true,
-                        type: 'info',
-                        size: 'tiny',
-                        disabled:
-                          ['CONDITIONS', 'SWITCH'].includes(row.taskType) ||
-                          (!!row.processDefinitionCode &&
-                            row.processReleaseState === 'ONLINE'),
-                        onClick: () => {
-                          onEdit(row, false)
-                        }
-                      },
-                      {
-                        icon: () =>
-                          h(NIcon, null, { default: () => h(EditOutlined) })
-                      }
-                    ),
-                  default: () => t('project.task.edit')
-                }
-              ),
               h(
                 NTooltip,
                 {},
@@ -246,10 +225,11 @@ export function useTable(onEdit: Function) {
     tableWidth: DefaultTableWidth,
     tableData: [],
     page: ref(1),
-    pageSize: ref(10),
+    pageSize: ref(30),
     searchTaskName: ref(null),
     searchWorkflowName: ref(null),
     totalPage: ref(1),
+    total: ref(0),
     taskType: ref(null),
     showVersionModalRef: ref(false),
     showMoveModalRef: ref(false),
@@ -292,6 +272,7 @@ export function useTable(onEdit: Function) {
             }
           }) as any
           variables.totalPage = res.totalPage
+          variables.total = res.total
           variables.loadingRef = false
         }
       ),

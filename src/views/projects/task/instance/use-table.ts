@@ -71,7 +71,8 @@ export function useTable() {
     logLoadingRef: ref(true),
     skipLineNum: ref(0),
     limit: ref(1000),
-    taskType: ref(0)
+    taskType: ref(0),
+    readOnly: ref(false),
   })
 
   // 如果 timeRange 参数存在，则进行拆分处理

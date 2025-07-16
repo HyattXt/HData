@@ -164,7 +164,7 @@ export default defineComponent({
             variables.value.model.projectCode = projectCode
             if( typeof(route.query.code) != 'undefined' )tsxRef.value.refresh(route.query.code, projectCode)
             if(history.state.taskCode) {//workflow-definition钻取
-              pushComponent(2, Number(history.state.taskCode), String(history.state.taskName), '', history.state.state, 0)
+              pushComponent(Number(history.state.type), Number(history.state.taskCode), String(history.state.taskName), history.state.taskType, history.state.state, 0)
             }
         })
 
@@ -348,7 +348,7 @@ export default defineComponent({
                     variables.value.moveWorkflowModel.taskCode = variables.value.taskCode = variables.value.renameWorkflowModel.taskCode = option.taskCode as number
                     variables.value.readOnly = option.releaseState === 1 || option.releaseState === 2
                     if(option.type == 1 ) {
-                        if(option.id === 57 || option.id === 58){
+                        if(option.treeStatus){
                             dropdownOption.value =[
                                 {
                                     label: '新建工作流',
@@ -676,6 +676,7 @@ export default defineComponent({
                                                     <n-dropdown
                                                         placement="bottom-start"
                                                         trigger="manual"
+                                                        size='small'
                                                         x={xRef.value}
                                                         y={yRef.value}
                                                         options={dropdownOption.value}

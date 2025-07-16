@@ -596,7 +596,7 @@ export default defineComponent({
               </NButton>
             )}
           {/* Return to previous page */}
-          {(props.instance || history.state.back) && (<NButton secondary round onClick={onClose} class='btn-close'>
+          {(props.instance || route.query.back) && (<NButton secondary round onClick={onClose} class='btn-close'>
             {t('project.dag.close')}
           </NButton>)}
         </div>

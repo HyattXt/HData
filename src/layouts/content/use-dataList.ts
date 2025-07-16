@@ -337,6 +337,10 @@ export function useDataList() {
                 key: `/devops/${projectCode}/workflow-definition`
               },
               {
+                label: t('menu.task_definition'),
+                key: `/devops/${projectCode}/task/definitions`
+              },
+              {
                 label: t('menu.workflow_timing'),
                 key: `/devops/${projectCode}/workflow/timings`
               },

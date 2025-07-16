@@ -90,6 +90,17 @@ export default {
             }
         },
         {
+          path: '/devops/:projectCode/task/definitions',
+          name: 'devops_task_definition',
+          component: components['projects-task-definition'],
+          meta: {
+            title: '任务定义',
+            activeMenu: 'devops',
+            showSide: true,
+            auth: []
+          }
+        },
+        {
             path: '/devops/service/api-manager',
             name: 'devops-api-manager',
             component: () => import('@/views/api/api-manager/list/index.vue'),

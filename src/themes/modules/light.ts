@@ -61,6 +61,11 @@ const light = {
   },
   Tree: {
     fontSize: '12px',
+    nodeWrapperPadding: '0px',
+    nodeHeight: '28px'
+  },
+  Dropdown: {
+    fontSizeSmall: '12px',
   }
 }
 

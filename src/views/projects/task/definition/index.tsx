@@ -20,7 +20,7 @@ import { useRoute } from 'vue-router'
 import {
   NButton,
   NCard,
-  NDataTable,
+  NDataTable, NDatePicker, NForm, NFormItem,
   NIcon,
   NInput,
   NPagination,
@@ -38,6 +38,10 @@ import MoveModal from './components/move-modal'
 import TaskModal from '@/views/projects/task/components/node/detail-modal'
 import styles from './index.module.scss'
 import type { INodeData } from './types'
+import CrudHeader from '@/components/cue/crud-header.vue'
+import CrudForm from '@/components/cue/crud-form.vue'
+import { stateType } from '@/common/common'
+import CrudPageDs from '@/components/cue/crud-page-ds.vue'
 
 const TaskDefinition = defineComponent({
   name: 'task-definition',
@@ -59,6 +63,11 @@ const TaskDefinition = defineComponent({
         searchWorkflowName: variables.searchWorkflowName,
         taskType: variables.taskType
       })
+    }
+
+    const handlePageChange = (page: number) => {
+      variables.page = page
+      requestData()
     }
 
     const onUpdatePageSize = () => {
@@ -105,6 +114,7 @@ const TaskDefinition = defineComponent({
       ...toRefs(task),
       onSearch,
       requestData,
+      handlePageChange,
       onUpdatePageSize,
       onRefresh,
       onCreate,
@@ -118,6 +128,7 @@ const TaskDefinition = defineComponent({
       t,
       onSearch,
       requestData,
+      handlePageChange,
       onUpdatePageSize,
       onRefresh,
       onCreate,
@@ -126,69 +137,76 @@ const TaskDefinition = defineComponent({
 
     return (
       <>
-        <NCard>
-          <div class={styles['search-card']}>
-            <div>
-              <NButton size='small' type='primary' onClick={onCreate}>
-                {t('project.task.create_task')}
-              </NButton>
-            </div>
-            <NSpace justify='end'>
-              <NInput
-                size='small'
-                clearable
-                v-model={[this.searchTaskName, 'value']}
-                placeholder={t('project.task.task_name')}
-              />
-              <NInput
-                size='small'
-                clearable
-                v-model={[this.searchWorkflowName, 'value']}
-                placeholder={t('project.task.workflow_name')}
-              />
-              <NSelect
-                v-model={[this.taskType, 'value']}
-                size='small'
-                options={Object.keys(TASK_TYPES_MAP).map((item) => {
-                  return { value: item, label: item }
-                })}
-                placeholder={t('project.task.task_type')}
-                style={{ width: '180px' }}
-                clearable
-              />
-              <NButton size='small' type='primary' onClick={onSearch}>
-                {{
-                  icon: () => (
+        <CrudForm>
+          {{
+            header: () => (
+              <CrudHeader title="任务管理" />
+            ),
+            condition: () => (
+              <NForm showFeedback={false} label-placement="left" inline style="margin-bottom: 3px">
+                <NFormItem label="任务名称">
+                  <NInput
+                    v-model={[this.searchTaskName, 'value']}
+                    size='small'
+                    placeholder={t('project.task.task_name')}
+                    clearable
+                  />
+                </NFormItem>
+                <NFormItem label="工作流名称">
+                  <NInput
+                    v-model={[this.searchWorkflowName, 'value']}
+                    size='small'
+                    placeholder={t('project.task.workflow_name')}
+                    clearable
+                  />
+                </NFormItem>
+                <NFormItem label="任务类型">
+                  <NSelect
+                    v-model={[this.taskType, 'value']}
+                    size='small'
+                    options={Object.keys(TASK_TYPES_MAP).map((item) => {
+                      return { value: item, label: item }
+                    })}
+                    placeholder={t('project.task.task_type')}
+                    style={{ width: '180px' }}
+                    clearable
+                  />
+                </NFormItem>
+                <NFormItem>
+                  <NButton size='small' color={'#0099CB'} type='primary' onClick={onSearch} style={"padding: 0 15px 0 15px"}>
                     <NIcon>
                       <SearchOutlined />
                     </NIcon>
-                  )
-                }}
-              </NButton>
-            </NSpace>
-          </div>
-        </NCard>
-        <Card class={styles['table-card']}>
-          <NDataTable
-            loading={loadingRef}
-            columns={this.columns}
-            data={this.tableData}
-            scrollX={this.tableWidth}
-            size={'small'}
-          />
-          <div class={styles.pagination}>
-            <NPagination
-              v-model:page={this.page}
-              v-model:page-size={this.pageSize}
-              page-count={this.totalPage}
-              show-size-picker
-              page-sizes={[10, 30, 50]}
-              show-quick-jumper
-              onUpdatePage={requestData}
-              onUpdatePageSize={onUpdatePageSize}
-            />
-          </div>
-        </Card>
+                    <div>
+                      查询
+                    </div>
+                  </NButton>
+                </NFormItem>
+              </NForm>
+            ),
+            table: () => (
+              <NDataTable
+                loading={loadingRef}
+                columns={this.columns}
+                data={this.tableData}
+                scrollX={this.tableWidth}
+                size={'small'}
+                bordered
+                flex-height
+                single-line={false}
+              />
+            ),
+            page: () => (
+              <CrudPageDs
+                page={this.page}
+                page-size={this.pageSize}
+                item-count={this.total}
+                onPageChange={handlePageChange}
+                onPageSizeChange={onUpdatePageSize}
+              />
+            )
+          }}
+        </CrudForm>
         <VersionModal
           show={this.showVersionModalRef}
           row={this.row}

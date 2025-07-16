@@ -43,6 +43,11 @@
           版本: V{{version}}
         </n-button>
       </div>
+      <div style="padding-right: 10px">
+      <n-button v-if="$route.query.back" secondary size="small" type="info" color="#0099CB" @click="onClose">
+        关闭
+      </n-button>
+      </div>
       <slot name="right"></slot>
     </div>
   </div>
@@ -59,6 +64,7 @@
 import { Save24Regular, PlayCircle20Regular, RecordStop24Regular, Broom16Filled } from '@vicons/fluent'
 import VersionModal from "@/views/projects/task/definition/components/version-modal";
 import { ref } from "vue";
+import { useRouter } from 'vue-router'
 
 defineProps({
   disableRun: {
@@ -98,6 +104,7 @@ defineProps({
   }
 })
 
+const router = useRouter()
 const showVersionModalRef = ref(false)
 const emit = defineEmits(['refresh', 'saveEvent', 'runEvent', 'stopEvent'])
 
@@ -105,6 +112,15 @@ const onRefresh = () => {
   showVersionModalRef.value = false
   emit('refresh');
 }
+
+const onClose = () => {
+  if (history.state.back !== '/login') {
+    router.go(-1)
+    return
+  }
+}
+
+console.log(history.state)
 
 </script>
 

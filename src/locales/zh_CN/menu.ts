@@ -30,7 +30,7 @@ export default {
   workflow_instance: '工作流实例',
   task: '任务',
   task_instance: '任务实例',
-  task_definition: '任务定义',
+  task_definition: '任务管理',
   file_manage: '文件管理',
   udf_manage: 'UDF管理',
   resource_manage: '资源管理',

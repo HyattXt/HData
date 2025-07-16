@@ -19,6 +19,8 @@ export type { ITaskData, INodeData } from '../components/node/types'
 export type { ISingleSaveReq } from '@/service/modules/task-definition/types'
 
 interface IRecord {
+  taskType: any
+  processReleaseState: string;
   processDefinitionCode: number
   taskCode: number
   taskName: string

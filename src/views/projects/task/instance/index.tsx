@@ -36,11 +36,13 @@ import CrudForm from "@/components/cue/crud-form.vue";
 import CrudHeader from "@/components/cue/crud-header.vue";
 import CrudPageDs from "@/components/cue/crud-page-ds.vue";
 import {ElRadioButton, ElRadioGroup} from "element-plus";
+import { useRoute } from 'vue-router'
 
 const TaskInstance = defineComponent({
   name: 'task-instance',
   setup() {
     const { t, variables, getTableData, createColumns } = useTable()
+    const route = useRoute()
 
     const requestTableData = () => {
       getTableData({
@@ -113,6 +115,11 @@ const TaskInstance = defineComponent({
 
     onMounted(() => {
       createColumns(variables)
+      if(route.query.searchVal) {
+        // @ts-ignore
+        variables.searchVal = route.query.searchVal
+        variables.readOnly = true
+      }
       requestTableData()
     })
 
@@ -168,7 +175,7 @@ const TaskInstance = defineComponent({
                   <CrudHeader title="任务实例" />
               ),
               condition: () => (
-                  <NForm showFeedback={false} label-placement="left" inline style="margin-bottom: 3px">
+                  <NForm showFeedback={false} disabled={this.readOnly} label-placement="left" inline style="margin-bottom: 3px">
                       <NFormItem label="任务名称">
                         <NInput
                             v-model={[this.searchVal, 'value']}
