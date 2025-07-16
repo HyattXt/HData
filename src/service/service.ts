@@ -27,7 +27,6 @@ import {loginSso} from "@/service/modules/login";
 import type {UserInfoRes} from "@/service/modules/users/types";
 import {getUserInfo} from "@/service/modules/users";
 import {useTimezoneStore} from "@/store/timezone/timezone";
-
 const userStore = useUserStore()
 const timezoneStore = useTimezoneStore()
 
@@ -79,26 +78,47 @@ const err = (err: AxiosError): Promise<AxiosError> => {
   return Promise.reject(err)
 }
 
-service.interceptors.request.use( async (config: InternalAxiosRequestConfig<any>) => {
-  if ((!userStore.getSessionId || userStore.getSessionTimeOut) && !config.url?.includes('login')) {
-    if(!userStore.getSessionId) console.log('未访问登录页且未获取到SessionId')
-    if(userStore.getSessionTimeOut) console.log('未访问登录页且SessionId过期')
-    let uniwater_utoken = getUrlParam("uniwater_utoken") || ""
-    if (uniwater_utoken) {
-      console.log('获取到token，尝试进行单点登录')
-      const loginRes: SessionIdRes = await loginSso({uniwater_utoken: uniwater_utoken})
-      await userStore.setSessionId(loginRes.sessionId)
-      await userStore.setSessionTime(Date.now())
+let isRefreshing = false;
+let pendingRequests: (() => void)[] = [];
 
-      const userInfoRes: UserInfoRes = await getUserInfo()
-      await userStore.setUserInfo(userInfoRes)
-
-      const timezone = userInfoRes.timeZone ? userInfoRes.timeZone : 'UTC'
-      await timezoneStore.setTimezone(timezone)
-
-    }
+const refreshSession = async () => {
+  if (isRefreshing) {
+    return new Promise(resolve => {
+      pendingRequests.push(resolve as () => void);
+    });
   }
-  config.headers && (config.headers.sessionId = userStore.getSessionId)
+
+  isRefreshing = true;
+  try {
+    let uniwaterUtoken = localStorage.getItem('uniwater_utoken')
+    const loginRes: SessionIdRes = await loginSso({ uniwater_utoken: uniwaterUtoken })
+    userStore.setSessionId(loginRes.sessionId)
+    userStore.setUniwaterUtoken(uniwaterUtoken)
+
+    const userInfoRes: UserInfoRes = await getUserInfo()
+    userStore.setUserInfo(userInfoRes)
+
+    const timezone = userInfoRes.timeZone ? userInfoRes.timeZone : 'UTC'
+    timezoneStore.setTimezone(timezone)
+  } finally {
+    pendingRequests.forEach(resolve => resolve());
+    pendingRequests = [];
+    isRefreshing = false;
+  }
+}
+
+service.interceptors.request.use( async (config: InternalAxiosRequestConfig<any>) => {
+  if (config.headers && !config.url?.includes('login')) {
+    let sessionId = userStore.getSessionId
+    let uniwaterUtoken = localStorage.getItem('uniwater_utoken')
+
+    if (uniwaterUtoken && (!sessionId || uniwaterUtoken !== userStore.getUniwaterUtoken)) {
+       await refreshSession();
+     }
+
+    config.headers.sessionId = userStore.getSessionId;
+    config.headers.uniwaterUtoken = uniwaterUtoken;
+  }
   const language = cookies.get('language')
   config.headers = config.headers || {}
   if (language) config.headers.language = language

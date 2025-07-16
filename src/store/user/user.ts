@@ -23,7 +23,7 @@ export const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     sessionId: '',
-    sessionTime: 0,
+    uniwaterUtoken: null,
     userInfo: {}
   }),
   persist: true,
@@ -31,22 +31,22 @@ export const useUserStore = defineStore({
     getSessionId(): string {
       return this.sessionId
     },
-    getSessionTimeOut(): number {
-      return (Date.now() - this.sessionTime) > 604800000 ? 1 : 0;
-    },
     getUserInfo(): UserInfoRes | {} {
       return this.userInfo
+    },
+    getUniwaterUtoken(): string | null {
+      return this.uniwaterUtoken
     }
   },
   actions: {
     setSessionId(sessionId: string): void {
       this.sessionId = sessionId
     },
-    setSessionTime(sessionTime: number): void {
-      this.sessionTime = sessionTime
-    },
     setUserInfo(userInfo: UserInfoRes | {}): void {
       this.userInfo = userInfo
-    }
+    },
+    setUniwaterUtoken(uniwaterUtoken: string | null): void {
+      this.uniwaterUtoken = uniwaterUtoken
+    },
   }
 })
