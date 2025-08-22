@@ -20,7 +20,7 @@
           />
         </n-form-item>
         <n-form-item label="写入数据源类型" path="dataSourceType">
-          <n-select v-model:value="formValue.dataSourceType" :options="dataSourceTypeOptions" :style="{ width: '300px' }"/>
+          <n-select v-model:value="formValue.dataSourceType" :options="dataSourceTypeOptions" @update-value="queryDataSource" :style="{ width: '300px' }"/>
         </n-form-item>
       </n-space>
       <n-space justify="space-between">
@@ -36,7 +36,6 @@
               v-model:value="formValue.dataSource"
               label-field="name"
               value-field="id"
-              @click="queryDataSource"
               :options="listSource"
               :style="{ width: '300px' }"/>
         </n-form-item>
@@ -266,20 +265,24 @@ const rules = {
 }
 const dataSourceTypeOptions = ref([
   {
-    label: "Mysql",
+    value: 0,
+    label: 'MYSQL'
+  },
+  {
     value: 1,
+    label: 'POSTGRESQL'
   },
   {
-    label: 'Oracle',
-    value: 2
+    value: 5,
+    label: 'ORACLE'
   },
   {
-    label: 'SqlServer',
-    value: 3
+    value: 6,
+    label: 'SQLSERVER'
   },
   {
-    label: 'PostgreSql',
-    value: 4
+    value: 12,
+    label: 'DM'
   }
 ])
 const httpTypeOptions = ref([
@@ -362,8 +365,9 @@ function formSubmit() {
       })
 }
 
-function queryDataSource() {
-  let queryUrl = utils.getUrl('httpHandle/getDataSource?type=0')
+function queryDataSource(dataSourceType) {
+  formValue.value.dataSource = null
+  let queryUrl = utils.getUrl(`httpHandle/getDataSource?type=${dataSourceType}`)
 
   apiAxios.get(queryUrl).then(function (response) {
 
