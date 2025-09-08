@@ -90,7 +90,7 @@ const refreshSession = async () => {
 
   isRefreshing = true;
   try {
-    let uniwaterUtoken = localStorage.getItem('uniwater_utoken')
+    let uniwaterUtoken = getUrlParam("uniwater_utoken") || getUrlParam("token") || ""
     const loginRes: SessionIdRes = await loginSso({ uniwater_utoken: uniwaterUtoken })
     userStore.setSessionId(loginRes.sessionId)
     userStore.setUniwaterUtoken(uniwaterUtoken)
@@ -110,7 +110,7 @@ const refreshSession = async () => {
 service.interceptors.request.use( async (config: InternalAxiosRequestConfig<any>) => {
   if (config.headers && !config.url?.includes('login')) {
     let sessionId = userStore.getSessionId
-    let uniwaterUtoken = localStorage.getItem('uniwater_utoken')
+    let uniwaterUtoken = getUrlParam("uniwater_utoken") || getUrlParam("token") || ""
 
     if (uniwaterUtoken && (!sessionId || uniwaterUtoken !== userStore.getUniwaterUtoken)) {
        await refreshSession();

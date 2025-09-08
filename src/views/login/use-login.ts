@@ -36,7 +36,6 @@ export function useLogin(state: any) {
       if (!valid) {
         const loginRes: SessionIdRes = await login({ ...state.loginForm })
         await userStore.setSessionId(loginRes.sessionId)
-        await userStore.setSessionTime(Date.now())
 
         const userInfoRes: UserInfoRes = await getUserInfo()
         await userStore.setUserInfo(userInfoRes)

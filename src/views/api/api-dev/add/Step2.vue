@@ -249,6 +249,22 @@ async function analysisSql() {
       demoValue: 30
     }
   )
+
+  // --- 去重逻辑开始 ---
+// 使用 Map 来存储唯一的 paramTitle
+  const uniqueParamsMap = new Map();
+
+// 遍历 requestParams.value 数组
+  requestParams.value.forEach(param => {
+    // 如果 Map 中还没有这个 paramTitle，则添加进去
+    // 如果已存在，则忽略（实现去重）
+    if (!uniqueParamsMap.has(param.paramTitle)) {
+      uniqueParamsMap.set(param.paramTitle, param);
+    }
+  });
+
+// 将 Map 的 values 转换回数组
+  requestParams.value = Array.from(uniqueParamsMap.values());
 }
 
 function formSubmit() {
