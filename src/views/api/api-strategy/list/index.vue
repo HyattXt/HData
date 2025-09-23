@@ -525,7 +525,8 @@
 
   function deleteApi(row) {
     let urlDel = utils.getUrl('ServicePolicy/delete')
-    apiAxios.post(urlDel, undefined, {params: {id: row.id}})
+    let body ={id: row.id}
+    apiAxios.post(urlDel, body)
       .then(function (response) {
         message.info(response.data.info)
         handlePageChange(paginationReactive.page, paginationReactive.pageSize)

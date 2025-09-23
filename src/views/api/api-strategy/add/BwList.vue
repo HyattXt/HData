@@ -256,6 +256,15 @@ function formSubmit() {
           ...formValue.value,
           servicePolicyIpInfo: requestParams.value
         }
+
+        // 新增判断：检查 servicePolicyIpInfo 中是否有 ipAddr 为空的项
+        const invalidIpItems = body.servicePolicyIpInfo.filter(item => !item.ipAddr || item.ipAddr.trim() === '');
+
+        if (invalidIpItems.length > 0) {
+          message.error('存在IP地址为空，请填写所有IP地址');
+          return; // 阻止后续提交
+        }
+
         let policySubmitUrl = utils.getUrl('ServicePolicy/insert')
 
         if(!!route.query.id){
