@@ -217,10 +217,12 @@ const topImagePath = {
 
 const initData = async () => {
   data.value = await getDatasourceHome()
-  const list = await resourcePlanningList({})
-  if(list.length) {
-    firstListData.value = list.slice(0, 9)
-    secondListData.value = list.slice(9)
+  const list = await resourcePlanningList({}) || []
+  const filteredList = list.filter(item => item.systemName?.trim())
+  if(filteredList.length) {
+    const mid = Math.ceil(filteredList.length / 2)
+    firstListData.value = filteredList.slice(0, mid)
+    secondListData.value = filteredList.slice(mid)
   } else {
     firstListData.value = [
       { systemName: "档案系统", abutmentStatus: '1', remarks: '' },
