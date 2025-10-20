@@ -12,8 +12,8 @@
           style="margin-left: 150px; margin-top: 180px"
         >
           <n-space>
-            <router-link to="/service/api-dev-step">
-              <n-button color="#0099CB" type="primary" class="mr-4">继续</n-button>
+            <router-link to="/service/api-manager">
+              <n-button color="#0099CB" type="primary" class="mr-4">调试</n-button>
             </router-link>
             <router-link to="/service/api-dev">
               <n-button tertiary>退出</n-button>
