@@ -42,6 +42,7 @@
     apiComment: '',
     apiIpaddr: '',
     apiFlag: 2,
+    apiFrequency: '',
     apiSample: '',
     apiTreeId: 1,
     apiId: '',
