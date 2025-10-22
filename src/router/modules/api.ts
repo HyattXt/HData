@@ -105,7 +105,7 @@ export default {
       meta: {
         title: '服务规范-api-standard',
         activeMenu: 'service',
-        frameSrc: '/pdf/API接口开发规范约束文档.pdf',
+        frameSrc: '/HData/Dev/ui/pdf/API接口开发规范约束文档.pdf',
         showSide: true,
         auth: []
       }
