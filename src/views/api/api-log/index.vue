@@ -17,6 +17,17 @@
               v-model:value="paginationReactive.interfaceIp"
             />
           </n-form-item-gi>
+          <n-form-item-gi
+            :span="4"
+            label="访问用户"
+            path="pagination.userName"
+          >
+            <n-input
+              clearable
+              size="small"
+              v-model:value="paginationReactive.userName"
+            />
+          </n-form-item-gi>
           <n-form-item-gi :span="4" label="服务路径">
             <n-input
               clearable
@@ -81,6 +92,11 @@ const columnsRef =  [
     {
       title: '访问ip',
       key: 'interfaceIp',
+      align: 'center'
+    },
+    {
+      title: '访问用户',
+      key: 'userName',
       align: 'center'
     },
     {
