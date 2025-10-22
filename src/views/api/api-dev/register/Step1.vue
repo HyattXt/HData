@@ -57,6 +57,16 @@
         placeholder="请输入"
       />
     </n-form-item>
+    <n-form-item label="频次限制" path="apiFrequency">
+      <n-input-group>
+        <n-input-number
+          v-model:value="formValue.apiFrequency"
+          placeholder="请输入"
+          :style="{ width: '100%' }"
+        />
+        <n-input-group-label>次/秒</n-input-group-label>
+      </n-input-group>
+    </n-form-item>
     <n-form-item label="描述" path="apiComment">
       <n-input
         v-model:value="formValue.apiComment"
@@ -175,6 +185,7 @@ const formValue = ref({
   apiName: '',
   apiPath: '',
   apiCreator: '',
+  apiFrequency: '',
   apiMethod: null,
   apiComment: '',
   apiIpaddr: '',
@@ -503,6 +514,14 @@ const rules = {
     message: '请选择请求方式',
     trigger: 'blur'
   },
+  apiFrequency: [
+    {
+      required: true,
+      type:"number",
+      message: '请输入频次限制',
+      trigger: 'blur'
+    }
+  ],
   apiCreator: {
     required: true,
     message: '请输入创建人',
