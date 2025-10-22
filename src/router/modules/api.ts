@@ -97,6 +97,18 @@ export default {
         showSide: true,
         auth: []
       }
-    }
+    },
+    {
+      path: '/service/api-standard',
+      name: 'api-standard',
+      component: () => import('@/views/iframe/index.vue'),
+      meta: {
+        title: '服务规范-api-standard',
+        activeMenu: 'service',
+        frameSrc: '/pdf/API接口开发规范约束文档.pdf',
+        showSide: true,
+        auth: []
+      }
+    },
   ]
 }

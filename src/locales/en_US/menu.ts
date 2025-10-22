@@ -74,6 +74,7 @@ export default {
   data_userPortrayal: 'Data UserPortrayal',
   api_manager: 'API Manager',
   api_log: 'API Log',
+  api_standard: 'API Standard',
   api_strategy: 'API Strategy',
   data_assets: 'Data Assets',
   assets: 'Assets',

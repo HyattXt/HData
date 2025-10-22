@@ -97,7 +97,7 @@ export function useDataList() {
     state.menuOptions = [
       {
         label: () => h(NEllipsis, null, { default: () => t('menu.home') }),
-        key: 'home',
+        key: 'home'
       },
       {
         label: () => h(NEllipsis, null, { default: () => t('menu.project') }),
@@ -164,7 +164,8 @@ export function useDataList() {
         ]
       },
       {
-        label: () => h(NEllipsis, null, { default: () => t('menu.data_quality') }),
+        label: () =>
+          h(NEllipsis, null, { default: () => t('menu.data_quality') }),
         key: 'data-quality',
         icon: renderIcon(ContainerOutlined),
         children: [
@@ -245,7 +246,7 @@ export function useDataList() {
                   key: '/security/user-manage',
                   icon: renderIcon(UserAddOutlined)
                 },
-/*                {
+                /*                {
                   label: t('menu.alarm_group_manage'),
                   key: '/security/alarm-group-manage',
                   icon: renderIcon(WarningOutlined)
@@ -398,11 +399,17 @@ export function useDataList() {
             label: t('menu.api_log'),
             key: '/service/api-log',
             icon: renderIcon(Catalog)
+          },
+          {
+            label: t("menu.api_standard"),
+            key: '/service/api-standard',
+            icon: renderIcon(Catalog)
           }
         ]
       },
       {
-        label: () => h(NEllipsis, null, { default: () => t('menu.data_assets') }),
+        label: () =>
+          h(NEllipsis, null, { default: () => t('menu.data_assets') }),
         key: 'data-assets',
         children: [
           {
@@ -473,7 +480,8 @@ export function useDataList() {
         ]
       },
       {
-        label: () => h(NEllipsis, null, { default: () => t('menu.data_business') }),
+        label: () =>
+          h(NEllipsis, null, { default: () => t('menu.data_business') }),
         key: 'data-business',
         children: [
           {
@@ -504,7 +512,8 @@ export function useDataList() {
         ]
       },
       {
-        label: () => h(NEllipsis, null, { default: () => t('menu.project_manager') }),
+        label: () =>
+          h(NEllipsis, null, { default: () => t('menu.project_manager') }),
         key: 'project',
         icon: renderIcon(ProjectOutlined),
         children: [
@@ -516,7 +525,8 @@ export function useDataList() {
         ]
       },
       {
-        label: () => h(NEllipsis, null, { default: () => t('menu.data_examine') }),
+        label: () =>
+          h(NEllipsis, null, { default: () => t('menu.data_examine') }),
         key: 'data-examine',
         icon: renderIcon(TextBulletListSquareEdit24Regular),
         children: [
