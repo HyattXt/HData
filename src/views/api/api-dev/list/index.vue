@@ -111,21 +111,62 @@
     <template #header> API调试: {{ drawTitle }} </template>
     <crudSplit class="titleSplit" title="调试URL" />
     <n-input v-model:value="drawPath" style="margin: 10px 0 20px 0" />
-    <crudSplit class="titleSplit" title="参数" />
-    <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
-      <thead>
+    <!-- query 参数 -->
+    <template v-if="queryParamList && queryParamList.length > 0">
+      <crudSplit class="titleSplit" title="query参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
         <tr>
           <th>参数名称</th>
           <th>参数值</th>
         </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in paramList">
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in queryParamList" :key="index">
           <td>{{ item.key }}</td>
           <n-input v-model:value="item.value" size="large"></n-input>
         </tr>
-      </tbody>
-    </n-table>
+        </tbody>
+      </n-table>
+    </template>
+
+    <!-- body 参数 -->
+    <template v-if="bodyParamList && bodyParamList.length > 0">
+      <crudSplit class="titleSplit" title="body参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
+        <tr>
+          <th>参数名称</th>
+          <th>参数值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in bodyParamList" :key="index">
+          <td>{{ item.key }}</td>
+          <n-input v-model:value="item.value" size="large"></n-input>
+        </tr>
+        </tbody>
+      </n-table>
+    </template>
+
+    <!-- header 参数 -->
+    <template v-if="headerParamList && headerParamList.length > 0">
+      <crudSplit class="titleSplit" title="header参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
+        <tr>
+          <th>参数名称</th>
+          <th>参数值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in headerParamList" :key="index">
+          <td>{{ item.key }}</td>
+          <n-input v-model:value="item.value" size="large"></n-input>
+        </tr>
+        </tbody>
+      </n-table>
+    </template>
     <div
       style="display: flex; justify-content: space-between; align-items: center"
     >
@@ -324,7 +365,9 @@
   const drawId = ref('')
   const drawScript = ref('')
   const drawMethod = ref('')
-  const paramList = ref([])
+  const bodyParamList = ref([])
+  const headerParamList = ref([])
+  const queryParamList = ref([])
   const code = ref('')
   const folderData = ref([])
   const treeFolder = ref([])
@@ -363,7 +406,23 @@
     drawId.value = row.apiId
     drawScript.value = row.apiScript
     drawMethod.value = row.apiMethod
-    paramList.value = JSON.parse(row.bodyArrayNew).map(item => {
+    bodyParamList.value = row.bodyArray.map(item => {
+      return {
+        key: item.paramTitle.trim(),
+        value: item.demoValue,
+        type: item.paramType
+      }
+    })
+    headerParamList.value = row.headersArray
+      .filter(item => item.paramTitle.trim() !== 'HDataApiToken') // 👈 在这里过滤掉
+      .map(item => {
+        return {
+          key: item.paramTitle.trim(),
+          value: item.demoValue,
+          type: item.paramType
+        };
+      });
+    queryParamList.value = row.queryArray.map(item => {
       return {
         key: item.paramTitle.trim(),
         value: item.demoValue,
@@ -749,32 +808,43 @@
     }
   }
 
+  function buildParamArray(paramList) {
+    const result = [];
+    for (let i = 0; i < paramList.length; i++) {
+      const item = paramList[i];
+      let value = item.value;
+
+      if (item.type === '数组') {
+        try {
+          value = JSON.parse(item.value.replace(/\s+/g, ''));
+        } catch (e) {
+          console.warn('Invalid JSON in array param:', item.key, item.value);
+          value = item.value; // 或设为 []
+        }
+      } else if (item.type === '数字' || item.type === 'number') {
+        value = Number(item.value);
+        if (isNaN(value)) value = 0;
+      }
+
+      // 每个参数作为一个独立对象推入数组
+      const paramObj = {};
+      paramObj[item.key] = value;
+      result.push(paramObj);
+    }
+    return result;
+  }
+
   function debugApi() {
     let url = drawPath.value
-    let list = paramList.value
-    let requestBody = {}
-    for (let i = 0; i < list.length; i++) {
-      requestBody[list[i].key] = list[i].type === '数组'
-        ? JSON.parse(list[i].value.replace(/\s+/g, ''))
-        : (list[i].type === '数字' || list[i].type === 'number')
-          ? Number(list[i].value)
-          : list[i].value;
-    }
+    const requestBody = {
+      bodyArray: buildParamArray(bodyParamList.value || []),
+      headersArray: buildParamArray(headerParamList.value || []),
+      queryArray: buildParamArray(queryParamList.value || []),
+      httpMethod: drawMethod.value
+    };
     startTime.value = Date.now()
     if (url.indexOf('proxy') > 0) {
       let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
-      if (drawMethod.value === 'GET') {
-        apiAxios.get(regUrl)
-          .then(function (response) {
-            code.value = JSON.stringify(response.data, null, 2)
-            executionTime.value = Date.now() - startTime.value
-            updateApiTimeConsuming(drawId.value, executionTime.value)
-          })
-          .catch(function (error) {
-            code.value = JSON.stringify(error, null, 2)
-            console.log(error)
-          })
-      } else {
         apiAxios.post(regUrl, requestBody)
           .then(function (response) {
             code.value = JSON.stringify(response.data, null, 2)
@@ -785,7 +855,6 @@
             code.value = JSON.stringify(error, null, 2)
             console.log(error)
           })
-      }
     } else {
       let sqlUrl = utils.getUrl('interface-ui/api/perform?id=' + drawId.value)
       let sqlBody = {

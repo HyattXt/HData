@@ -31,21 +31,28 @@
             :columnData="apiData.portTable.columns"
         />
       </n-card>
-      <n-card size="small" style="height: 200px">
+      <n-card size="small" style="min-height: 200px">
         <CrudSplit class='titleSplit' title="请求参数(Headers)"/>
         <CrudTable
             :tableData="apiData.requestParamHeadersTable.data"
             :columnData="apiData.requestParamHeadersTable.columns"
         />
       </n-card>
-      <n-card size="small" style="height: 200px">
+      <n-card size="small" style="min-height: 200px">
+        <CrudSplit class='titleSplit' title="请求参数(Query)"/>
+        <CrudTable
+          :tableData="apiData.requestParamQueryTable.data"
+          :columnData="apiData.requestParamQueryTable.columns"
+        />
+      </n-card>
+      <n-card size="small" style="min-height: 200px">
         <CrudSplit class='titleSplit' title="请求参数(Body)"/>
         <CrudTable
             :tableData="apiData.requestParamBodyTable.data"
             :columnData="apiData.requestParamBodyTable.columns"
         />
       </n-card>
-      <n-card size="small" style="height: 200px">
+      <n-card size="small" style="min-height: 200px">
         <CrudSplit class='titleSplit' title="返回字段"/>
         <CrudTable
           :tableData="apiData.responseTable.data"
@@ -100,7 +107,8 @@ const apiData =ref({
         columns: [
           { prop: 'apiPath', label: 'URL' },
           { prop: 'json', label: '返回参数格式' },
-          { prop: 'apiMethod', label: '请求方式' }
+          { prop: 'apiMethod', label: '请求方式' },
+          { prop: 'apiBodyType', label: 'BODY格式' }
         ]
       },
       requestParamHeadersTable: {
@@ -114,6 +122,16 @@ const apiData =ref({
         ]
       },
       requestParamBodyTable: {
+        data: [],
+        columns: [
+          { prop: 'paramTitle', label: '参数标题 ' },
+          { prop: 'paramNotes', label: '参数描述' },
+          { prop: 'paramType', label: '参数类型' },
+          { prop: 'paramIsNull', label: '是否必填' },
+          { prop: 'demoValue', label: '示例值' }
+        ]
+      },
+      requestParamQueryTable: {
         data: [],
         columns: [
           { prop: 'paramTitle', label: '参数标题 ' },
@@ -235,10 +253,15 @@ function queryBasic(apiParam, type) {
     apiData.value.portTable.data.push({
       apiPath: basicInfo.value.apiPath,
       json: 'json',
-      apiMethod: basicInfo.value.apiMethod
+      apiMethod: basicInfo.value.apiMethod,
+      apiBodyType: basicInfo.value.apiBodyType
     })
     apiData.value.requestParamHeadersTable.data = basicInfo.value.headersArray
     apiData.value.requestParamHeadersTable.data.map(item => {
+      return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
+    })
+    apiData.value.requestParamQueryTable.data = basicInfo.value.queryArray
+    apiData.value.requestParamQueryTable.data.map(item => {
       return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
     })
     apiData.value.requestParamBodyTable.data = basicInfo.value.bodyArray

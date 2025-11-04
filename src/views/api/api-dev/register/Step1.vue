@@ -47,7 +47,19 @@
         placeholder="请选择"
         :options="[
           { label: 'POST', value: 'POST' },
-          { label: 'GET', value: 'GET' }
+          { label: 'GET', value: 'GET' },
+          { label: 'PUT', value: 'PUT' },
+          { label: 'DELETE', value: 'DELETE' }
+        ]"
+      />
+    </n-form-item>
+    <n-form-item label="请求体格式" v-if="formValue.apiMethod && formValue.apiMethod !== 'GET'">
+      <n-select
+        v-model:value="formValue.apiBodyType"
+        placeholder="请选择"
+        :options="[
+          { label: 'json', value: 'json' },
+          { label: 'form-data', value: 'form-data' }
         ]"
       />
     </n-form-item>
@@ -187,6 +199,7 @@ const formValue = ref({
   apiCreator: '',
   apiFrequency: '',
   apiMethod: null,
+  apiBodyType: 'json',
   apiComment: '',
   apiIpaddr: '',
   apiFlag: 2,
@@ -197,6 +210,7 @@ const formValue = ref({
   fieldsInfo: [],
   headersArray: [],
   bodyArray: [],
+  queryArray: [],
   requestDemo: [],
   responseDemo: '',
   dynamicTokenState: 2,
@@ -343,7 +357,7 @@ const requestColumns = [
     render(row, index) {
       return h(NSelect, {
         value: row.paramPosition,
-        options: [{ label: 'BODY', value: 'BODY' }, { label: 'HEADER', value: 'HEADER' }],
+        options: [{ label: 'BODY', value: 'BODY' }, { label: 'HEADER', value: 'HEADER' }, { label: 'QUERY', value: 'QUERY' }],
         onUpdateValue(v) {
           requestParams.value[index].paramPosition = v;
         }
@@ -545,6 +559,7 @@ function formSubmit() {
         responseHeader: [],
         responseBody: {}
       }
+      let queryArray = [...requestParams.value.filter(obj => obj.paramPosition === 'QUERY')];
       let bodyArray = [...requestParams.value.filter(obj => obj.paramPosition === 'BODY')];
       let headerArray = [...requestParams.value.filter(obj => obj.paramPosition === 'HEADER')];
       if (route.query.apiId !== undefined) {
@@ -577,6 +592,7 @@ function formSubmit() {
       formValue.value.fieldsInfo = returnParams.value
       formValue.value.bodyArray = bodyArray
       formValue.value.headersArray = headerArray
+      formValue.value.queryArray = queryArray
       formValue.value.requestDemo = requestBody
 
       emit('nextStep', formValue.value)
@@ -608,12 +624,17 @@ function getInitData ()  {
           return item
         })
 
+        let tmpQueryParams = response.data.obj.queryArray.map((item)=>{
+          item.paramPosition = 'QUERY'
+          return item
+        })
+
         let tmpHeaderParams = response.data.obj.headersArray.filter((item) => item.paramTitle !== 'HDataApiToken').map((item)=>{
           item.paramPosition = 'HEADER'
           return item
         })
 
-        requestParams.value = [...tmpBodyParams, ...tmpHeaderParams]
+        requestParams.value = [...tmpBodyParams, ...tmpHeaderParams, ...tmpQueryParams]
         returnParams.value = response.data.obj.fieldsInfo
       })
       .catch(function (error) {
