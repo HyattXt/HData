@@ -171,8 +171,6 @@ export function useTaskState() {
     taskVariables.taskLoadingRef = true
     const { state } = useAsyncState(
       getTaskStatisticsInfo({
-        startTime: !date ? '' : format(date[0][0], 'yyyy-MM-dd HH:mm:ss'),
-        endTime: !date ? '' : format(date[0][1], 'yyyy-MM-dd HH:mm:ss'),
         projectCode: projectCode
       }
       )
