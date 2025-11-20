@@ -836,15 +836,15 @@
 
   function debugApi() {
     let url = drawPath.value
-    const requestBody = {
-      bodyArray: buildParamArray(bodyParamList.value || []),
-      headersArray: buildParamArray(headerParamList.value || []),
-      queryArray: buildParamArray(queryParamList.value || []),
-      httpMethod: drawMethod.value
-    };
     startTime.value = Date.now()
     if (url.indexOf('proxy') > 0) {
       let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
+      const requestBody = {
+        bodyArray: buildParamArray(bodyParamList.value || []),
+        headersArray: buildParamArray(headerParamList.value || []),
+        queryArray: buildParamArray(queryParamList.value || []),
+        httpMethod: drawMethod.value
+      }
         apiAxios.post(regUrl, requestBody)
           .then(function (response) {
             code.value = JSON.stringify(response.data, null, 2)
@@ -857,6 +857,15 @@
           })
     } else {
       let sqlUrl = utils.getUrl('interface-ui/api/perform?id=' + drawId.value)
+      let requestBody = {}
+      let list = bodyParamList.value || []
+      for (let i = 0; i < list.length; i++) {
+        requestBody[list[i].key] = list[i].type === '数组'
+          ? JSON.parse(list[i].value.replace(/\s+/g, ''))
+          : (list[i].type === '数字' || list[i].type === 'number')
+            ? Number(list[i].value)
+            : list[i].value;
+      }
       let sqlBody = {
         id: drawId.value,
         select: 'POST',
