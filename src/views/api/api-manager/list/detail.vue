@@ -256,15 +256,15 @@ function queryBasic(apiParam, type) {
       apiMethod: basicInfo.value.apiMethod,
       apiBodyType: basicInfo.value.apiBodyType
     })
-    apiData.value.requestParamHeadersTable.data = basicInfo.value.headersArray
+    apiData.value.requestParamHeadersTable.data = basicInfo.value.headersArray || []
     apiData.value.requestParamHeadersTable.data.map(item => {
       return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
     })
-    apiData.value.requestParamQueryTable.data = basicInfo.value.queryArray
+    apiData.value.requestParamQueryTable.data = basicInfo.value.queryArray || []
     apiData.value.requestParamQueryTable.data.map(item => {
       return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
     })
-    apiData.value.requestParamBodyTable.data = basicInfo.value.bodyArray
+    apiData.value.requestParamBodyTable.data = basicInfo.value.bodyArray || []
     apiData.value.requestParamBodyTable.data.map(item => {
       return item.paramIsNull = item.paramIsNull === 'Y' ? '否' : '是'
     })
