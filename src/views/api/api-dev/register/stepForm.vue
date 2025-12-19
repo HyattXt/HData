@@ -1,7 +1,11 @@
 <template>
   <div class="cue-crud">
-    <CrudHeader title="API开发/新建API"/>
-    <n-card :bordered="false" class="mt-4 proCard" style="border-top: solid 1px #e8ecf0;">
+    <CrudHeader title="API开发/新建API" />
+    <n-card
+      :bordered="false"
+      class="mt-4 proCard"
+      style="border-top: solid 1px #e8ecf0"
+    >
       <n-space vertical class="steps" justify="center">
         <n-steps :current="currentTab" :status="currentStatus">
           <n-step title="API信息配置" />
@@ -12,7 +16,11 @@
           <step1 v-if="currentTab === 1" @nextStep="nextStep1" />
         </KeepAlive>
         <KeepAlive>
-          <step2 v-if="currentTab === 2" @prevStep="prevStep" @nextStep="nextStep2" />
+          <step2
+            v-if="currentTab === 2"
+            @prevStep="prevStep"
+            @nextStep="nextStep2"
+          />
         </KeepAlive>
         <step3 v-if="currentTab === 3" @prevStep="prevStep" @finish="finish" />
       </n-space>
@@ -38,6 +46,7 @@
     apiName: '',
     apiPath: '',
     apiCreator: '',
+    apiDataSource: '',
     apiMethod: null,
     apiComment: '',
     apiIpaddr: '',
@@ -93,7 +102,7 @@
 </script>
 
 <style lang="less" scoped>
-.steps {
-  margin: 16px 100px;
-}
+  .steps {
+    margin: 16px 100px;
+  }
 </style>

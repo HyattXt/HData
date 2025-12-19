@@ -1,15 +1,10 @@
 <template>
   <div>
-    <n-result
-      status="success"
-      title="提交成功"
-      description="请前往API管理查看"
-      class="step-result"
-    >
+    <n-result status="success" title="提交成功" description="请前往API管理查看" class="step-result">
       <template #footer>
         <n-space justify="center" style="margin-top: 30px">
           <router-link to="/service/api-manager">
-            <n-button color="#0099CB" type="primary" class="mr-4">调试</n-button>
+            <n-button color="#0099CB" type="primary" class="mr-4">查看</n-button>
           </router-link>
           <router-link to="/service/api-dev">
             <n-button tertiary>退出</n-button>

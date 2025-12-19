@@ -79,6 +79,7 @@ export default {
   assets: 'Assets',
   assets_overview: 'Assets Overview',
   assets_catalog: 'Assets Catalog',
+  api_catalog: 'Api Catalog',
   assets_query: 'Assets Query',
   assets_classify: 'Assets Classify',
   index_center: 'Index Center',

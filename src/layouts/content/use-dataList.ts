@@ -97,7 +97,7 @@ export function useDataList() {
     state.menuOptions = [
       {
         label: () => h(NEllipsis, null, { default: () => t('menu.home') }),
-        key: 'home',
+        key: 'home'
       },
       {
         label: () => h(NEllipsis, null, { default: () => t('menu.project') }),
@@ -181,8 +181,7 @@ export function useDataList() {
         ]
       },
       {
-        label: () =>
-          h(NEllipsis, null, { default: () => t('menu.datasource') }),
+        label: () => h(NEllipsis, null, { default: () => t('menu.datasource') }),
         key: 'datasource',
         icon: renderIcon(DatabaseOutlined),
         children: []
@@ -245,7 +244,7 @@ export function useDataList() {
                   key: '/security/user-manage',
                   icon: renderIcon(UserAddOutlined)
                 },
-/*                {
+                /*                {
                   label: t('menu.alarm_group_manage'),
                   key: '/security/alarm-group-manage',
                   icon: renderIcon(WarningOutlined)
@@ -413,6 +412,11 @@ export function useDataList() {
           {
             label: t('menu.assets_catalog'),
             key: '/data-assets/assets-catalog',
+            icon: renderIcon(BarsOutlined)
+          },
+          {
+            label: t('menu.api_catalog'),
+            key: '/data-assets/api-catalog',
             icon: renderIcon(BarsOutlined)
           },
           {

@@ -79,6 +79,7 @@ export default {
   assets: '资产概览',
   assets_overview: '资产总览',
   assets_catalog: '全部数据',
+  api_catalog: '全部API',
   assets_query: '数据探查',
   assets_classify: '数据编目',
   index_center: '指标中心',

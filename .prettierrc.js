@@ -26,5 +26,6 @@ module.exports = {
   arrowParens: 'always',
   htmlWhitespaceSensitivity: 'strict',
   endOfLine: 'lf',
-  trailingComma: 'none'
+  trailingComma: 'none',
+  printWidth: 120 // 行宽限制（按字符数计算）
 }

@@ -53,6 +53,17 @@ export default {
       }
     },
     {
+      path: '/data-assets/api-catalog',
+      name: 'api-catalog',
+      component: () => import('@/views/api/api-dev/list/list.vue'),
+      meta: {
+        title: '全部API-api-catalog',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
       path: '/data-assets/assets-query',
       name: 'assets-query',
       component: () => import('@/views/iframe/index.vue'),

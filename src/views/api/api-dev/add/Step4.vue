@@ -9,11 +9,11 @@
       <template #footer>
         <div
           class="flex justify-center"
-          style="margin-left: 150px; margin-top: 180px"
+          style="margin-top: 180px"
         >
-          <n-space>
+          <n-space justify="center">
             <router-link to="/service/api-manager">
-              <n-button color="#0099CB" type="primary" class="mr-4">调试</n-button>
+              <n-button color="#0099CB" type="primary" class="mr-4">查看</n-button>
             </router-link>
             <router-link to="/service/api-dev">
               <n-button tertiary>退出</n-button>
