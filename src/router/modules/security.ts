@@ -26,159 +26,19 @@ export default {
   path: '/security',
   name: 'security',
   meta: { title: '安全中心' },
-  redirect: { name: 'tenant-manage' },
+  redirect: { name: 'token-manage' },
   component: () => import('@/layouts/content'),
   children: [
-    {
-      path: '/security/tenant-manage',
-      name: 'tenant-manage',
-      component: components['security-tenant-manage'],
-      meta: {
-        title: '租户管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/user-manage',
-      name: 'user-manage',
-      component: components['security-user-manage'],
-      meta: {
-        title: '用户管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/alarm-group-manage',
-      name: 'alarm-group-manage',
-      component: components['security-alarm-group-manage'],
-      meta: {
-        title: '告警组管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/worker-group-manage',
-      name: 'worker-group-manage',
-      component: components['security-worker-group-manage'],
-      meta: {
-        title: 'Worker分组管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/yarn-queue-manage',
-      name: 'yarn-queue-manage',
-      component: components['security-yarn-queue-manage'],
-      meta: {
-        title: 'Yarn队列管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/environment-manage',
-      name: 'environment-manage',
-      component: components['security-environment-manage'],
-      meta: {
-        title: '环境管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
     {
       path: '/security/token-manage',
       name: 'token-manage',
       component: components['security-token-manage'],
       meta: {
-        title: '令牌管理管理',
+        title: '令牌管理',
         activeMenu: 'security',
-        showSide: true,
+        showSide: false,
         auth: []
       }
     },
-    {
-      path: '/security/alarm-instance-manage',
-      name: 'alarm-instance-manage',
-      component: components['security-alarm-instance-manage'],
-      meta: {
-        title: '告警实例管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/alarm-task-manage',
-      name: 'alarm-task-manage',
-      component: import('@/views/security/alarm-task-manage/index.vue'),
-      meta: {
-        title: '告警任务管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/k8s-namespace-manage',
-      name: 'k8s-namespace-manage',
-      component: components['security-k8s-namespace-manage'],
-      meta: {
-        title: 'K8S命名空间管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/license-manage',
-      name: 'license-manage',
-      component: components['security-license-manage'],
-      meta: {
-        title: 'License管理',
-        activeMenu: 'security',
-        showSide: true,
-        auth: ['ADMIN_USER']
-      }
-    },
-    {
-      path: '/security/desensitization/rule-manage',
-      name: 'rule-manage',
-      component: () => import('@/views/security/desensitization-manage/rule/index.vue'),
-      meta: {
-        title: '脱敏规则',
-        activeMenu: 'security',
-        showSide: true
-      }
-    },
-    {
-      path: '/security/desensitization/secret-key-manage',
-      name: 'secret-key-manage',
-      component: () => import('@/views/security/desensitization-manage/secret-key/index.vue'),
-      meta: {
-        title: '密钥管理',
-        activeMenu: 'security',
-        showSide: true
-      }
-    },
-    {
-      path: '/security/desensitization/list-manage',
-      name: 'list-manage',
-      component: () => import('@/views/security/desensitization-manage/list/index.vue'),
-      meta: {
-        title: '脱敏台账',
-        activeMenu: 'security',
-        showSide: true
-      }
-    }
   ]
 }

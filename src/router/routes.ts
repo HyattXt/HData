@@ -31,6 +31,7 @@ import DevOpsPage from './modules/devops'
 import dataBusinessPage from './modules/data-business'
 import dataExaminePage from './modules/data-examine'
 import projectManagerPage from './modules/project-manager'
+import myApiPage from './modules/my-api'
 
 // All TSX files under the views folder automatically generate mapping relationship
 const modules = import.meta.glob('/src/views/**/**.tsx')
@@ -49,8 +50,7 @@ const basePage: RouteRecordRaw[] = [
       {
         path: '/home',
         name: 'home',
-        //component: components['home'],
-        component: () => import('@/views/home/index.vue'),
+        component: components['home'],
         meta: {
           title: '首页',
           activeMenu: 'home',
@@ -84,6 +84,7 @@ const basePage: RouteRecordRaw[] = [
   securityPage,
   dataQualityPage,
   apiPage,
+  myApiPage,
   dataAssetsPage,
   restPage,
   DevOpsPage,
@@ -95,7 +96,7 @@ const basePage: RouteRecordRaw[] = [
 /**
  * Login page
  */
-const loginPage: RouteRecordRaw[] = [
+/* const loginPage: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
@@ -104,12 +105,12 @@ const loginPage: RouteRecordRaw[] = [
       auth: []
     }
   }
-]
+] */
 
 /**
  * visitor page
  */
-const visitorPage: RouteRecordRaw[] = [
+/* const visitorPage: RouteRecordRaw[] = [
   {
     path: '/visitor',
     name: 'visitor',
@@ -118,9 +119,9 @@ const visitorPage: RouteRecordRaw[] = [
       auth: []
     }
   }
-]
+] */
 
-const routes: RouteRecordRaw[] = [...basePage, ...loginPage, ...visitorPage]
+const routes: RouteRecordRaw[] = [...basePage]
 
 // 重新组织后导出
 export default routes

@@ -138,6 +138,7 @@ const columns =  [
         case 4 : return h("div",'数据开发')
         case 5 : return h("div",'API服务')
         case 6 : return h("div",'数据元')
+        case 7 : return h("div",'TOKEN令牌')
       }
     }
   },
@@ -147,6 +148,7 @@ const columns =  [
     width: 120,
     slots: (row) => {
       switch (row.releaseState) {
+        case 2: return h("div",'授权')
         case 1: return h("div",'上线')
         case 0: return h("div",'下线')
       }
@@ -303,6 +305,7 @@ const editDetail = (row) => {
     case 4: {approvalType = '数据开发'} break
     case 5: {approvalType = 'API服务'} break
     case 6: {approvalType = '数据元'} break
+    case 7: {approvalType = 'TOKEN令牌'} break
   }
   switch (row.approvalStatus) {
     case 1: {approvalStatus = '已同意'; approvalColor = 'success'} break

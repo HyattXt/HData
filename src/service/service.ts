@@ -72,7 +72,8 @@ const err = (err: AxiosError): Promise<AxiosError> => {
   if (err.response?.status === 401) {
     userStore.setSessionId('')
     userStore.setUserInfo({})
-    router.push({ path: '/login' })
+    //router.push({ path: '/login' })
+    window.$message.error('登录过期，请重新登录')
   }
 
   return Promise.reject(err)

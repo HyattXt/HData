@@ -2,7 +2,7 @@
   <el-config-provider :locale="zhCn">
     <div
       class="cue-drag-layout__mainview"
-      style="width: 280px; margin-right: 12px"
+      style="width: 280px;"
     >
       <div class="tree-container">
         <div class="add-buttons">

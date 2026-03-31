@@ -42,7 +42,10 @@ export function useDropDown() {
       userStore.setUserInfo({})
       cookies.remove('sessionId')
 
-      router.push({ path: '/login' })
+      router.push({ path: '/home' })
+      
+      // 注销成功消息
+      window.$message.success('注销成功')
     })
   }
 

@@ -17,11 +17,12 @@
 
 import { defineComponent, PropType } from 'vue'
 import { NDropdown, NIcon, NButton } from 'naive-ui'
-import { DownOutlined, UserOutlined } from '@vicons/antd'
+import { DownOutlined } from '@vicons/antd'
 import { useDropDown } from './use-dropdown'
 import { useUserStore } from '@/store/user/user'
 import styles from './index.module.scss'
 import type { UserInfoRes } from '@/service/modules/users/types'
+import { UserAlt } from '@vicons/fa'
 
 const User = defineComponent({
   name: 'User',
@@ -45,9 +46,9 @@ const User = defineComponent({
         options={this.userDropdownOptions}
         on-select={this.handleSelect}
       >
-        <NButton text>
-          <NIcon class={styles.icon}>
-            <UserOutlined />
+        <NButton size="large" text>
+          <NIcon size="24" color="#165DFF" class={styles.icon}>
+            <UserAlt />
           </NIcon>
           {(this.userStore.getUserInfo as UserInfoRes).userName}
           <NIcon class={styles.icon}>

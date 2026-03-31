@@ -37,7 +37,7 @@ export default {
       meta: {
         title: '服务开发-api-dev',
         activeMenu: 'service',
-        showSide: true,
+        showSide: false,
         auth: []
       }
     },
@@ -66,13 +66,13 @@ export default {
       }
     },
     {
-      path: '/service/api-manager',
+      path: '/my-service/api-manager',
       name: 'api-manager',
       component: () => import('@/views/api/api-manager/list/index.vue'),
       meta: {
         title: '服务开发-api-manager',
-        activeMenu: 'service',
-        showSide: true,
+        activeMenu: 'my-service',
+        showSide: false,
         auth: []
       }
     },
@@ -83,7 +83,7 @@ export default {
       meta: {
         title: '服务详情-api-detail',
         activeMenu: 'service',
-        showSide: true,
+        showSide: false,
         auth: []
       }
     },

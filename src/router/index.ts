@@ -55,6 +55,18 @@ router.beforeEach(
     NProgress.start()
     const userStore = useUserStore()
     const metaData: metaData = to.meta
+    
+    // 检查是否登录（除了 home 页面和其他公开页面）
+    const publicPaths = ['/', '/home', '/login', '/visitor']
+    const isPublicPath = publicPaths.includes(to.path)
+    
+    if (!isPublicPath && !userStore.isLoggedIn) {
+      window.$message.warning('请先登录后再访问此页面')
+      next({ name: 'home' })
+      NProgress.done()
+      return
+    }
+    
     if (
       metaData.auth?.includes('ADMIN_USER') &&
       (userStore.getUserInfo as UserInfoRes).userType !== 'ADMIN_USER' &&

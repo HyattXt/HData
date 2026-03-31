@@ -22,14 +22,33 @@
   height: 64px;
   border-bottom: 1px solid var(--n-border-color);
 
+  .logo-container {
+    display: flex;
+    align-items: center;
+    margin-right: 24px;
+    margin-left: 100px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
   .nav {
     margin-left: 12px;
+
+    :global(.n-menu .n-menu-item .n-menu-item-content) {
+      font-size: 16px;
+      font-weight: 500;
+    }
   }
 
   .settings {
     display: flex;
     flex: 1;
     justify-content: flex-end;
+    padding-right: 36px;
 
     :global(.n-menu .n-submenu .n-menu-item-content) {
       height: var(--n-item-height);

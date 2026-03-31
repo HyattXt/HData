@@ -87,54 +87,84 @@
       />
     </template>
   </CrudForm>
-  <el-dialog
-      v-model="showModal"
-      width="600px"
-  >
-    <template #header> API授权 </template>
-    <CrudSplit title="API名称：" style="margin-bottom: 10px; font-size: 14px; background: rgba(255,255,255,0)">
-      <template v-slot:default>
-        <div style="display: flex; align-items: center">
-          <div style="font-size: 14px">API名称：</div>
-          <div style="font-size: 16px; margin-left: 10px">{{drawTitle}}</div>
-        </div>
-      </template>
-    </CrudSplit>
 
-    <CrudSplit title="授权用户：" style="margin-top: 10px; font-size: 14px; background: rgba(255,255,255,0)"/>
-    <n-form-item :show-label="false" path="user.name">
-      <n-transfer
-          ref="transfer"
-          v-model:value="apiAuthorizer"
-          virtual-scroll
-          :options="userList"
-          source-filterable
-          target-filterable
-      />
-    </n-form-item>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button color="#0099CB" @click="subAuth" >确定</el-button>
-      </div>
+  <!-- 调试对话框 -->
+  <el-dialog v-model="active" :before-close="dialogVisible" :width="600">
+    <template #header> API调试: {{ drawTitle }} </template>
+    <crudSplit class="titleSplit" title="调试URL" />
+    <n-input v-model:value="drawPath" style="margin: 10px 0 20px 0" />
+    <!-- query 参数 -->
+    <template v-if="queryParamList && queryParamList.length > 0">
+      <crudSplit class="titleSplit" title="query参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
+        <tr>
+          <th>参数名称</th>
+          <th>参数值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in queryParamList" :key="index">
+          <td>{{ item.key }}</td>
+          <n-input v-model:value="item.value" size="large"></n-input>
+        </tr>
+        </tbody>
+      </n-table>
     </template>
-  </el-dialog>
-  <el-dialog
-      v-model="approvalModalShow"
-      width="600px"
-  >
-    <template #header> {{approvalForm.releaseState ? '上线' : '下线'}}审批 </template>
-    <n-form ref="approvalFormRef" :rules="approveRule" :model="approvalForm">
-      <n-form-item label="申请理由" label-placement="left" path="reasonForApplication">
-        <n-input
-            v-model:value="approvalForm.reasonForApplication"
-            type="textarea"
-        />
-      </n-form-item>
-    </n-form>
 
+    <!-- body 参数 -->
+    <template v-if="bodyParamList && bodyParamList.length > 0">
+      <crudSplit class="titleSplit" title="body参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
+        <tr>
+          <th>参数名称</th>
+          <th>参数值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in bodyParamList" :key="index">
+          <td>{{ item.key }}</td>
+          <n-input v-model:value="item.value" size="large"></n-input>
+        </tr>
+        </tbody>
+      </n-table>
+    </template>
+
+    <!-- header 参数 -->
+    <template v-if="headerParamList && headerParamList.length > 0">
+      <crudSplit class="titleSplit" title="header参数" />
+      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
+        <thead>
+        <tr>
+          <th>参数名称</th>
+          <th>参数值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, index) in headerParamList" :key="index">
+          <td>{{ item.key }}</td>
+          <n-input v-model:value="item.value" size="large"></n-input>
+        </tr>
+        </tbody>
+      </n-table>
+    </template>
+
+    <crudSplit class="titleSplit" title="响应结果" />
+      <div>
+        <n-scrollbar style="max-height: 300px; min-height: 100px">
+          <n-config-provider :hljs="hljs">
+            <n-code :code="code" language="javascript" />
+          </n-config-provider>
+        </n-scrollbar>
+      </div>
+    <div v-if="executionTime > 0" style="text-align: right; margin-bottom: 10px; font-size: 14px; color: #666;">
+      返回时间：{{ executionTime }}毫秒
+    </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button color="#0099CB" @click="handleApprovalDefinition" >确定</el-button>
+        <el-button @click="dialogVisible">取消</el-button>
+        <el-button color="#0099CB" @click="debugApi">发送请求</el-button>
       </div>
     </template>
   </el-dialog>
@@ -144,35 +174,32 @@
 import { ref, reactive, onMounted, h} from 'vue'
 import apiAxios from '@/utils/api-axios'
 import {
-  UserOutlined,
-  ToTopOutlined,
   ProfileOutlined,
-  VerticalAlignBottomOutlined
+  BugFilled
 } from '@vicons/antd'
 import {
   NButton,
   NSpace,
-  useMessage,
   NTooltip,
   NIcon,
-  NPopconfirm
+  NInput,
+  NTable
 } from 'naive-ui'
 import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
 import moment from 'moment'
 import CrudHeader from "@/components/cue/crud-header.vue";
-import {ElButton} from "element-plus";
+import {ElButton, ElDialog} from "element-plus";
 import {Search} from "@element-plus/icons-vue";
 import CrudForm from "@/components/cue/crud-form.vue";
-import CrudSplit from "@/components/cue/crud-split.vue";
 import router from "@/router";
 import CrudPage from "@/components/cue/crud-page.vue";
+import crudSplit from "@/components/cue/crud-split.vue";
 import utils from "@/utils";
-import {insertApproval, queryApprovalConfig} from "@/service/modules/data-bussiness";
 
 hljs.registerLanguage('javascript', javascript)
 
-const columns = ({ play }, { pub }, { auth }) => {
+const columns = ( { debug }, { play } ) => {
   return [
     {
       title: '序号',
@@ -234,27 +261,14 @@ const columns = ({ play }, { pub }, { auth }) => {
         return h(NSpace, {justify: "center"}, {
           default: () => [
             h(NTooltip, {}, {trigger: () =>
-                  h(NButton, {circle: true, type: row.apiAuthorizer === null ? 'warning' : 'info', size: 'tiny', class: 'edit', onClick: () => {auth(row)}}, {icon: () =>
-                        h(NIcon, null, { default: () => h(UserOutlined) })}
-                  ), default: () => '授权'}
+                  h(NButton, {circle: true, type: 'info', size: 'tiny', class: 'edit', onClick: () => {debug(row)}}, {icon: () =>
+                        h(NIcon, null, { default: () => h(BugFilled) })} 
+                  ), default: () => '调试'}
             ),
             h(NTooltip, {}, {trigger: () =>
                   h(NButton, {circle: true, type: 'info', size: 'tiny', class: 'edit', onClick: () => {play(row)}}, {icon: () =>
-                        h(NIcon, null, { default: () => h(ProfileOutlined) })}
+                        h(NIcon, null, { default: () => h(ProfileOutlined) })} 
                   ), default: () => '查看'}
-            ),
-            h(NPopconfirm, {onPositiveClick: () => {pub(row)}}, {trigger: () =>
-                  h(NTooltip, {}, {trigger: () =>
-                        h(NButton, {disabled: row.apiAuthorizer === null || row.apiStatus === '审核中', circle: true, type: row.apiStatus === '待发布' ? 'info' : 'warning', size: 'tiny', class: 'edit'}, {icon: () =>
-                              h(NIcon, null, {
-                                default: () => row.apiStatus === '待发布'
-                                    ? h(ToTopOutlined)
-                                    : h(VerticalAlignBottomOutlined)
-                              })}
-                        ), default: () =>
-                        row.apiStatus === '待发布' ? '发布' : (row.apiStatus === '审核中' ? '审核中' : '下线')}
-                  ), default: () =>
-                  row.apiStatus === '待发布' ? '确定发布吗？' : '确定下线吗？'}
             )
           ]
         })
@@ -295,41 +309,25 @@ const statusOptions = [
     value: '1'
   }
 ]
-const approveRule = {
-  reasonForApplication: {
-    required: true,
-    message: '请输入理由',
-    trigger: 'blur'
-  }
-}
 
 const getApiTreeUrl = utils.getUrl('interface/getApiTreeFloder')
 const dataRef = ref([])
 const loadingRef = ref(false)
-const showModal = ref(false)
-const approvalModalShow = ref(false)
-const drawTitle = ref('')
-const drawId = ref('')
-const userList = ref([])
-const apiAuthorizer = ref([])
-const apiAuthorizerName = ref('')
 const folderData = ref([])
-const approvalFormRef = ref()
-const approvalForm = ref({
-  objNum: 0,
-  objName: '',
-  approvalType: 5,
-  approvalStatus: 2,
-  releaseState: 1,
-  reasonForApplication: ''
-})
-const actAuth = (row) => {
-  showModal.value = true
-  drawTitle.value = row.apiName
-  drawId.value = row.apiId
-  queryUser()
-}
-const message = useMessage()
+
+// 调试相关变量
+const active = ref(false)
+const drawTitle = ref('')
+const drawPath = ref('')
+const drawId = ref('')
+const drawScript = ref('')
+const drawMethod = ref('')
+const bodyParamList = ref([])
+const headerParamList = ref([])
+const queryParamList = ref([])
+const code = ref('')
+const startTime = ref(0)
+const executionTime = ref(0)
 
 const menuIcon = () => {
   return h('svg', {
@@ -344,39 +342,6 @@ const menuIcon = () => {
       fill: '#0099CB'
     })
   ])
-}
-
-function queryUser() {
-  const listUrl = utils.getUrl('interface/getUser')
-  const authListUrl = utils.getUrl('interface/getAuthorizeInfo')
-  apiAxios.get(listUrl).then(function (response) {
-    userList.value = response.data.data
-    userList.value = userList.value.map((item) => {
-      let tempList = {}
-      tempList.value = item.id
-      tempList.label = item.userName
-      return tempList
-    })
-  })
-  let authBody = {
-    'apiId': ''
-  }
-  authBody.apiId = drawId.value
-  apiAxios.post(authListUrl, authBody).then(function (response) {
-    let list = response.data.data
-    apiAuthorizer.value = list.map((item) => {
-      let authList
-      authList = item.id
-      return authList
-    })
-    apiAuthorizerName.value = list
-        .map((item) => {
-          let authList
-          authList = item.userName
-          return authList
-        })
-        .join(',')
-  })
 }
 
 function handlePageChange(currentPage, pageSize) {
@@ -458,39 +423,149 @@ function query(page, pageSize = 30, apiName = '', apiFlag = '', apiStatus = '', 
   })
 }
 
-const handleApprovalDefinition = () => {
-  approvalFormRef.value.validate(async (errors) => {
-    if (!errors) {
-      await insertApproval(approvalForm.value)
-      window.$message.success('提交成功')
-      approvalModalShow.value = false
-      handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-    } else {
-      message.error('验证失败，请填写完整信息')
+// 调试相关函数
+const activate = (row) => {
+  code.value = ''
+  active.value = true
+  drawTitle.value = row.apiName
+  drawPath.value = row.apiPath
+  drawId.value = row.apiId
+  drawScript.value = row.apiScript
+  drawMethod.value = row.apiMethod
+  bodyParamList.value = row.bodyArray.map(item => {
+    return {
+      key: item.paramTitle.trim(),
+      value: item.demoValue,
+      type: item.paramType
     }
   })
-
+  headerParamList.value = row.headersArray
+    .filter(item => item.paramTitle.trim() !== 'HDataApiToken')
+    .map(item => {
+      return {
+        key: item.paramTitle.trim(),
+        value: item.demoValue,
+        type: item.paramType
+      };
+    });
+  queryParamList.value = row.queryArray.map(item => {
+    return {
+      key: item.paramTitle.trim(),
+      value: item.demoValue,
+      type: item.paramType
+    }
+  })
 }
 
-function subAuth() {
-  let subUrl = utils.getUrl('interface/insertAuthorizeInfo')
-  let requestBody = {
-    apiId: drawId.value,
-    'authorizeId': apiAuthorizer.value
+function buildParamArray(paramList) {
+  const result = [];
+  for (let i = 0; i < paramList.length; i++) {
+    const item = paramList[i];
+    let value = item.value;
+
+    if (item.type === '数组') {
+      try {
+        value = JSON.parse(item.value.replace(/\s+/g, ''));
+      } catch (e) {
+        console.warn('Invalid JSON in array param:', item.key, item.value);
+        value = item.value; // 或设为 []
+      }
+    } else if (item.type === '数字' || item.type === 'number') {
+      value = Number(item.value);
+      if (isNaN(value)) value = 0;
+    }
+
+    // 每个参数作为一个独立对象推入数组
+    const paramObj = {};
+    paramObj[item.key] = value;
+    result.push(paramObj);
   }
-  apiAxios.post(subUrl, requestBody)
-      .then(function (response) {
-        message.info('授权成功')
-        showModal.value = false
-        handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-      })
-      .catch(function (error) {
-        message.info('授权失败,请联系管理员')
-        console.log(error)
-      })
+  return result;
 }
+
+function debugApi() {
+  let url = drawPath.value
+  startTime.value = Date.now()
+  if (url.indexOf('proxy') > 0) {
+    let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
+    const requestBody = {
+      bodyArray: buildParamArray(bodyParamList.value || []),
+      headersArray: buildParamArray(headerParamList.value || []),
+      queryArray: buildParamArray(queryParamList.value || []),
+      httpMethod: drawMethod.value
+    }
+      apiAxios.post(regUrl, requestBody)
+        .then(function (response) {
+          code.value = JSON.stringify(response.data, null, 2)
+          executionTime.value = Date.now() - startTime.value
+          updateApiTimeConsuming(drawId.value, executionTime.value)
+        })
+        .catch(function (error) {
+          code.value = JSON.stringify(error, null, 2)
+          console.log(error)
+        })
+  } else {
+      let sqlUrl = utils.getUrl('interface-ui/api/perform?id=' + drawId.value)
+      let requestBody = {}
+      let list = bodyParamList.value || []
+      for (let i = 0; i < list.length; i++) {
+        requestBody[list[i].key] = list[i].type === '数组'
+          ? JSON.parse(list[i].value.replace(/\s+/g, ''))
+          : (list[i].type === '数字' || list[i].type === 'number')
+            ? Number(list[i].value)
+            : list[i].value;
+      }
+      let sqlBody = {
+        id: drawId.value,
+        select: 'POST',
+        apiPath: drawPath.value,
+        codeType: 'SQL',
+        codeValue: drawScript.value,
+        requestBody: requestBody,
+        optionInfo: {
+          resultStructure: true,
+          responseFormat:
+            '{\n "success" : "@resultStatus",\n "message" : "@resultMessage",\n "code" : "@resultCode",\n "lifeCycleTime": "@timeLifeCycle",\n "executionTime": "@timeExecution",\n "value" : "@resultData"\n}'
+        }
+      }
+      apiAxios.post(sqlUrl, sqlBody)
+        .then(function (response) {
+          code.value = JSON.stringify(response.data, null, 2)
+          executionTime.value = response.data.executionTime
+          updateApiTimeConsuming(drawId.value, executionTime.value)
+        })
+        .catch(function (error) {
+          code.value = JSON.stringify(error, null, 2)
+          console.log(error)
+        })
+    }
+}
+
+function updateApiTimeConsuming(apiId, timeConsuming) {
+  const url = utils.getUrl('interface/updateApiTimeConsuming')
+  const params = {
+    apiId: apiId,
+    timeConsuming: timeConsuming
+  }
+  apiAxios.post(url, params).then(function (response) {
+    console.log(response.data)
+  }).catch(function (error) {
+    console.log(error)
+  })
+}
+
+function dialogVisible() {
+  active.value = false
+  executionTime.value = 0
+}
+
 const columnsRef = ref(
     columns(
+              {
+          debug(row) {
+            activate(row)
+          }
+        },
         {
           play(row) {
             router.push({
@@ -500,68 +575,6 @@ const columnsRef = ref(
                 }
             )
             }
-        },
-        {
-          async pub(row) {
-            const approvalConfig = await queryApprovalConfig()
-            if (approvalConfig[4].configurationStatus === 1) {
-              approvalForm.value.reasonForApplication = ''
-              approvalForm.value.objNum = row.apiId
-              approvalForm.value.objName = row.apiName
-              approvalForm.value.releaseState = row.apiStatus === '待发布' ? 1 : 0
-              approvalModalShow.value = true
-            } else {
-              if (row.apiStatus === '待发布') {
-                if (row.apiFlag === '自定义SQL') {
-                  let urlPub = utils.getUrl(`interface-ui/api/publish?id=${row.apiId}`)
-                  let pubPar = {
-                    id: ''
-                  }
-                  pubPar.id = row.apiId
-                  apiAxios.post(urlPub, pubPar).then(function (response) {
-                    message.info(`成功发布 ${row.apiName}`)
-                    handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-                  }).catch(function (error) {
-                    message.info('发布失败,请联系管理员')
-                    console.log(error)
-                  })
-                } else {
-                  let urlPub = utils.getUrl('interface/upAndDownLines')
-                  let pubPar = {
-                    apiId: '',
-                    apiStatus: 1
-                  }
-                  pubPar.apiId = row.apiId
-                  apiAxios.post(urlPub, pubPar).then(function (response) {
-                    message.info(`成功发布 ${row.apiName}`)
-                    handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-                  }).catch(function (error) {
-                    message.info('发布失败,请联系管理员')
-                    console.log(error)
-                  })
-                }
-              } else {
-                let urlPub = utils.getUrl('interface/upAndDownLines')
-                let pubPar = {
-                  apiId: '',
-                  apiStatus: 0
-                }
-                pubPar.apiId = row.apiId
-                apiAxios.post(urlPub, pubPar).then(function (response) {
-                  message.info(`成功下线 ${row.apiName}`)
-                  handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-                }).catch(function (error) {
-                  message.info('下线失败,请联系管理员')
-                  console.log(error)
-                })
-              }
-            }
-          }
-        },
-        {
-          auth(row) {
-            actAuth(row)
-          }
         }
     )
 )

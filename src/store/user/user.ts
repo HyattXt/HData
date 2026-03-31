@@ -36,6 +36,9 @@ export const useUserStore = defineStore({
     },
     getUniwaterUtoken(): string | null {
       return this.uniwaterUtoken
+    },
+    isLoggedIn(): boolean {
+      return !!(this.sessionId || (this.userInfo as any)?.id)
     }
   },
   actions: {

@@ -1,936 +1,638 @@
 <template>
-  <CrudForm :width="'calc(100% - ' + (280 + 12) + 'px)'">
-    <template v-slot:tree>
-      <crudTree
-        addButton
-        @add-event="showAddRef = !showAddRef"
-        :tree-folder="treeFolder"
-        :folder-data="treeFolder"
-        :show-spin="showSpin"
-        :menuIcon="menuIcon"
-        :nodeProps="nodeProps"
-        :renderSuffix="renderSuffix"
-        v-model:showUpdateRef="showUpdateRef"
-        v-model:showAddRef="showAddRef"
-        v-model:updateFormValue="updateFormValue"
-        v-model:addFormValue="addFormValue"
-        v-model:selectedMenu="selectedMenu"
-        @update-menu="updateMenu"
-        @create-menu="createMenu"
-      />
-    </template>
-    <template v-slot:header>
-      <CrudHeader
-        title="API开发"
-        addButton
-        updateButton
-        deleteButton
-        :disableUpdate="ifDisableUpdate"
-        :disableDelete="ifDisableDelete"
-        @add-event="showModal = !showModal"
-        @update-event="editMetadata(currentRow)"
-        @delete-event="delConfirm"
-      />
-    </template>
-    <template v-slot:condition>
-      <el-form inline>
-        <el-form-item label="名称">
-          <el-input
-            type="text"
-            style="width: 180px"
-            clearable
-            v-model="paginationReactive.apiName"
-          />
-        </el-form-item>
-        <el-form-item label="API类型">
-          <el-select
-            v-model="paginationReactive.apiFlag"
-            clearable
-            style="width: 180px"
-            popper-class="form-item-select"
-          >
-            <el-option
-              v-for="item in stateOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="API状态">
-          <el-select
-            v-model="paginationReactive.apiStatus"
-            clearable
-            style="width: 180px"
-            popper-class="form-item-select"
-          >
-            <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="路径">
-          <el-input
-            type="text"
-            style="width: 180px"
-            clearable
-            v-model="paginationReactive.apiPath"
-          />
-        </el-form-item>
-      </el-form>
-    </template>
-    <template v-slot:query>
-      <el-button
-        color="#0099CB"
-        class="cue-crud__header-query"
-        type="primary"
-        size="default"
-        @click="handlePageChange(1, paginationReactive.pageSize)"
-        >查询
-      </el-button>
-    </template>
-    <template v-slot:table>
-      <CrudTable
-        :tableData="dataRef"
-        :columnData="columns"
-        :loadingRef="loadingRef"
-        @current-change="handleCurrentChange"
-      />
-    </template>
-    <template v-slot:page>
-      <CrudPage
-        :paginationReactive="paginationReactive"
-        @page-change="handlePageChange"
-      />
-    </template>
-  </CrudForm>
-  <el-dialog v-model="active" :before-close="dialogVisible" :width="600">
-    <template #header> API调试: {{ drawTitle }} </template>
-    <crudSplit class="titleSplit" title="调试URL" />
-    <n-input v-model:value="drawPath" style="margin: 10px 0 20px 0" />
-    <!-- query 参数 -->
-    <template v-if="queryParamList && queryParamList.length > 0">
-      <crudSplit class="titleSplit" title="query参数" />
-      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
-        <thead>
-        <tr>
-          <th>参数名称</th>
-          <th>参数值</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in queryParamList" :key="index">
-          <td>{{ item.key }}</td>
-          <n-input v-model:value="item.value" size="large"></n-input>
-        </tr>
-        </tbody>
-      </n-table>
-    </template>
-
-    <!-- body 参数 -->
-    <template v-if="bodyParamList && bodyParamList.length > 0">
-      <crudSplit class="titleSplit" title="body参数" />
-      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
-        <thead>
-        <tr>
-          <th>参数名称</th>
-          <th>参数值</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in bodyParamList" :key="index">
-          <td>{{ item.key }}</td>
-          <n-input v-model:value="item.value" size="large"></n-input>
-        </tr>
-        </tbody>
-      </n-table>
-    </template>
-
-    <!-- header 参数 -->
-    <template v-if="headerParamList && headerParamList.length > 0">
-      <crudSplit class="titleSplit" title="header参数" />
-      <n-table :single-line="false" size="small" style="margin: 10px 0 10px 0">
-        <thead>
-        <tr>
-          <th>参数名称</th>
-          <th>参数值</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in headerParamList" :key="index">
-          <td>{{ item.key }}</td>
-          <n-input v-model:value="item.value" size="large"></n-input>
-        </tr>
-        </tbody>
-      </n-table>
-    </template>
-    <div
-      style="display: flex; justify-content: space-between; align-items: center"
-    >
-      <n-button
-        type="primary"
-        color="#0099CB"
-        style="margin-right: 10px"
-        @click="debugApi"
-        >开始调试</n-button
-      >
-      <div>返回时间：{{ executionTime }}毫秒</div>
-    </div>
-    <n-card title="调试结果" style="margin-top: 10px">
-      <div>
-        <n-scrollbar style="max-height: 300px; min-height: 100px">
-          <n-config-provider :hljs="hljs">
-            <n-code :code="code" language="javascript" />
-          </n-config-provider>
-        </n-scrollbar>
+  <!-- 🔥 适配 NaiveUI：只做内部弹性布局，不影响外层 -->
+  <div class="api-page-wrapper">
+    <!-- 搜索框：STICKY 固定，永远在顶部，不被滚走 -->
+    <div class="api-search-sticky">
+      <div class="search-container">
+        <div class="search-header">
+          <h1 class="api-title">资源目录</h1>
+          <p class="api-description">浏览全量开放API资源，按需申请使用</p>
+        </div>
+        <div class="search-box">
+          <input v-model="paginationReactive.apiName" @keyup.enter="handlePageChange(1, paginationReactive.pageSize)"
+            placeholder="搜索 API 名称、场景、类型" class="search-input" />
+          <button @click="handlePageChange(1, paginationReactive.pageSize)" class="search-btn">
+            <SearchOutlined />
+            搜索
+          </button>
+        </div>
       </div>
-    </n-card>
-  </el-dialog>
-  <el-dialog v-model="showModal" :width="700">
-    <template #header> API新增 </template>
-    <crudSplit class="titleSplit" title="选择API类型" />
-    <n-data-table
-      bordered
-      :single-line="false"
-      :columns="[
-        { type: 'selection', multiple: false },
-        { title: 'API类型', key: 'API类型' },
-        { title: '描述', key: '描述' }
-      ]"
-      :data="[
-        {
-          key: '自定义SQL',
-          API类型: '自定义SQL',
-          描述: '支持编写自定义查询SQL,直接查询数据源数据，生成数据服务API'
-        },
-        {
-          key: '注册API',
-          API类型: '注册API',
-          描述: '支持将已有Web服务注册到平台进行统一管理'
-        },
-        {
-          key: '标签API',
-          API类型: '标签API',
-          描述: '获取标签系统已有标签，生成API对外提供数据服务'
-        },
-      ]"
-      @update:checked-row-keys="handleCheck"
-      :default-checked-row-keys="['自定义SQL']"
-      style="margin-top: 10px"
-    />
+    </div>
+
+    <!-- 中间主体：左右布局 -->
+    <div class="api-body-layout">
+      <!-- 左侧分类栏 -->
+      <!-- 左侧分类栏 -->
+      <div class="api-sidebar">
+        <div class="tree-title">
+          <NIcon size="22px">
+            <UnorderedListOutlined />
+          </NIcon>
+          资源分类
+        </div>
+
+        <!-- 🔥 全部分类（固定id=1） -->
+        <div class="tree-item tree-item-all" :class="{ active: activeCategory === 1 }" @click="handleCategoryChange(1)">
+          全部分类
+        </div>
+
+        <!-- 原有分类列表 -->
+        <div v-for="item in apiCategories" :key="item.id" class="tree-item"
+          :class="{ active: activeCategory === item.id }" @click="handleCategoryChange(item.id)">
+          {{ item.name }}
+        </div>
+      </div>
+
+      <!-- 右侧内容区：唯一滚动区域 -->
+      <div class="api-right-container">
+        <!-- 🔥 唯一滚动：API 列表 -->
+        <div class="api-list-scroll">
+          <div v-if="dataRef.length === 0" class="empty-tip">暂无数据</div>
+
+          <div class="api-card" v-for="item in dataRef" :key="item.apiId" @click="handleCurrentChange(item)">
+            <div class="card-header">
+              <div class="api-name">
+                <svg class="api-icon" viewBox="0 0 24 24" fill="#165dff">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                </svg>
+                {{ item.apiName }}
+              </div>
+              <div class="card-buttons">
+                <button class="btn btn-view" @click.stop="play(item)">查看详情</button>
+                <button class="btn btn-apply" @click.stop="showApplyDialog(item)">立即申请</button>
+              </div>
+            </div>
+
+            <div class="api-path" :title="item.apiPath">{{ item.apiPath }}</div>
+            <div class="api-info">
+              <el-tag :type="getMethodTagType(item.apiMethod)" size="small" class="method-tag">{{ item.apiMethod
+              }}</el-tag>
+              <el-tag :type="getStatusTagType(item.apiStatus)" size="small" class="status-tag">{{ item.apiStatus
+              }}</el-tag>
+              <span class="info-text">类型：{{ item.apiFlag }}</span>
+              <span class="info-text">提供方：{{ item.apiDataSource || '未知' }}</span>
+            </div>
+            <div class="api-desc" v-if="item.apiComment">{{ item.apiComment }}</div>
+            <div class="api-footer">
+              <span>更新时间：{{ item.apiGmtTime || item.apiCreateTime }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🔥 分页组件：永远固定在底部，不滚动 -->
+        <div class="api-pagination-bar" v-if="dataRef.length > 0">
+          <el-config-provider :locale="zhCn">
+            <el-pagination background :default-page-size="30" :page-sizes="[30, 90, 180, 300]"
+              layout="total, sizes, prev, pager, next" :total="paginationReactive.itemCount"
+              @change="handlePageChange" />
+          </el-config-provider>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 申请弹窗 -->
+  <el-dialog v-model="applyDialogVisible" :width="600" title="API申请" @close="handleClose">
+    <el-form :model="applyForm" label-width="100px" :rules="applyRules" ref="applyFormRef" :show-message="false">
+      <el-form-item label="申请人或单位" prop="applicant"><el-input v-model="applyForm.applicant" /></el-form-item>
+      <el-form-item label="申请理由" prop="reasonForApplication"><el-input type="textarea" v-model="applyForm.reasonForApplication"
+          rows="4" /></el-form-item>
+      <el-form-item label="有效期" prop="expiryDate"><el-date-picker v-model="applyForm.expiryDate" type="datetime"
+          style="width:100%" value-format="YYYY-MM-DD HH:mm:ss" /></el-form-item>
+    </el-form>
     <template #footer>
-      <n-button color="#0099CB" type="primary" size="small" @click="createApi">
-        确定
-      </n-button>
+      <div class="dialog-footer">
+        <el-button @click="handleClose">取消</el-button>
+        <el-button type="primary" @click="submitApply">提交申请</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-  import { ref, reactive, onMounted, h } from 'vue'
-  import { useRouter } from 'vue-router'
-  import apiAxios from '@/utils/api-axios'
-  import { BoxPlotOutlined } from '@vicons/antd'
-  import { NButton, useMessage, NIcon, NPopover } from 'naive-ui'
-  import hljs from 'highlight.js/lib/core'
-  import javascript from 'highlight.js/lib/languages/javascript'
-  import moment from 'moment'
-  import CrudTree from '@/components/cue/crud-tree.vue'
-  import CrudTable from '@/components/cue/crud-table.vue'
-  import { ElButton, ElMessageBox } from 'element-plus'
-  import CrudSplit from '@/components/cue/crud-split.vue'
-  import CrudForm from '@/components/cue/crud-form.vue'
-  import CrudHeader from '@/components/cue/crud-header.vue'
-  import CrudPage from '@/components/cue/crud-page.vue'
-  import { PencilAlt, TrashAlt } from '@vicons/fa'
-  import utils from '@/utils'
+import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import apiAxios from '@/utils/api-axios'
+import { SearchOutlined, UnorderedListOutlined } from '@vicons/antd'
+import { useMessage } from 'naive-ui'
+import moment from 'moment'
+import utils from '@/utils'
+import { ElButton, ElInput, ElForm, ElFormItem, ElDatePicker, ElDialog, ElTag, ElPagination, ElConfigProvider } from 'element-plus'
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import {insertApproval} from "@/service/modules/data-bussiness";
 
-  hljs.registerLanguage('javascript', javascript)
+const router = useRouter()
+const message = useMessage()
 
-  const columns = [
-    {
-      label: 'ID',
-      prop: 'apiId'
-    },
-    {
-      label: '名称',
-      prop: 'apiName'
-    },
-    {
-      label: '方式',
-      prop: 'apiMethod',
-      width: 61
-    },
-    {
-      label: '路径',
-      prop: 'apiPath'
-    },
-    {
-      label: '状态',
-      prop: 'apiStatus',
-      width: 66
-    },
-    {
-      label: 'API类型',
-      prop: 'apiFlag',
-      width: 100
-    },
-    {
-      label: '已绑定资产运营',
-      prop: 'addFlag',
-      width: 120,
-      slots: (row) => {
-        return h('span',row.addFlag === 2 ? '否' : '是')
-      }
-    },
-    {
-      label: '创建时间',
-      prop: 'apiCreateTime'
-    },
-    {
-      label: '操作',
-      prop: 'actions',
-      width: 132,
-      slots: (row) => {
-        return h(
-          ElButton,
-          {
-            class: 'el-button--text',
-            size: 'small',
-            onClick: () => activate(row)
-          },
-          { default: () => '调试' }
-        )
-      }
+const dataRef = ref([])
+const apiCategories = ref([])
+const activeCategory = ref(1)
+const targetApiId = ref(null) // 用于存储从home页面传递过来的apiId
+
+const paginationReactive = reactive({
+  page: 1,
+  pageSize: 30,
+  apiName: '',
+  apiTreeId: '',
+  itemCount: 0,
+})
+
+const applyDialogVisible = ref(false)
+const applyForm = ref({
+  applicant: '',
+  expiryDate: '',
+  approvalStatus: 2,
+  approvalType: 7,
+  releaseState: 2,
+  objName: "",
+  objNum: "",
+  reasonForApplication: ""
+})
+const applyFormRef = ref(null)
+const currentApi = ref(null)
+const applyRules = ref({
+  applicant: [{ required: true, trigger: 'blur' }],
+  reasonForApplication: [{ required: true, trigger: 'blur' }],
+  expiryDate: [{ required: true, trigger: 'change' }],
+})
+
+function query(page, pageSize) {
+  return new Promise((resolve) => {
+    const url = utils.getUrl('interface/getList')
+    const params = {
+      pageNum: page, pageSize,
+      apiName: paginationReactive.apiName,
+      apiTreeId: paginationReactive.apiTreeId,
+      order: 'api_create_time', sort: 'desc',
     }
-  ]
 
-  const TableData = reactive({
-    apiList: [],
-    totalNum: 0
+    // 如果有targetApiId，则添加到查询参数中
+    if (targetApiId.value) {
+      params.apiId = targetApiId.value
+      // 只在首次查询时使用targetApiId，之后清空
+      targetApiId.value = null
+    }
+
+    apiAxios.post(url, params).then((res) => {
+      const list = res.data.data || []
+      const total = res.data.totalNum || 0
+      list.forEach(item => {
+        item.apiCreateTime = item.apiCreateTime ? moment(+item.apiCreateTime).format('YYYY-MM-DD HH:mm') : ''
+        item.apiGmtTime = item.apiGmtTime ? moment(+item.apiGmtTime).format('YYYY-MM-DD HH:mm') : ''
+        const statusMap = { '-1': '删除', '0': '待发布', '1': '已发布', '2': '审核中', '3': '禁用' }
+        item.apiStatus = statusMap[item.apiStatus] || item.apiStatus
+        const flagMap = { 1: '自定义SQL', 2: '注册API', 3: '标签API' }
+        item.apiFlag = flagMap[item.apiFlag] || item.apiFlag
+      })
+      dataRef.value = list
+      paginationReactive.itemCount = total
+      resolve({ list, total })
+    })
   })
+}
 
-  function query(
-    page,
-    pageSize = 30,
-    apiName = '',
-    apiFlag = '',
-    apiStatus = '',
-    apiPath = '',
-    apiTreeId = 1
-  ) {
-    return new Promise((resolve) => {
-      const url = utils.getUrl('interface/getList')
-      const params = {
-        pageNum: page,
-        pageSize: pageSize,
-        apiName: apiName,
-        apiFlag: apiFlag,
-        apiStatus: apiStatus,
-        apiPath: apiPath,
-        apiTreeId: apiTreeId,
-        order: 'api_create_time',
-        sort: 'desc'
-      }
-
-      apiAxios.post(url, params)
-        .then(function (response) {
-          TableData.apiList = response.data.data
-          TableData.totalNum = response.data.totalNum
-          const copiedData = TableData.apiList.map((v) => v)
-          const total = TableData.totalNum
-          const pageCount = Math.ceil(total / pageSize)
-          loadingRef.value = false
-          resolve({
-            pageCount,
-            data: copiedData,
-            total
-          })
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    })
-  }
-
-  const dataRef = ref([])
-  const loadingRef = ref(false)
-  const showSpin = ref(false)
-  const active = ref(false)
-  const drawTitle = ref('')
-  const drawPath = ref('')
-  const drawId = ref('')
-  const drawScript = ref('')
-  const drawMethod = ref('')
-  const bodyParamList = ref([])
-  const headerParamList = ref([])
-  const queryParamList = ref([])
-  const code = ref('')
-  const folderData = ref([])
-  const treeFolder = ref([])
-  const showDropdownRef = ref(false)
-  const showAddRef = ref(false)
-  const currentRow = ref()
-  const ifDisableDelete = ref(true)
-  const ifDisableUpdate = ref(true)
-  const startTime = ref(0)
-  const executionTime = ref(0)
-  const showModal = ref(false)
-  const checkRow = ref(['自定义SQL'])
-  const showUpdateRef = ref(false)
-  const updateFormValue = ref({})
-  const selectedMenu = ref(1)
-  const addFormValue = ref({ titleName: '' })
-  const getApiTreeUrl = utils.getUrl('interface/getApiTree')
-  const addApiTreeUrl = utils.getUrl('interface/insertApiTree')
-  const delApiTreeUrl = utils.getUrl('interface/deleteApiTree')
-  const updateApiTreeUrl = utils.getUrl('interface/updateInterfaceFloderRename')
-  const getApiFolderUrl = utils.getUrl('interface/getApiTreeFloder')
-  const router = useRouter()
-  const rules = {
-    titleName: {
-      required: true,
-      message: '请输入名称',
-      trigger: 'blur'
+const fetchApiCategories = async () => {
+  try {
+    const res = await apiAxios.get(utils.getUrl('interface/getApiTreeFloder'))
+    if (res.data.data?.[0]?.children) {
+      apiCategories.value = res.data.data[0].children.map(item => ({ id: item.id, name: item.titleName }))
     }
-  }
+  } catch (e) { }
+}
 
-  const activate = (row) => {
-    code.value = ''
-    active.value = true
-    drawTitle.value = row.apiName
-    drawPath.value = row.apiPath
-    drawId.value = row.apiId
-    drawScript.value = row.apiScript
-    drawMethod.value = row.apiMethod
-    bodyParamList.value = row.bodyArray.map(item => {
-      return {
-        key: item.paramTitle.trim(),
-        value: item.demoValue,
-        type: item.paramType
-      }
-    })
-    headerParamList.value = row.headersArray
-      .filter(item => item.paramTitle.trim() !== 'HDataApiToken') // 👈 在这里过滤掉
-      .map(item => {
-        return {
-          key: item.paramTitle.trim(),
-          value: item.demoValue,
-          type: item.paramType
-        };
-      });
-    queryParamList.value = row.queryArray.map(item => {
-      return {
-        key: item.paramTitle.trim(),
-        value: item.demoValue,
-        type: item.paramType
-      }
-    })
-  }
-  const message = useMessage()
+const handlePageChange = (page, pageSize) => {
+  paginationReactive.page = page
+  paginationReactive.pageSize = pageSize
+  // 清空apiId，恢复正常查询
+  query(page, pageSize)
+}
 
-  const stateOptions = [
-    {
-      label: '自定义SQL',
-      value: '1'
-    },
-    {
-      label: '注册API',
-      value: '2'
-    },
-    {
-      label: '标签API',
-      value: '3'
+const handleCategoryChange = (id) => {
+  activeCategory.value = id
+  paginationReactive.apiTreeId = id
+  // 清空apiId，恢复正常查询
+  handlePageChange(1, paginationReactive.pageSize)
+}
+
+const handleFilterChange = () => {
+  // 清空apiId，恢复正常查询
+  handlePageChange(1, paginationReactive.pageSize)
+}
+const handleCurrentChange = (item) => { }
+
+const showApplyDialog = (api) => {
+  currentApi.value = api
+  applyForm.value = { 
+    applicant: '', 
+    reasonForApplication: '', 
+    expiryDate: '',
+    objNum: api.apiId,
+    objName: api.apiName,
+    releaseState: 2,
+    approvalStatus: 2,
+    approvalType: 7
+  }
+  applyDialogVisible.value = true
+}
+
+// 处理从home页面传递过来的参数
+const handleIncomingParams = () => {
+  // 从路由state中获取参数
+  const state = history.state
+  if (state) {
+    targetApiId.value = state.apiId || null
+  }
+}
+
+const submitApply = () => {
+  applyFormRef.value.validate(async ok => {
+    if (!ok) {
+      message.error('请填写完整信息')
+      return
     }
-  ]
-  const statusOptions = [
-    {
-      label: '删除',
-      value: '-1'
-    },
-    {
-      label: '待发布',
-      value: '0'
-    },
-    {
-      label: '已发布',
-      value: '1'
-    },
-    {
-      label: '审核中',
-      value: '2'
-    },
-    {
-      label: '禁用',
-      value: '3'
-    }
-  ]
-  function getTreeFolder() {
-    apiAxios.get(getApiTreeUrl)
-      .then((res) => {
-        folderData.value = res.data.data
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  function getApiFolder() {
-    showSpin.value = true
-    apiAxios.get(getApiFolderUrl)
-      .then((res) => {
-        treeFolder.value = res.data.data
-        showSpin.value = false
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  function menuIcon({ option }) {
-    switch (option.type) {
-      case 1:
-        return h('svg', {
-          class: 'icon',
-          viewBox: '0 0 1024 1024',
-          version: '1.1',
-          xmlns: 'http://www.w3.org/2000/svg',
-          width: '16',
-          height: '16',
-        }, [
-          h('path', {
-            d: 'M0 101.888C0 76.288 17.042286 59.245714 42.642286 59.245714h349.915428c17.042286 0 34.084571 17.042286 42.642286 34.157715l16.457143 51.2H972.8c25.6 0 42.642286 17.042286 42.642286 42.642285v733.842286c8.557714 25.6-8.484571 42.715429-34.084572 42.715429H42.642286c-25.6 0-42.642286-17.115429-42.642286-42.715429v-819.2z',
-            fill: '#FFA000',
-          }),
-          h('path', {
-            d: 'M904.557714 912.603429H119.442286c-25.6 0-42.642286-17.115429-42.642286-42.715429v-614.4c0-25.6 17.042286-42.642286 42.642286-42.642286h793.6c25.6 0 42.715429 17.042286 42.715428 42.642286v614.4c0 17.115429-25.6 42.715429-51.2 42.715429',
-            fill: '#FFFFFF',
-          }),
-          h('path', {
-            d: 'M981.357714 963.803429H42.642286c-25.6 0-42.642286-17.115429-42.642286-42.715429V340.845714c0-25.6 17.042286-42.642286 42.642286-42.642285H972.8c34.157714-8.557714 51.2 17.042286 51.2 42.642285v580.242286c0 25.6-17.042286 42.715429-42.642286 42.715429',
-            fill: '#FFCA28',
-          }),
-          h('path', {
-            d: 'M366.957714 631.003429H119.442286c-8.484571 0-25.6-8.557714-25.6-25.6 0-17.115429 8.557714-25.6 25.6-25.6h247.515428c8.484571 0 25.6 8.484571 25.6 25.6-8.557714 17.042286-17.115429 25.6-25.6 25.6m0-153.6H119.442286c-8.484571 0-25.6-8.557714-25.6-25.6 0-17.115429 8.557714-25.6 25.6-25.6h247.515428c8.484571 0 25.6 8.484571 25.6 25.6 0 17.042286-17.115429 25.6-25.6 25.6',
-            fill: '#FFFFFF',
-          }),
-        ])
-      case 2:
-        return h(
-          NIcon,
-          { color: '#0099CB' },
-          { default: () => h(BoxPlotOutlined) }
-        )
-    }
-  }
-  function nodeProps({ option }) {
-    return {
-      onClick() {
-        paginationReactive.apiTreeId = option.id
-        selectedMenu.value = option.id
-        handlePageChange(1, paginationReactive.pageSize)
-      },
-      onContextmenu(e) {
-        e.preventDefault()
-      }
-    }
-  }
-  function renderSuffix({ option }) {
-    if (option.id === selectedMenu.value) {
-      return h(
-        NPopover,
-        {
-          trigger: 'hover',
-          placement: 'bottom',
-          style: { padding: 0, width: '100px' }
-        },
-        {
-          trigger: () =>
-            h(
-              NButton,
-              { text: true, type: 'primary', color: '#000', style:{padding: '5px'} },
-              { default: () => '┄' }
-            ),
-          default: () =>
-            h('div', [
-              h(
-                'div',
-                h(
-                  NButton,
-                  {
-                    onClick: () => updateTree(option.id, option.parentId),
-                    quaternary: true,
-                    style: {
-                      width: '100px',
-                      'font-size': '12px',
-                      'justify-content': 'left'
-                    }
-                  },
-                  {
-                    icon: () =>
-                      h(NIcon, { text: true, size: '12' }, {default: () => h(PencilAlt)}),
-                    default: () => '修改'
-                  }
-                )
-              ),
-              h(
-                'div',
-                h(
-                  NButton,
-                  {
-                    onClick: () => delTreeConfirm(option.id, option.titleName),
-                    disabled: !!option.children,
-                    quaternary: true,
-                    style: {
-                      width: '100px',
-                      'font-size': '12px',
-                      'justify-content': 'left'
-                    }
-                  },
-                  {
-                    icon: () =>
-                      h(NIcon, { text: true, size: '12' }, h(TrashAlt)),
-                    default: () => '删除'
-                  }
-                )
-              )
-            ])
-        }
-      )
-    } else {
-      return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
-    }
-  }
-
-  function handleSelect(key, option) {
-    if (option.key !== '删除') {
-      showDropdownRef.value = false
-      showAddRef.value = true
-    }
-  }
-  function handlePageChange(currentPage, pageSize) {
-    if (!loadingRef.value) {
-      loadingRef.value = true
-      paginationReactive.page = currentPage
-      paginationReactive.pageSize = pageSize
-      query(
-        paginationReactive.page,
-        paginationReactive.pageSize,
-        paginationReactive.apiName,
-        paginationReactive.apiFlag,
-        paginationReactive.apiStatus,
-        paginationReactive.apiPath,
-        paginationReactive.apiTreeId
-      ).then((data) => {
-        dataRef.value = data.data
-        dataRef.value.forEach((item) => {
-          let date = new Date(parseInt(item.apiCreateTime))
-          item.apiCreateTime = moment(date).format('YYYY-MM-DD HH:mm:ss')
-        })
-        dataRef.value.forEach((item) => {
-          if (item.apiStatus === '-1') {
-            item.apiStatus = '删除'
-          }
-          if (item.apiStatus === '0') {
-            item.apiStatus = '待发布'
-          }
-          if (item.apiStatus === '1') {
-            item.apiStatus = '已发布'
-          }
-          if (item.apiStatus === '2') {
-            item.apiStatus = '审核中'
-          }
-          if (item.apiStatus === '3') {
-            item.apiStatus = '禁用'
-          }
-        })
-        dataRef.value.forEach((item) => {
-          if (item.apiFlag === 1) {
-            item.apiFlag = '自定义SQL'
-          }
-          if (item.apiFlag === 2) {
-            item.apiFlag = '注册API'
-          }
-          if (item.apiFlag === 3) {
-            item.apiFlag = '标签API'
-          }
-        })
-        paginationReactive.page = currentPage
-        paginationReactive.pageCount = data.pageCount
-        paginationReactive.itemCount = data.total
-      })
-    }
-  }
-
-  const delTreeConfirm = (id, titleName) => {
-    ElMessageBox.confirm('您将删除' + titleName + '，是否继续？', '提示', {
-      cancelButtonText: '取消',
-      confirmButtonText: '确定'
-    })
-      .then(() => {
-        delMenu(id)
-      })
-      .catch(() => {})
-  }
-
-  function updateTree(id, parentId) {
-    showUpdateRef.value = true
-    updateFormValue.value.id = id
-    updateFormValue.value.parentId = parentId
-  }
-
-  function createApi() {
-    if (checkRow.value[0] === '注册API') {
-      router.push({ path: '/service/api-register' })
-    } else {
-      router.push({
-        path: '/service/api-dev-step',
-        state: {type: checkRow.value[0]}
-      })
-    }
-  }
-
-  function handleCheck(rowKeys) {
-    checkRow.value = rowKeys
-  }
-
-  const delConfirm = () => {
-    ElMessageBox.confirm(
-      '您将删除' + currentRow.value.apiName + '，是否继续？',
-      '提示',
-      {
-        cancelButtonText: '取消',
-        confirmButtonText: '确定'
-      }
-    )
-      .then(() => {
-        deleteApi(currentRow.value)
-      })
-      .catch(() => {})
-  }
-
-  function delMenu(id) {
-    let params = {
-      id: id
-    }
-    apiAxios.post(delApiTreeUrl, params)
-      .then((res) => {
-        message.info(res.data.info)
-        showDropdownRef.value = false
-        getTreeFolder()
-        getApiFolder()
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-
-  function deleteApi(row) {
-    let urlDel = utils.getUrl('interface/deleteByApiId')
-    let delPar = {
-      apiId: row.apiId
-    }
-    apiAxios.post(urlDel, delPar)
-      .then(function (response) {
-        message.info(`成功删除 ${row.apiName}`)
-        handlePageChange(paginationReactive.page, paginationReactive.pageSize)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-
-  function updateMenu(ruleFormRef) {
-    let params = {
-      id: updateFormValue.value.id,
-      titleName: updateFormValue.value.titleName,
-      parentId: updateFormValue.value.parentId
-    }
-    apiAxios.post(updateApiTreeUrl, params)
-      .then((res) => {
-        message.info(res.data.info)
-        showUpdateRef.value = false
-        getApiFolder()
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-
-  function createMenu() {
-    let params = {
-      parentId: selectedMenu.value,
-      titleName: addFormValue.value.titleName,
-      type: 1
-    }
-    apiAxios.post(addApiTreeUrl, params)
-      .then((res) => {
-        message.info(res.data.info)
-        showAddRef.value = false
-        getTreeFolder()
-        getApiFolder()
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-    showDropdownRef.value = false
-  }
-
-  function dialogVisible() {
-    active.value = false
-    executionTime.value = 0
-  }
-
-  function handleCurrentChange(val) {
-    currentRow.value = val
-    if (currentRow.value && currentRow.value.apiStatus !== '已发布' && currentRow.value.apiStatus !== '审核中') {
-      ifDisableUpdate.value = false
-      ifDisableDelete.value = currentRow.value.addFlag !== 2
-    } else {
-      ifDisableDelete.value = true
-      ifDisableUpdate.value = true
-    }
-  }
-
-  function editMetadata(row) {
-    if (row.apiFlag === '注册API') {
-      router.push({
-        path: '/service/api-register',
-        query: { apiId: row.apiId }
-      })
-    } else {
-      router.push({
-        path: '/service/api-dev-step',
-        query: { apiId: row.apiId },
-        state: {type: row.apiFlag}
-      })
-    }
-  }
-
-  function buildParamArray(paramList) {
-    const result = [];
-    for (let i = 0; i < paramList.length; i++) {
-      const item = paramList[i];
-      let value = item.value;
-
-      if (item.type === '数组') {
-        try {
-          value = JSON.parse(item.value.replace(/\s+/g, ''));
-        } catch (e) {
-          console.warn('Invalid JSON in array param:', item.key, item.value);
-          value = item.value; // 或设为 []
-        }
-      } else if (item.type === '数字' || item.type === 'number') {
-        value = Number(item.value);
-        if (isNaN(value)) value = 0;
-      }
-
-      // 每个参数作为一个独立对象推入数组
-      const paramObj = {};
-      paramObj[item.key] = value;
-      result.push(paramObj);
-    }
-    return result;
-  }
-
-  function debugApi() {
-    let url = drawPath.value
-    startTime.value = Date.now()
-    if (url.indexOf('proxy') > 0) {
-      let regUrl = utils.getUrl(url.replace('/HData/DevApi/proxy', 'debug/proxy'))
-      const requestBody = {
-        bodyArray: buildParamArray(bodyParamList.value || []),
-        headersArray: buildParamArray(headerParamList.value || []),
-        queryArray: buildParamArray(queryParamList.value || []),
-        httpMethod: drawMethod.value
-      }
-        apiAxios.post(regUrl, requestBody)
-          .then(function (response) {
-            code.value = JSON.stringify(response.data, null, 2)
-            executionTime.value = Date.now() - startTime.value
-            updateApiTimeConsuming(drawId.value, executionTime.value)
-          })
-          .catch(function (error) {
-            code.value = JSON.stringify(error, null, 2)
-            console.log(error)
-          })
-    } else {
-      let sqlUrl = utils.getUrl('interface-ui/api/perform?id=' + drawId.value)
-      let requestBody = {}
-      let list = bodyParamList.value || []
-      for (let i = 0; i < list.length; i++) {
-        requestBody[list[i].key] = list[i].type === '数组'
-          ? JSON.parse(list[i].value.replace(/\s+/g, ''))
-          : (list[i].type === '数字' || list[i].type === 'number')
-            ? Number(list[i].value)
-            : list[i].value;
-      }
-      let sqlBody = {
-        id: drawId.value,
-        select: 'POST',
-        apiPath: drawPath.value,
-        codeType: 'SQL',
-        codeValue: drawScript.value,
-        requestBody: requestBody,
-        optionInfo: {
-          resultStructure: true,
-          responseFormat:
-            '{\n "success" : "@resultStatus",\n "message" : "@resultMessage",\n "code" : "@resultCode",\n "lifeCycleTime": "@timeLifeCycle",\n "executionTime": "@timeExecution",\n "value" : "@resultData"\n}'
-        }
-      }
-      apiAxios.post(sqlUrl, sqlBody)
-        .then(function (response) {
-          code.value = JSON.stringify(response.data, null, 2)
-          executionTime.value = response.data.executionTime
-          updateApiTimeConsuming(drawId.value, executionTime.value)
-        })
-        .catch(function (error) {
-          code.value = JSON.stringify(error, null, 2)
-          console.log(error)
-        })
-    }
-  }
-
-  function updateApiTimeConsuming(id, executeTime) {
-    let url = utils.getUrl('interface/updateApiTimeConsuming')
-    let param = {
-      apiId: id,
-      apiTimeConsuming: executeTime
-    }
-    apiAxios.post(url, param)
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-
-  const paginationReactive = reactive({
-    page: 1,
-    pageCount: 1,
-    pageSize: 10,
-    apiName: '',
-    apiFlag: null,
-    apiStatus: null,
-    apiPath: '',
-    apiTreeId: '',
-    itemCount: 0
+      await insertApproval(applyForm.value)
+      window.$message.success('提交成功')
+      applyDialogVisible.value = false
+      handlePageChange(paginationReactive.page, paginationReactive.pageSize)
   })
-  onMounted(() => {
-    getTreeFolder()
-    getApiFolder()
-    handlePageChange(1, 30)
-  })
+}
+
+const handleClose = () => {
+  applyFormRef.value?.resetFields()
+  applyDialogVisible.value = false
+}
+
+const play = (row) => router.push({ name: 'api-detail', state: { apiId: row.apiId }, query: { back: true } })
+const getMethodTagType = m => ({ GET: 'success', POST: 'primary', PUT: 'warning', DELETE: 'danger' }[m] || 'info')
+const getStatusTagType = s => ({ '已发布': 'success', '待发布': 'warning', '禁用': 'danger' }[s] || 'info')
+
+onMounted(() => {
+  fetchApiCategories()
+  // 处理从home页面传递过来的参数
+  handleIncomingParams()
+  handlePageChange(1, 30)
+})
 </script>
 
 <style scoped>
-  .titleSplit {
-    background: white !important;
-    font-size: 14px !important;
-    padding: 0 !important;
-  }
+/* 最外层：只做弹性，不影响 NaiveUI 滚动 */
+.api-page-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7fa;
+}
 
-  a {
-    text-decoration: none;
-  }
+/* 🔥 真正固定：搜索框 STICKY，永远不滚走 */
+.api-search-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.search-header {
+  flex: 0 0 auto;
+  max-width: 400px;
+}
+
+.api-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px;
+}
+
+.api-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 700px;
+  flex-shrink: 0;
+  margin-left: 65px;
+}
+
+.search-input {
+  flex: 1;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  border-color: #165dff;
+}
+
+.search-btn {
+  height: 38px;
+  padding: 0 18px;
+  background: #165dff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.search-btn :deep(.n-icon) {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+/* 主体左右布局 */
+.api-body-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* 左侧分类容器 */
+.api-sidebar {
+  width: 260px;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 20px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  margin-left: 16px;
+}
+
+/* 标题样式 */
+.tree-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-title i {
+  color: #165dff;
+  font-size: 16px;
+}
+
+/* 分类项 */
+.tree-item {
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #4b5563;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.tree-item:hover {
+  background: #f9fafb;
+  color: #165dff;
+}
+
+.tree-item.active {
+  background: rgba(22, 93, 255, 0.1);
+  color: #165dff;
+  font-weight: 500;
+  border-left: 3px solid #165dff;
+}
+
+/* 筛选分组 */
+.filter-group {
+  margin-top: 28px;
+}
+
+.filter-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #4b5563;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-item:hover {
+  color: #165dff;
+}
+
+
+/* 自定义复选框 */
+.filter-item input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.filter-item input[type="checkbox"]:checked {
+  background: #165dff;
+  border-color: #165dff;
+}
+
+.filter-item input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.filter-item input[type="checkbox"]:hover {
+  border-color: #165dff;
+}
+
+/* 滚动条美化 */
+.api-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.api-sidebar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.api-sidebar::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+/* 右侧容器：弹性 + 内部滚动 */
+.api-right-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+/* 🔥 唯一滚动区域：API 列表 */
+.api-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-tip {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  background: #fff;
+  border-radius: 8px;
+}
+
+/* API 卡片 */
+.api-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #e5e6eb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.api-card:hover {
+  border-color: #165dff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.api-name {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.api-icon {
+  width: 18px;
+  height: 18px;
+  color: #666;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-view {
+  background: #f5f7fa;
+  color: #333;
+}
+
+.btn-apply {
+  background: #165dff;
+  color: #fff;
+}
+
+.api-path {
+  background: #f7f8fa;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #4e5969;
+  font-size: 13px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.api-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.method-tag,
+.status-tag {
+  transform: scale(0.85);
+  transform-origin: left center;
+}
+
+.info-text {
+  font-size: 13px;
+  color: #666;
+}
+
+.api-desc {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.api-footer {
+  font-size: 12px;
+  color: #909399;
+}
+
+/* 🔥 分页条：永远贴底，不滚动 */
+.api-pagination-bar {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #f5f7fa;
+  border-top: 1px solid #e5e6eb;
+  flex-shrink: 0;
+}
 </style>
