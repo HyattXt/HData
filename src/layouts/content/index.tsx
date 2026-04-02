@@ -77,7 +77,7 @@ const Content = defineComponent({
       state.sideMenuOptions =
         state.menuOptions.filter((menu: { key: string }) => menu.key === key)[0]
           ?.children || state.menuOptions
-      state.isShowSide = route.meta.showSide
+      state.isShowSide = typeof route.meta.showSide === 'function' ? route.meta.showSide() : route.meta.showSide
     }
 
     watch(useI18n().locale, () => {
@@ -88,6 +88,14 @@ const Content = defineComponent({
       changeUserDropdown(state)
     })
 
+    watch(() => userStore.getUserInfo, () => {
+      changeMenuOption(state)
+      changeHeaderMenuOptions(state)
+      changeIconMenuOptions(state)
+      getSideMenu(state)
+      changeUserDropdown(state)
+    }, { deep: true })
+
     watch(
       () => ({
         path: route.path,
@@ -95,7 +103,7 @@ const Content = defineComponent({
       () => {
         if (route.path !== '/login') {
           routeStore.setLastRoute(route.path)
-          state.isShowSide = route.meta.showSide as boolean
+          state.isShowSide = typeof route.meta.showSide === 'function' ? route.meta.showSide() : route.meta.showSide
           if (route.matched[1].path === '/projects/:projectCode/workflow/relation' || route.matched[1].path === '/devops/:projectCode/devops_overview') {
             changeMenuOption(state)
           }

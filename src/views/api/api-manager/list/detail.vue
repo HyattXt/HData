@@ -54,22 +54,6 @@
         <CrudSplit class="titleSplit" title="返回字段" />
         <CrudTable :tableData="apiData.responseTable.data" :columnData="apiData.responseTable.columns" />
       </n-card>
-      <n-card size="small">
-        <CrudSplit class="titleSplit" title="自定义SQL" />
-        <n-descriptions label-placement="left" column="1" separator="" style="padding: 18px">
-          <n-descriptions-item>
-            {{ basicInfo.apiScript }}
-          </n-descriptions-item>
-        </n-descriptions>
-      </n-card>
-      <n-card size="small">
-        <CrudSplit class="titleSplit" title="授权用户" />
-        <n-descriptions label-placement="left" column="1" style="padding: 18px">
-          <n-descriptions-item label="用户列表">
-            {{ apiAuthorizerName }}
-          </n-descriptions-item>
-        </n-descriptions>
-      </n-card>
     </div>
   </div>
 </template>

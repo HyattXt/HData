@@ -17,6 +17,7 @@
 
 import type { Component } from 'vue'
 import utils from '@/utils'
+import { useUserStore } from '@/store/user/user'
 const IFrame = () => import('@/views/iframe/index.vue')
 
 // All TSX files under the views folder automatically generate mapping relationship
@@ -27,7 +28,15 @@ export default {
   path: '/data-examine',
   name: 'data-examine',
   meta: { title: 'data-examine' },
-  redirect: { name: 'data-examine-list' },
+  redirect: () => {
+    const userStore = useUserStore()
+    const approvalUserType = (userStore.getUserInfo as any).approvalUserType
+    if (approvalUserType == 1) {
+      return { name: 'data-examine-list' }
+    } else {
+      return { name: 'data-my-approval' }
+    }
+  },
   component: () => import('@/layouts/content'),
   children: [
     {
@@ -70,7 +79,15 @@ export default {
       meta: {
         title: '审批明细-examine-detail',
         activeMenu: 'data-examine',
-        showSide: true,
+        showSide: () => {
+          const userStore = useUserStore()
+          const approvalUserType = (userStore.getUserInfo as any).approvalUserType
+          if (approvalUserType == 1) {
+            return true
+          } else {
+            return false
+          }
+        },
         auth: []
       }
     },
@@ -81,7 +98,15 @@ export default {
       meta: {
         title: '我的申请-data-my-approval',
         activeMenu: 'data-examine',
-        showSide: true,
+        showSide: () => {
+          const userStore = useUserStore()
+          const approvalUserType = (userStore.getUserInfo as any).approvalUserType
+          if (approvalUserType == 1) {
+            return true
+          } else {
+            return false
+          }
+        },
         auth: []
       }
     },

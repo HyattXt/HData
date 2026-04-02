@@ -1,0 +1,520 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 顶部导航栏 */
+.header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .logo-img {
+        width: 32px;
+        height: 32px;
+        background-color: #165DFF;
+        border-radius: 4px;
+      }
+      
+      .logo-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+/* Banner标题区 */
+.banner {
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 60%, #E6F0FF 100%);
+  color: white;
+  padding: 40px 0 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  
+  // 添加装饰元素
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="70" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.5;
+  }
+  
+  .banner-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    
+    .banner-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    
+    .banner-description {
+      font-size: 18px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    // Banner内部的搜索区域
+    .banner-search {
+      max-width: 70%;
+      margin: 32px auto 0;
+      padding: 0;
+      transition: all 0.3s ease;
+      
+      .search-content {
+        width: 100%;
+        
+        .search-container {
+          display: flex;
+          width: 100%;
+          gap: 0;
+        }
+        
+        .search-input {
+          flex: 1;
+          border: none;
+          background-color: white;
+          border-radius: 8px 0 0 8px;
+          padding: 12px 16px;
+          font-size: 16px;
+          color: #333;
+          transition: all 0.3s ease;
+          
+          &::placeholder {
+            color: #999;
+          }
+          
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+          }
+        }
+        
+        .search-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background-color: #1677ff;
+          color: white;
+          border: none;
+          border-radius: 0 8px 8px 0;
+          padding: 12px 24px;
+          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          
+          &:hover {
+            background-color: #4096ff;
+          }
+        }
+        
+        .hot-tags {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          margin-top: 12px;
+          gap: 8px;
+        }
+        
+        .hot-tags-label {
+          color: white;
+          font-size: 14px;
+        }
+        
+        .hot-tag {
+          color: white;
+          font-size: 14px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .search-container {
+            flex-direction: column;
+            gap: 8px;
+          }
+          
+          .search-input {
+            border-radius: 8px;
+          }
+          
+          .search-button {
+            border-radius: 8px;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 60px 0 100px;
+    
+    .banner-content {
+      .banner-title {
+        font-size: 32px;
+      }
+      
+      .banner-description {
+        font-size: 16px;
+      }
+      
+      .banner-search {
+        padding: 24px;
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    padding: 40px 0 80px;
+    
+    .banner-content {
+      .banner-title {
+        font-size: 24px;
+      }
+      
+      .banner-description {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/* API分类导航 */
+.categories {
+  max-width: 1400px;
+  margin: 40px auto 40px;
+  padding: 0 20px;
+  
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .categories-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      }
+      
+      .category-name {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+  }
+}
+
+/* API资源列表 */
+.api-list {
+  max-width: 1400px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+  
+  .api-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .api-count {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .api-list-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+    
+    .api-card {
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 250px;
+      padding: 8px;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+      }
+      
+      .api-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        
+        .api-name {
+          font-size: 20px;
+          font-weight: 600;
+          margin: 0;
+          color: #333;
+        }
+      }
+      
+      .api-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 16px;
+        line-height: 1.4;
+        min-height: 40px;
+      }
+      
+      .api-tags {
+        margin-bottom: 16px;
+        
+        :deep(.n-tag) {
+          margin-right: 8px;
+          margin-bottom: 8px;
+        }
+      }
+      
+      .api-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #999;
+        
+        .api-provider {
+          flex: 1;
+        }
+        
+        .api-update {
+          text-align: right;
+        }
+      }
+      
+      .api-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 16px;
+        justify-content: flex-end;
+        
+        :deep(.n-button) {
+          border-radius: 4px;
+          padding: 10px 16px;
+          font-size: 14px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+        
+        :deep(.n-button[type="default"]) {
+          background-color: white;
+          border: 1px solid #e8e8e8;
+          color: #333;
+          
+          &:hover {
+            border-color: #165DFF;
+          }
+        }
+        
+        :deep(.n-button[type="primary"]) {
+          background-color: #165DFF;
+          border: none;
+          color: white;
+          
+          &:hover {
+            background-color: rgba(22, 93, 255, 0.9);
+          }
+        }
+      }
+    }
+  }
+  
+  .load-more {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .load-more-btn {
+    padding: 10px 24px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: #165DFF;
+      color: #165DFF;
+    }
+  }
+}
+
+/* 底部版权信息 */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 40px 0;
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    
+    p {
+      margin: 8px 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .banner {
+    padding: 60px 0;
+    
+    .banner-content {
+      .banner-title {
+        font-size: 32px;
+      }
+      
+      .banner-description {
+        font-size: 16px;
+      }
+    }
+  }
+  
+  .search {
+    margin: -20px 20px 30px;
+    padding: 30px 0;
+  }
+  
+  .api-list {
+    .api-list-content {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    .header-content {
+      padding: 0 16px;
+      
+      .logo {
+        .logo-text {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  
+  .banner {
+    padding: 40px 0;
+    
+    .banner-content {
+      .banner-title {
+        font-size: 24px;
+      }
+      
+      .banner-description {
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .categories {
+    .categories-content {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      
+      .category-item {
+        padding: 16px;
+        
+        span {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

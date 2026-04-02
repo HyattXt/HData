@@ -156,6 +156,7 @@ const applyRules = ref({
   reasonForApplication: [{ required: true, trigger: 'blur' }],
   expiryDate: [{ required: true, trigger: 'change' }],
 })
+const isSubmitting = ref(false)
 
 function query(page, pageSize) {
   return new Promise((resolve) => {
@@ -246,15 +247,29 @@ const handleIncomingParams = () => {
 }
 
 const submitApply = () => {
+  // 防止重复提交
+  if (isSubmitting.value) {
+    return
+  }
+  
   applyFormRef.value.validate(async ok => {
     if (!ok) {
       message.error('请填写完整信息')
       return
     }
+    
+    try {
+      isSubmitting.value = true
       await insertApproval(applyForm.value)
       window.$message.success('提交成功')
       applyDialogVisible.value = false
       handlePageChange(paginationReactive.page, paginationReactive.pageSize)
+    } catch (error) {
+      console.error('提交失败:', error)
+    } finally {
+      // 无论成功还是失败，都要重置提交状态
+      isSubmitting.value = false
+    }
   })
 }
 

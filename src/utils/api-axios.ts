@@ -14,11 +14,11 @@ const apiAxios = {
     }
   },
 
-  get: (url: string, params?: object) =>
-    apiAxios.request({ method: 'get', url }),
+  get: (url: string, params?: object, config?: AxiosRequestConfig) =>
+    apiAxios.request({ method: 'get', url, params, ...config }),
 
-  post: (url: string, data?: object) =>
-    apiAxios.request({ method: 'post', url, data })
+  post: (url: string, data?: object, config?: AxiosRequestConfig) =>
+    apiAxios.request({ method: 'post', url, data, ...config })
 }
 
 export default apiAxios

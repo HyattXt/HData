@@ -6,19 +6,6 @@
     <template v-slot:condition>
       <n-form :show-feedback="false" :model="paginationReactive" label-placement="left" style="margin-bottom: 3px">
         <n-grid :cols="22" :x-gap="16">
-        <n-form-item-gi label="目录" :span="4">
-          <n-tree-select
-              v-model:value="paginationReactive.apiTreeId"
-              :options="folderData"
-              key-field="id"
-              label-field="titleName"
-              children-field="children"
-              placeholder="请选择"
-              size="small"
-              :default-expanded-keys="[1]"
-              :render-prefix="menuIcon"
-          />
-        </n-form-item-gi>
         <n-form-item-gi
             :span="4"
             label="名称"
@@ -28,32 +15,6 @@
               clearable
               size="small"
               v-model:value="paginationReactive.apiName"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi :span="4" label="API类型">
-          <n-select
-              size="small"
-              v-model:value="paginationReactive.apiFlag"
-              :options="stateOptions"
-              clearable
-              placeholder="请选择"
-              class="from-n-select"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi :span="4" label="API状态">
-          <n-select
-              size="small"
-              v-model:value="paginationReactive.apiStatus"
-              :options="statusOptions"
-              clearable
-              placeholder="请选择"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi :span="4" label="路径">
-          <n-input
-              clearable
-              size="small"
-              v-model:value="paginationReactive.apiPath"
           />
         </n-form-item-gi>
         <n-form-item-gi :span="2">
@@ -168,6 +129,32 @@
       </div>
     </template>
   </el-dialog>
+
+  <!-- 令牌弹窗 -->
+  <el-dialog
+    v-model="tokenDialogVisible"
+    title="API令牌"
+    width="660px"
+  >
+    <el-table :data="tokenList" style="width: 100%">
+      <el-table-column prop="token" label="令牌" width="300" />
+      <el-table-column prop="expire_time" label="过期时间">
+        <template #default="scope">
+          {{ scope.row.expire_time ? moment(scope.row.expire_time).format('YYYY-MM-DD HH:mm:ss') : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="create_time" label="创建时间">
+        <template #default="scope">
+          {{ scope.row.create_time ? moment(scope.row.create_time).format('YYYY-MM-DD HH:mm:ss') : '' }}
+        </template>
+      </el-table-column>
+    </el-table>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="tokenDialogVisible = false">关闭</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -177,6 +164,7 @@ import {
   ProfileOutlined,
   BugFilled
 } from '@vicons/antd'
+import { Key20Regular } from '@vicons/fluent'
 import {
   NButton,
   NSpace,
@@ -189,13 +177,13 @@ import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
 import moment from 'moment'
 import CrudHeader from "@/components/cue/crud-header.vue";
-import {ElButton, ElDialog} from "element-plus";
 import {Search} from "@element-plus/icons-vue";
 import CrudForm from "@/components/cue/crud-form.vue";
 import router from "@/router";
 import CrudPage from "@/components/cue/crud-page.vue";
 import crudSplit from "@/components/cue/crud-split.vue";
 import utils from "@/utils";
+import { useUserStore } from '@/store/user/user'
 
 hljs.registerLanguage('javascript', javascript)
 
@@ -269,6 +257,11 @@ const columns = ( { debug }, { play } ) => {
                   h(NButton, {circle: true, type: 'info', size: 'tiny', class: 'edit', onClick: () => {play(row)}}, {icon: () =>
                         h(NIcon, null, { default: () => h(ProfileOutlined) })} 
                   ), default: () => '查看'}
+            ),
+            h(NTooltip, {}, {trigger: () =>
+                  h(NButton, {circle: true, type: 'info', size: 'tiny', class: 'edit', onClick: () => {showTokenDialog(row)}}, {icon: () =>
+                        h(NIcon, null, { default: () => h(Key20Regular) })} 
+                  ), default: () => '令牌'}
             )
           ]
         })
@@ -314,20 +307,25 @@ const getApiTreeUrl = utils.getUrl('interface/getApiTreeFloder')
 const dataRef = ref([])
 const loadingRef = ref(false)
 const folderData = ref([])
+const userStore = useUserStore()
 
 // 调试相关变量
 const active = ref(false)
+const code = ref('')
 const drawTitle = ref('')
 const drawPath = ref('')
 const drawId = ref('')
 const drawScript = ref('')
 const drawMethod = ref('')
+const queryParamList = ref([])
 const bodyParamList = ref([])
 const headerParamList = ref([])
-const queryParamList = ref([])
-const code = ref('')
 const startTime = ref(0)
 const executionTime = ref(0)
+
+// 令牌弹窗相关
+const tokenDialogVisible = ref(false)
+const tokenList = ref([])
 
 const menuIcon = () => {
   return h('svg', {
@@ -401,12 +399,17 @@ function handlePageChange(currentPage, pageSize) {
 
 function query(page, pageSize = 30, apiName = '', apiFlag = '', apiStatus = '', apiPath = '', apiTreeId = '') {
   return new Promise((resolve) => {
-    const url = utils.getUrl('interface/getList')
+    const url = utils.getUrl('interface/getMyList')
     const params = {
-      pageNum: page, 'pageSize': pageSize, 'apiName': apiName, 'apiFlag': apiFlag, 'apiStatus': apiStatus, 'apiPath': apiPath, 'apiTreeId': apiTreeId,
+      pageNum: page, 'pageSize': pageSize, 'apiName': apiName,
       order: 'api_create_time', 'sort': 'desc'
     }
-    apiAxios.post(url, params).then(function (response) {
+    let sessionId = userStore.getSessionId
+    apiAxios.post(url, params, {
+      headers: {
+        'sessionid': sessionId
+      }
+    }).then(function (response) {
       TableData.apiList = response.data.data
       TableData.totalNum = response.data.totalNum
       const copiedData = TableData.apiList.map((v) => v)
@@ -455,6 +458,39 @@ const activate = (row) => {
       type: item.paramType
     }
   })
+}
+
+// 显示令牌弹窗
+const showTokenDialog = (row) => {
+  tokenDialogVisible.value = true
+  getTokens(row.apiId)
+}
+
+// 获取令牌列表
+const getTokens = async (apiId) => {
+  try {
+    const url = utils.getUrl('interface/getMyToken')
+    const params = {
+      apiId: apiId
+    }
+    let sessionId = userStore.getSessionId
+    
+    const response = await apiAxios.post(url, params, {
+      headers: {
+        'sessionid': sessionId
+      }
+    })
+    
+    // 处理返回数据
+    if (response.data && response.data.data) {
+      tokenList.value = response.data.data
+    } else {
+      tokenList.value = []
+    }
+  } catch (error) {
+    console.error('获取令牌失败:', error)
+    tokenList.value = []
+  }
 }
 
 function buildParamArray(paramList) {

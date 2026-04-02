@@ -142,7 +142,7 @@ export function useDataList() {
           }
         ]
       },
-      ...((userStore.getUserInfo as UserInfoRes).userType == 'ADMIN_USER'
+      ...((userStore.getUserInfo as UserInfoRes).approvalUserType == 1
         ? [
           {
             label: () => h(NEllipsis, null, { default: () => t('menu.token_manage') }),
@@ -166,52 +166,66 @@ export function useDataList() {
       {
         label: () => h(NEllipsis, null, { default: () => t('menu.data_examine') }),
         key: 'data-examine',
-        children: [
-          {
-            label: t('menu.examine_list'),
-            key: '/data-examine/examine-list',
-            icon: renderIcon(BarsOutlined),
-            onClick: (e: MouseEvent) => {
-              if (!checkLogin('/data-examine/examine-list')) {
-                e.preventDefault()
-                return false
+        children: (userStore.getUserInfo as UserInfoRes).approvalUserType == 1
+          ? [
+              {
+                label: t('menu.examine_list'),
+                key: '/data-examine/examine-list',
+                icon: renderIcon(BarsOutlined),
+                onClick: (e: MouseEvent) => {
+                  if (!checkLogin('/data-examine/examine-list')) {
+                    e.preventDefault()
+                    return false
+                  }
+                }
+              },
+              {
+                label: t('menu.my_examine'),
+                key: '/data-examine/my-examine',
+                icon: renderIcon(DocumentBulletListClock20Regular),
+                onClick: (e: MouseEvent) => {
+                  if (!checkLogin('/data-examine/my-examine')) {
+                    e.preventDefault()
+                    return false
+                  }
+                }
+              },
+              {
+                label: t('menu.already_examine'),
+                key: '/data-examine/already-examine',
+                icon: renderIcon(PlaylistAddCheckTwotone),
+                onClick: (e: MouseEvent) => {
+                  if (!checkLogin('/data-examine/already-examine')) {
+                    e.preventDefault()
+                    return false
+                  }
+                }
+              },
+              {
+                label: t('menu.my_approval'),
+                key: '/data-examine/my-approval',
+                icon: renderIcon(MyLocation16Filled),
+                onClick: (e: MouseEvent) => {
+                  if (!checkLogin('/data-examine/my-approval')) {
+                    e.preventDefault()
+                    return false
+                  }
+                }
               }
-            }
-          },
-          {
-            label: t('menu.my_examine'),
-            key: '/data-examine/my-examine',
-            icon: renderIcon(DocumentBulletListClock20Regular),
-            onClick: (e: MouseEvent) => {
-              if (!checkLogin('/data-examine/my-examine')) {
-                e.preventDefault()
-                return false
+            ]
+          : [
+              {
+                label: t('menu.my_approval'),
+                key: '/data-examine/my-approval',
+                icon: renderIcon(MyLocation16Filled),
+                onClick: (e: MouseEvent) => {
+                  if (!checkLogin('/data-examine/my-approval')) {
+                    e.preventDefault()
+                    return false
+                  }
+                }
               }
-            }
-          },
-          {
-            label: t('menu.already_examine'),
-            key: '/data-examine/already-examine',
-            icon: renderIcon(PlaylistAddCheckTwotone),
-            onClick: (e: MouseEvent) => {
-              if (!checkLogin('/data-examine/already-examine')) {
-                e.preventDefault()
-                return false
-              }
-            }
-          },
-          {
-            label: t('menu.my_approval'),
-            key: '/data-examine/my-approval',
-            icon: renderIcon(MyLocation16Filled),
-            onClick: (e: MouseEvent) => {
-              if (!checkLogin('/data-examine/my-approval')) {
-                e.preventDefault()
-                return false
-              }
-            }
-          }
-        ]
+            ]
       }
     ]
   }
