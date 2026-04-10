@@ -17,6 +17,7 @@
 
 import { axios } from '@/service/service'
 import { LoginReq } from './types'
+import { RegisterUserReq } from '../users/types'
 
 export function login(data: LoginReq): any {
   return axios({
@@ -37,5 +38,21 @@ export function captchaUrl(): any {
   return axios({
     url: '/defaultKaptcha',
     method: 'get'
+  })
+}
+
+export function sendVerificationCode(data: { phone: string, captcha: string }): any {
+  return axios({
+    url: '/verification-code/send',
+    method: 'post',
+    data
+  })
+}
+
+export function registerUser(data: RegisterUserReq): any {
+  return axios({
+    url: '/register',
+    method: 'post',
+    data
   })
 }

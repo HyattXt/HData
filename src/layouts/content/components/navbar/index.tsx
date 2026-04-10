@@ -30,6 +30,7 @@ import { useMessage } from 'naive-ui'
 import { InfoCircleOutlined, FormOutlined, CloudOutlined } from '@vicons/antd'
 import { Cloud } from '@vicons/fa'
 import { useDataList } from '@/layouts/content/use-dataList'
+import { sendVerificationCode, registerUser } from '@/service/modules/login'
 
 const Navbar = defineComponent({
   name: 'Navbar',
@@ -82,7 +83,8 @@ const Navbar = defineComponent({
       phone: '',
       code: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      captcha: ''
     })
 
     // 注册表单校验规则
@@ -137,6 +139,15 @@ const Navbar = defineComponent({
           }
           return true
         }
+      },
+      captcha: {
+        trigger: ['blur', 'input'],
+        validator() {
+          if (!registerForm.captcha) {
+            return new Error('请输入图形验证码')
+          }
+          return true
+        }
       }
     }
     const countdown = ref(0)
@@ -178,6 +189,7 @@ const Navbar = defineComponent({
       registerForm.code = ''
       registerForm.password = ''
       registerForm.confirmPassword = ''
+      registerForm.captcha = ''
       // 重置到登录标签
       activeTab.value = 'login'
       // 重置验证码倒计时
@@ -191,7 +203,7 @@ const Navbar = defineComponent({
     }
 
     // 获取验证码
-    const getVerificationCode = () => {
+    const getVerificationCode = async () => {
       if (!registerForm.phone) {
         window.$message.warning('请输入手机号')
         return
@@ -200,27 +212,54 @@ const Navbar = defineComponent({
         window.$message.warning('请输入正确的手机号')
         return
       }
-      // 模拟发送验证码
-      window.$message.success('验证码已发送')
-      // 开始倒计时
-      countdown.value = 60
-      isCounting.value = true
-      const timer = setInterval(() => {
-        countdown.value--
-        if (countdown.value <= 0) {
-          clearInterval(timer)
-          isCounting.value = false
+      if (!registerForm.captcha) {
+        window.$message.warning('请输入图形验证码')
+        return
+      }
+      
+      try {
+        // 调用后端发送验证码接口
+        const params = {
+          phone: registerForm.phone,
+          captcha: registerForm.captcha
         }
-      }, 1000)
+        await sendVerificationCode(params)
+        
+        window.$message.success('验证码已发送')
+        // 开始倒计时
+        countdown.value = 60
+        isCounting.value = true
+        const timer = setInterval(() => {
+          countdown.value--
+          if (countdown.value <= 0) {
+            clearInterval(timer)
+            isCounting.value = false
+          }
+        }, 1000)
+      } catch (error) {
+        // 发送失败，刷新图形验证码
+        getCaptchaUrl()
+      }
     }
 
     // 注册
-    const handleRegister = () => {
-      // 表单校验由NForm的rules自动处理
-      // 这里直接执行注册逻辑
-      // 模拟注册
-      window.$message.success('注册成功')
-      activeTab.value = 'login'
+    const handleRegister = async () => {
+      try {
+        // 调用后端注册接口
+        const params = {
+          userName: registerForm.phone,
+          code: registerForm.code,
+          userPassword: registerForm.password,
+          repeatPassword: registerForm.confirmPassword,
+          email: ''
+        }
+        await registerUser(params)
+        
+        window.$message.success('注册成功')
+        activeTab.value = 'login'
+      } catch (error) {
+        window.$message.error('注册失败，请重试')
+      }
     }
 
     watch(
@@ -435,6 +474,24 @@ const Navbar = defineComponent({
                   />
                 </NFormItem>
                 <NFormItem
+                  label="图形验证码"
+                  label-style={{ color: 'black' }}
+                  path='captcha'
+                >
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <NInput
+                      type='text'
+                      size='large'
+                      v-model={[this.registerForm.captcha, 'value']}
+                      placeholder="请输入图形验证码"
+                      style={{ flex: 1 }}
+                    />
+                    <img src={'data:image/jpg;base64,' + this.loginForm.captchaUrl} alt="验证码" 
+                      style={{ width: '120px', height: '40px', cursor: 'pointer' }} 
+                      onClick={this.getCaptchaUrl} />
+                  </div>
+                </NFormItem>
+                <NFormItem
                   label="短信验证码"
                   label-style={{ color: 'black' }}
                   path='code'
@@ -464,7 +521,7 @@ const Navbar = defineComponent({
                 round
                 type='info'
                 disabled={
-                  !this.registerForm.phone || !this.registerForm.password || !this.registerForm.confirmPassword || !this.registerForm.code
+                  !this.registerForm.phone || !this.registerForm.password || !this.registerForm.confirmPassword || !this.registerForm.code || !this.registerForm.captcha
                 }
                 style={{ width: '100%' }}
                 onClick={this.handleRegister}

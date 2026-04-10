@@ -92,6 +92,7 @@ interface RegisterUserReq {
   repeatPassword: string
   userName: string
   userPassword: string
+  code: string
 }
 
 interface UserInfoRes extends UserReq, IdReq {
