@@ -51,7 +51,7 @@ export function sendVerificationCode(data: { phone: string, captcha: string }): 
 
 export function registerUser(data: RegisterUserReq): any {
   return axios({
-    url: '/register',
+    url: '/users/register',
     method: 'post',
     data
   })
