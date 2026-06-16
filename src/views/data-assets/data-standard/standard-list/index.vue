@@ -30,8 +30,8 @@
     </template>
     <template v-slot:condition>
       <el-form inline>
-        <el-form-item label="名称">
-          <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.apiName"/>
+        <el-form-item label="中文名称">
+          <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.chineseName"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-select

@@ -30,7 +30,7 @@
     </template>
     <template v-slot:condition>
       <el-form inline>
-        <el-form-item label="模型名称">
+        <el-form-item label="中文名称">
           <el-input type="text" style="width: 180px" clearable v-model="paginationReactive.chineseName"/>
         </el-form-item>
         <el-form-item label="包含数据元名称">

@@ -166,7 +166,7 @@ function query(
   axios
       .post(url, params)
       .then(function (response) {
-        TableData.tableList = response.data.data
+        TableData.tableList = response.data.data.sort((a, b) => a.id - b.id)
         TableData.totalNum = response.data.totalNum
         paginationReactive.itemCount = TableData.totalNum
         loadingRef.value = false
@@ -276,8 +276,8 @@ function exportToCSV() {
   // 将数据转换为 CSV 格式字符串
   const csvContent = convertToCSV(data, header);
 
-  // 创建 Blob 对象并触发下载
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // 创建 Blob 对象并触发下载（添加 BOM 解决中文乱码）
+  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
   link.setAttribute('href', url);
@@ -288,9 +288,14 @@ function exportToCSV() {
 
 function convertToCSV(data, header) {
   const headers = header.join(',') + '\n';
-  const rows = data.map(row =>
-      Object.values(row).map(val => `"${val}"`).join(',')
-  ).join('\n');
+  const rows = data.map((row, index) => [
+    index + 1,
+    row.spatialDataName,
+    row.spaceMeasurementThreshold,
+    row.spatialQueryMethod,
+    row.topologyAnalysisMethod,
+    row.connectivityAnalysisMethod
+  ].map(val => `"${val || ''}"`).join(',')).join('\n');
   return headers + rows;
 }
 
