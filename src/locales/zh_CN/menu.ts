@@ -93,6 +93,7 @@ export default {
   data_statistic: '标准概览',
   standard_list: '标准列表',
   model_list: '模型列表',
+  value_assessment: '价值评估',
   rest: '接口管理',
   rest_dev: '接口注册',
   rest_manager: '接口管理',

@@ -93,6 +93,7 @@ export default {
   data_statistic: 'Data Statistic',
   standard_list: 'Standard List',
   model_list: 'Model List',
+  value_assessment: 'Value Assessment',
   rest: 'Http manager',
   rest_dev: 'Http development',
   rest_manager: 'Http manager',

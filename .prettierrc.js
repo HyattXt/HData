@@ -21,11 +21,11 @@ module.exports = {
   vueIndentScriptAndStyle: true,
   singleQuote: true,
   quoteProps: 'as-needed',
-  jsxBracketSameLine: false,
+  bracketSameLine: true,          // ← 2.7.0+ 官方替代项，同时作用于 JSX 和 Vue 模板
   jsxSingleQuote: true,
   arrowParens: 'always',
-  htmlWhitespaceSensitivity: 'strict',
+  htmlWhitespaceSensitivity: 'ignore', // ← 建议从 strict 改为 css（Vue 官方推荐）
   endOfLine: 'lf',
-  trailingComma: 'none',
-  printWidth: 120 // 行宽限制（按字符数计算）
+  trailingComma: 'all',
+  printWidth: 120
 }

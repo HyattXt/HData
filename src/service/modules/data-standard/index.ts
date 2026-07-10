@@ -25,7 +25,7 @@ import {
   releaseReq,
   modelTableReq,
   modelColumnReq,
-  createModelColumnReq, modelFieldListReq, dataElementReq
+  createModelColumnReq, modelFieldListReq, dataElementReq, queryAppliedModelListReq, runLandingCheckRes
 } from './types'
 
 export function queryStandardTreeFolder(data: any): any {
@@ -192,6 +192,18 @@ export function deleteModel(data: modelTreeId): any {
     url: '/Model/delete',
     method: 'post',
     data
+  })
+}
+
+export function batchDeleteModel(data: modelTreeId): any {
+  return axios({
+    url: '/Model/batchDelete',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params)
   })
 }
 
@@ -404,5 +416,89 @@ export function queryModelByName(data: any): any {
       'Content-Type': 'application/json'
     },
     transformRequest: (params) => JSON.stringify(params)
+  })
+}
+
+export function importModel(data: FormData): any {
+  return axios({
+    url: '/Model/import',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function exportDdl(data: { modelIds: string[] }): any {
+  return axios({
+    url: '/Model/exportDdl',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params),
+    responseType: 'blob'
+  })
+}
+
+export function queryAppliedModelDetails(data: queryAppliedModelListReq): any {
+  return axios({
+    url: '/ModelDataElement/queryAppliedModelDetails',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params)
+  })
+}
+
+export function queryAppliedModelList(data: queryAppliedModelListReq): any {
+  return axios({
+    url: '/Model/queryLandingDetail',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params)
+  })
+}
+
+export function runLandingCheck(): any {
+  return axios({
+    url: '/Model/runLandingCheck',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+export function exportLedger(data: { modelIds: number[] }): any {
+  return axios({
+    url: '/Model/exportLedger',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params),
+    responseType: 'blob'
+  })
+}
+
+export function exportModel(data: { modelIds: number[] }): any {
+  return axios({
+    url: '/Model/export',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: (params) => JSON.stringify(params),
+    responseType: 'blob'
   })
 }

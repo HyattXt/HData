@@ -155,6 +155,17 @@ export default {
       }
     },
     {
+      path: '/data-assets/data-standard/value-assessment',
+      name: 'value-assessment',
+      component: () => import('@/views/data-assets/data-standard/value-assessment/index.vue'),
+      meta: {
+        title: '价值评估-value-assessment',
+        activeMenu: 'data-assets',
+        showSide: true,
+        auth: []
+      }
+    },
+    {
       path: '/data-assets/model-classification-review',
       name: 'model-classification-review',
       component: () => import('@/views/data-assets/intelligent-data/model_class.vue'),

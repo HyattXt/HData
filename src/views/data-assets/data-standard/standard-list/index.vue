@@ -26,7 +26,11 @@
           :disableUpdate="!currentRow"
           :disableDelete="ifDisableDelete"
           @add-event="addMetadata" @update-event="editMetadata" @delete-event="delConfirm"
-      />
+      >
+        <template v-slot:button-group>
+          <n-button tertiary size="small" @click="handleRunLandingCheck">落标检测</n-button>
+        </template>
+      </CrudHeader>
     </template>
     <template v-slot:condition>
       <el-form inline>
@@ -174,6 +178,29 @@
       </div>
     </template>
   </el-dialog>
+  <el-config-provider :locale="zhCn">
+    <el-dialog
+      v-model="appliedModelDialogVisible"
+      width="1200px"
+      title="模型表明细"
+  >
+    <el-table :data="appliedModelTableData" border style="width: 100%">
+      <el-table-column type="index" label="序号" width="60" align="center" />
+      <el-table-column v-for="col in appliedModelColumns" :key="col.prop" :prop="col.prop" :label="col.label" :width="col.width" :formatter="col.formatter" show-overflow-tooltip />
+    </el-table>
+    <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+      <el-pagination
+          v-model:current-page="appliedModelPagination.page"
+          v-model:page-size="appliedModelPagination.pageSize"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="appliedModelPagination.total"
+          layout="total, sizes, prev, pager, next"
+          @size-change="handleAppliedModelPageChange"
+          @current-change="handleAppliedModelPageChange"
+      />
+    </div>
+    </el-dialog>
+  </el-config-provider>
 </template>
 
 <script setup>
@@ -206,7 +233,7 @@ import {
   updateDataElement,
   deleteDataElement,
   queryElementByName,
-  queryModelElementByName, queryModelDataType
+  queryModelElementByName, queryModelDataType, queryAppliedModelDetails, runLandingCheck
 } from "@/service/modules/data-standard";
 import {Search} from "@element-plus/icons-vue";
 import {insertApproval, queryApprovalConfig} from "@/service/modules/data-bussiness";
@@ -243,6 +270,15 @@ const approvalForm = ref({
 })
 const tableData = ref([])
 const createDate = ref(null)
+const appliedModelDialogVisible = ref(false)
+const appliedModelTableData = ref([])
+const appliedModelPagination = reactive({
+  page: 1,
+  pageSize: 10,
+  total: 0,
+  currentmodelId: null
+})
+
 const paginationReactive = reactive({
   page: 1,
   pageCount: 1,
@@ -307,6 +343,23 @@ const columns =  [
   {
     label: '添加日期',
     prop: 'dataElementAddDate',
+  },
+  {
+    label: '落标数量',
+    prop: 'appliedModelCount',
+    width: 100,
+    slots: (row) => {
+      return h(
+          ElButton,
+          {
+            text: true,
+            type: 'primary',
+            size: 'small',
+            onClick: () => handleShowAppliedModel(row)
+          },
+          { default: () => row.appliedModelCount || 0 }
+      )
+    }
   },
   {
     label: '更新日期',
@@ -800,6 +853,114 @@ function editMetadata() {
   currentRow.value.releaseStatus ? ifUpdate.value = true : ifUpdate.value = false
   rules.value.englishName[1] = {}
   active.value = true
+}
+
+const appliedModelColumns = [
+  {
+    label: '模型ID',
+    prop: 'modelId',
+    width: 80
+  },
+  {
+    label: '模型中文名',
+    prop: 'modelChineseName'
+  },
+  {
+    label: '模型英文名',
+    prop: 'modelEnglishName'
+  },
+  {
+    label: '表类型',
+    prop: 'tableType',
+    width: 100,
+    formatter: (row) => {
+      const map = { '1': '贴源表', '2': '维度表', '3': '事实表', '4': '汇总表' }
+      return map[String(row.tableType)] || row.tableType
+    }
+  },
+  {
+    label: '字段ID',
+    prop: 'fieldId',
+    width: 80
+  },
+  {
+    label: '字段中文名',
+    prop: 'fieldChineseName'
+  },
+  {
+    label: '字段英文名',
+    prop: 'fieldEnglishName'
+  },
+  {
+    label: '字段数据类型',
+    prop: 'fieldDataType',
+    width: 120
+  },
+  {
+    label: '分类名称',
+    prop: 'categoryName'
+  }
+]
+
+const handleShowAppliedModel = async (row) => {
+  appliedModelPagination.currentmodelId = row.id
+  appliedModelPagination.page = 1
+  await loadAppliedModelList()
+  appliedModelDialogVisible.value = true
+}
+
+const loadAppliedModelList = async () => {
+  const params = {
+    dataElementId: appliedModelPagination.currentmodelId,
+    pageNum: appliedModelPagination.page,
+    pageSize: appliedModelPagination.pageSize
+  }
+  const data = await queryAppliedModelDetails(params)
+  appliedModelTableData.value = data.totalList || []
+  appliedModelPagination.total = data.total || 0
+}
+
+const handleAppliedModelPageChange = async (currentPage, pageSize) => {
+  appliedModelPagination.page = currentPage
+  appliedModelPagination.pageSize = pageSize
+  await loadAppliedModelList()
+}
+
+const handleRunLandingCheck = async () => {
+  try {
+    loadingRef.value = true
+    const result = await runLandingCheck()
+    const obj = result.data || result
+
+    ElMessageBox.alert(
+      `本次命中更新字段数：${obj.matchedCount || 0}<br/>` +
+      `本次回写字段数：${obj.resetCount || 0}<br/>` +
+      `当前总落标字段数：${obj.landedFieldCount || 0}<br/>` +
+      `当前总落标模型表数：${obj.landedModelCount || 0}`,
+      '落标检测结果',
+      {
+        confirmButtonText: '确定',
+        dangerouslyUseHTMLString: true
+      }
+    )
+
+    message.success('落标检测执行成功')
+
+    await query(
+      paginationReactive.chineseName,
+      paginationReactive.page,
+      paginationReactive.pageSize,
+      paginationReactive.startTime,
+      paginationReactive.endTime,
+      paginationReactive.apiTreeId,
+      paginationReactive.releaseStatus
+    )
+  } catch (error) {
+    message.error('落标检测执行失败')
+    console.error(error)
+  } finally {
+    loadingRef.value = false
+  }
 }
 
 onMounted(() => {

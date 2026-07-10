@@ -35,9 +35,17 @@
       <template #2>
           <n-tabs v-model:value="editableTabsValue" type="card"  style="height: 100%" >
             <template #suffix>
-              <n-button @click="VerticalLog" text><n-icon size="16"><ArrowMinimizeVertical20Filled/></n-icon></n-button>
-              <n-button @click="minimizeLog" text><n-icon size="16"><ArrowMinimize28Filled/></n-icon></n-button>
-              <n-button @click="fullScreenLog" text><n-icon size="16"><FullScreenMinimize24Filled/></n-icon></n-button>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div :style="{ visibility: editableTabsValue !== '信息' && resultData.length > 0 ? 'visible' : 'hidden', minWidth: '60px', display: 'flex', alignItems: 'center' }">
+                  <n-button @click="exportCurrentResult" text>
+                    <n-icon size="16"><SimCardDownloadOutlined/></n-icon>
+                    <span style="margin-left: 4px">导出</span>
+                  </n-button>
+                </div>
+                <n-button @click="VerticalLog" text><n-icon size="16"><ArrowMinimizeVertical20Filled/></n-icon></n-button>
+                <n-button @click="minimizeLog" text><n-icon size="16"><ArrowMinimize28Filled/></n-icon></n-button>
+                <n-button @click="fullScreenLog" text><n-icon size="16"><FullScreenMinimize24Filled/></n-icon></n-button>
+              </div>
             </template>
             <n-tab-pane name="信息" tab="信息">
               <div>执行时间:{{ elapsedTime/50 }}s</div>
@@ -116,6 +124,7 @@ import {
   Circle24Filled,
   FullScreenMinimize24Filled
 } from "@vicons/fluent";
+import {SimCardDownloadOutlined} from "@vicons/material"
 import {useHeightAdjustment} from "@/views/projects/workflow/components/task/useHeightAdjustment";
 
 const props = defineProps({
@@ -277,6 +286,81 @@ const onTaskStop = async () => {
   stopTimer()
   stopStatus.value = true
   disableStop.value = true
+}
+
+const exportCurrentResult = async () => {
+  if (resultData.value.length === 0) {
+    message.warning('没有可导出的数据')
+    return
+  }
+
+  const currentIndex = editableTabsValue.value
+  if (currentIndex === '信息') {
+    message.warning('当前不是结果标签页')
+    return
+  }
+
+  const index = parseInt(currentIndex.replace('结果', '')) - 1
+  if (index < 0 || index >= resultData.value.length) {
+    message.error('获取数据失败')
+    return
+  }
+
+  const data = resultData.value[index]
+  if (!data || data.length === 0) {
+    message.warning('当前结果集为空')
+    return
+  }
+
+  try {
+    // 动态导入 xlsx 库
+    const XLSX = await import('xlsx')
+
+    // 获取表头
+    const headers = Object.keys(data[0])
+
+    // 将所有数据转换为文本格式
+    const textData = data.map(row => {
+      const textRow = {}
+      headers.forEach(header => {
+        let value = row[header]
+        if (value === null || value === undefined) {
+          value = ''
+        } else {
+          value = String(value)
+        }
+        // 使用特殊前缀强制 Excel 识别为文本
+        textRow[header] = '\t' + value
+      })
+      return textRow
+    })
+
+    // 创建工作表
+    const worksheet = XLSX.utils.json_to_sheet(textData)
+
+    // 设置列宽
+    const colWidths = headers.map(header => {
+      const maxLen = Math.max(
+        header.length,
+        ...textData.map(row => String(row[header]).length)
+      )
+      return { wch: Math.min(maxLen + 5, 50) }
+    })
+    worksheet['!cols'] = colWidths
+
+    // 创建工作簿
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, currentIndex)
+
+    // 生成文件名并导出
+    const fileName = `SQL查询结果_${new Date().getTime()}.xlsx`
+    XLSX.writeFile(workbook, fileName)
+
+    message.success('导出成功')
+  } catch (error) {
+    console.error('导出失败:', error)
+    message.error('导出失败，请确保已安装 xlsx 依赖：npm install xlsx')
+  }
 }
 
 const tabProps = (item, index) => {
@@ -493,6 +577,10 @@ onMounted( () => {
 
   :deep(.n-tabs-nav__suffix) {
     background-color: #F5F7FA;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
 
     .n-button:nth-child(1), .n-button:nth-child(3) {
       padding: 0 15px

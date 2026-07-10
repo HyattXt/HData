@@ -104,4 +104,17 @@ interface modelFieldListReq {
   modelId: number
 }
 
-export { ListReq, modelReq, modelTreeUpdateReq, modelTreeId, modelTreeReq, releaseReq, dataElementReq, modelTableReq, modelColumnReq, createModelColumnReq, modelFieldListReq }
+interface queryAppliedModelListReq {
+  dataElementId: number
+  pageNum: number
+  pageSize: number
+}
+
+interface runLandingCheckRes {
+  matchedCount: number
+  resetCount: number
+  landedFieldCount: number
+  landedModelCount: number
+}
+
+export { ListReq, modelReq, modelTreeUpdateReq, modelTreeId, modelTreeReq, releaseReq, dataElementReq, modelTableReq, modelColumnReq, createModelColumnReq, modelFieldListReq, queryAppliedModelListReq, runLandingCheckRes }

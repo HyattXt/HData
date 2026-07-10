@@ -90,59 +90,83 @@
                       暂无数据
                     </div>
                     <div class="list-item mb16 bgf" v-for="item in dataRef" :key="item.id">
-                      <div class="top pb16">
-                        <div class="FBH FBJ t-title">
-                          <div class="t-left">
-                            <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M32 192a128 128 0 0 1 128-128h704a128 128 0 0 1 128 128v192H32V192z" fill="#2399ED"></path><path d="M32 384h320v192h-320z" fill="#E3F2FD"></path><path d="M32 384h320v192h-320z" fill="#E3F2FD" ></path><path d="M32 576h320v192h-320z" fill="#CDE8FF" ></path><path d="M32 768h320v192h-192a128 128 0 0 1-128-128v-64z" fill="#ABD9FF" ></path><path d="M352 384h320v192h-320z" fill="#CDE8FF" ></path><path d="M352 384h320v192h-320z" fill="#CDE8FF" ></path><path d="M352 576h320v192h-320z" fill="#ABD9FF" ></path><path d="M352 768h320v192h-320z" fill="#96D0FF" ></path><path d="M672 384h320v192h-320z" fill="#ABD9FF" ></path><path d="M672 384h320v192h-320z" fill="#ABD9FF" ></path><path d="M672 576h320v192h-320z" fill="#96D0FF" ></path><path d="M672 768h320v64a128 128 0 0 1-128 128h-192v-192z" fill="#7FC6FF" ></path></svg>
-                            <a target="_blank" rel="noopener noreferrer" class="ml8 mr48 fs16" :title="item.sqlLineageName" @click="play(item)">{{ item.sqlLineageName }}</a>
+                      <div class="card-header">
+                        <div class="FBH FBAC title-row">
+                          <div class="table-icon">
+                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M32 192a128 128 0 0 1 128-128h704a128 128 0 0 1 128 128v192H32V192z" fill="#2399ED"></path><path d="M32 384h320v192h-320z" fill="#E3F2FD"></path><path d="M32 384h320v192h-320z" fill="#E3F2FD" ></path><path d="M32 576h320v192h-320z" fill="#CDE8FF" ></path><path d="M32 768h320v192h-192a128 128 0 0 1-128-128v-64z" fill="#ABD9FF" ></path><path d="M352 384h320v192h-320z" fill="#CDE8FF" ></path><path d="M352 384h320v192h-320z" fill="#CDE8FF" ></path><path d="M352 576h320v192h-320z" fill="#ABD9FF" ></path><path d="M352 768h320v192h-320z" fill="#96D0FF" ></path><path d="M672 384h320v192h-320z" fill="#ABD9FF" ></path><path d="M672 384h320v192h-320z" fill="#ABD9FF" ></path><path d="M672 576h320v192h-320z" fill="#96D0FF" ></path><path d="M672 768h320v64a128 128 0 0 1-128 128h-192v-192z" fill="#7FC6FF" ></path></svg>
                           </div>
-                          <div class="FBH FBJ FBAC t-right">
-                            <div style="display: flex; align-items: center;">
-                              <div class="hand">
-                                <svg @click="handleLikeCollection(true, item.likeState, item.collectionState, item.sqlLineageName)" class="icon" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg" width="15" height="15"><path d="M335.008 916.629333c-35.914667 22.314667-82.88 10.773333-104.693333-25.557333a77.333333 77.333333 0 0 1-8.96-57.429333l46.485333-198.24a13.141333 13.141333 0 0 0-4.021333-12.864l-152.16-132.586667c-31.605333-27.52-35.253333-75.648-8.234667-107.733333a75.68 75.68 0 0 1 51.733333-26.752L354.848 339.2c4.352-0.362667 8.245333-3.232 10.026667-7.594667l76.938666-188.170666c16.032-39.2 60.618667-57.92 99.52-41.461334a76.309333 76.309333 0 0 1 40.832 41.461334l76.938667 188.16c1.781333 4.373333 5.674667 7.253333 10.026667 7.605333l199.712 16.277333c41.877333 3.413333 72.885333 40.458667 69.568 82.517334a76.938667 76.938667 0 0 1-26.08 51.978666l-152.16 132.586667c-3.541333 3.082667-5.141333 8.074667-4.021334 12.853333l46.485334 198.24c9.621333 41.013333-15.36 82.336-56.138667 92.224a75.285333 75.285333 0 0 1-57.525333-9.237333l-170.976-106.24a11.296 11.296 0 0 0-12.010667 0l-170.986667 106.24z" :fill="item.collectionState ? '#F0D155' : '#bfbfbf'"></path></svg>
-                              </div>
-                              <span style="color: rgba(0, 0, 0, 0.15); padding: 0 8px">|</span>
-                              <div class="hand">
-                                <svg @click="handleLikeCollection(false, item.likeState, item.collectionState, item.sqlLineageName)" class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="15" height="15"><path d="M948.4 407.2c-29.2-35.5-76.9-35.5-92.6-35.5H730c10.2-55.2 18.9-119.4 0.2-187.1-12.8-46.6-36.3-79.7-72-101.1-18.7-11.2-38.1-16.9-57.8-16.9-51.8 0-90.6 38.4-96.4 95.7-2.2 21.4-4.2 41.7-9.3 59.1-19 63.9-65.4 112.7-108.3 151.8-16 14.4-33.1 40.2-33.3 69.2-0.6 77.6-0.7 155.5-0.7 235.1l-0.1 141.4c-0.2 47.3 25 85.4 67 101.7 22.2 9 45.7 14 70.1 14.7 38.8 0.5 77.8 0.5 114.3 0.5h56.9c37.2 0 74.4 0 111.8 0.4h1.2c43.5 0 77.7-21.7 93.9-59.5l4.8-11.1c11.3-26 22.9-52.9 30.1-82.8 22-90.9 44.9-188.2 63.4-283.8 7.4-37.9 1.6-68.8-17.4-91.8zM216.1 374.5h-11.9c-56.2 0-101.9 45.7-101.9 101.9v348.4c0 56.2 45.7 101.9 101.9 101.9h11.9c56.2 0 101.9-45.7 101.9-101.9V476.4c0.1-56.2-45.7-101.9-101.9-101.9z" :fill="item.likeState ? '#F0D155' : '#bfbfbf'"></path></svg>
-                              </div>
-                            </div>
-                          </div>
+                          <a class="table-name" :title="item.sqlLineageName" @click="play(item)">{{ item.sqlLineageName }}</a>
+                          <span :class="['db-tag', 'db-tag-' + item.dbType]">{{ formatDbType(item.dbType) }}</span>
                         </div>
-                        <div class="text-box notesPi">
-                          <span class="t-label">描述：</span>
-                          <span class="color25">{{ item.notes }}</span>
-                        </div>
-                        <div class="FBH FBJ">
-                          <div class="text-box">
-                            <span class="t-label">任务流：</span>
-                            <span class="t-content">{{ item.taskName }}</span>
+                        <div class="action-icons FBH FBAC">
+                          <div class="icon-btn hand" :title="item.collectionState ? '取消收藏' : '收藏'" @click="handleLikeCollection(true, item.likeState, item.collectionState, item.sqlLineageName)">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M335.008 916.629333c-35.914667 22.314667-82.88 10.773333-104.693333-25.557333a77.333333 77.333333 0 0 1-8.96-57.429333l46.485333-198.24a13.141333 13.141333 0 0 0-4.021333-12.864l-152.16-132.586667c-31.605333-27.52-35.253333-75.648-8.234667-107.733333a75.68 75.68 0 0 1 51.733333-26.752L354.848 339.2c4.352-0.362667 8.245333-3.232 10.026667-7.594667l76.938666-188.170666c16.032-39.2 60.618667-57.92 99.52-41.461334a76.309333 76.309333 0 0 1 40.832 41.461334l76.938667 188.16c1.781333 4.373333 5.674667 7.253333 10.026667 7.605333l199.712 16.277333c41.877333 3.413333 72.885333 40.458667 69.568 82.517334a76.938667 76.938667 0 0 1-26.08 51.978666l-152.16 132.586667c-3.541333 3.082667-5.141333 8.074667-4.021334 12.853333l46.485334 198.24c9.621333 41.013333-15.36 82.336-56.138667 92.224a75.285333 75.285333 0 0 1-57.525333-9.237333l-170.976-106.24a11.296 11.296 0 0 0-12.010667 0l-170.986667 106.24z" :fill="item.collectionState ? '#F5A623' : '#bfbfbf'"></path></svg>
                           </div>
-                          <div class="text-box">
-                            <span class="t-label">数据库：</span>
-                            <span class="t-content">{{ item.dataSourceName }}</span>
-                          </div>
-                          <div class="text-box">
-                            <span class="t-label">数据库类型：</span>
-                            <span class="t-content">{{ item.dbType }}</span>
+                          <div class="icon-divider"></div>
+                          <div class="icon-btn hand" :title="item.likeState ? '取消点赞' : '点赞'" @click="handleLikeCollection(false, item.likeState, item.collectionState, item.sqlLineageName)">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M948.4 407.2c-29.2-35.5-76.9-35.5-92.6-35.5H730c10.2-55.2 18.9-119.4 0.2-187.1-12.8-46.6-36.3-79.7-72-101.1-18.7-11.2-38.1-16.9-57.8-16.9-51.8 0-90.6 38.4-96.4 95.7-2.2 21.4-4.2 41.7-9.3 59.1-19 63.9-65.4 112.7-108.3 151.8-16 14.4-33.1 40.2-33.3 69.2-0.6 77.6-0.7 155.5-0.7 235.1l-0.1 141.4c-0.2 47.3 25 85.4 67 101.7 22.2 9 45.7 14 70.1 14.7 38.8 0.5 77.8 0.5 114.3 0.5h56.9c37.2 0 74.4 0 111.8 0.4h1.2c43.5 0 77.7-21.7 93.9-59.5l4.8-11.1c11.3-26 22.9-52.9 30.1-82.8 22-90.9 44.9-188.2 63.4-283.8 7.4-37.9 1.6-68.8-17.4-91.8zM216.1 374.5h-11.9c-56.2 0-101.9 45.7-101.9 101.9v348.4c0 56.2 45.7 101.9 101.9 101.9h11.9c56.2 0 101.9-45.7 101.9-101.9V476.4c0.1-56.2-45.7-101.9-101.9-101.9z" :fill="item.likeState ? '#F5A623' : '#bfbfbf'"></path></svg>
                           </div>
                         </div>
                       </div>
-                      <div class="bottom pt16 FBH FBJS">
-                        <div class="text-box-4">
-                          <span class="t-label">数据行数：</span>
-                          <span class="t-content text-break">{{ item.tableDataRow }}</span>
+
+                      <div v-if="item.notes" class="description-row">
+                        <span class="desc-icon">📝</span>
+                        <span class="desc-text">{{ item.notes }}</span>
+                      </div>
+
+                      <div class="info-grid-top">
+                        <div class="info-item">
+                          <span class="info-label">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm192 704c0 17.7-14.3 32-32 32H352c-17.7 0-32-14.3-32-32v-64h384v64zm0-192H320c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32zm0-160H320c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32z" fill="#0099CB"/></svg>
+                            任务流
+                          </span>
+                          <span class="info-value" :title="item.taskName">{{ item.taskName || '-' }}</span>
                         </div>
-                        <div class="text-box-4">
-                          <span class="t-label">表大小：</span>
-                          <span class="t-content text-break">{{ item.tableDataLength }}</span>
+                        <div class="info-item">
+                          <span class="info-label">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M832 64H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32zm-600 72h560v208H232V136zm560 480H232V408h560v208zm0 272H232V680h560v208z" fill="#0099CB"/></svg>
+                            数据源
+                          </span>
+                          <span class="info-value" :title="item.dataSourceName">{{ item.dataSourceName || '-' }}</span>
                         </div>
-                        <div class="text-box-4">
-                          <span class="t-label">添加时间：</span>
-                          <span class="t-content">{{ item.tableCreateTime }}</span>
+                      </div>
+
+                      <div class="info-grid-bottom">
+                        <div class="stat-item">
+                          <div class="stat-icon stat-icon-row">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 632H136v-39.9l138.5-164.3 150.1 178L658.1 489 888 761.6V792zm0-129.8L664.2 396.8c-3.2-3.8-9-3.8-12.2 0L424.6 667.4l-149.3-176.9c-3.2-3.8-9-3.8-12.2 0L136 652.7V232h752v430.2zM304 456a88 88 0 1 0 0-176 88 88 0 0 0 0 176z" fill="#52C41A"/></svg>
+                          </div>
+                          <div class="stat-content">
+                            <div class="stat-value">{{ formatNumber(item.tableDataRow) }}</div>
+                            <div class="stat-label">数据行数</div>
+                          </div>
                         </div>
-                        <div class="text-box-4">
-                          <span class="t-label">修改时间：</span>
-                          <span class="t-content">{{ item.tableUpdateTime }}</span>
+                        <div class="stat-item">
+                          <div class="stat-icon stat-icon-size">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M832 64H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32zM507.7 596.7c-3.1 1-6.3 1.5-9.7 1.5h-72v79.6c0 4.4-3.6 8-8 8h-56.7c-4.4 0-8-3.6-8-8V598.2h-48.3V475.1h156.7c4 0 7.8.7 11.3 2.1 14.3 5.8 24.3 19.9 24.3 36.6 0 11.7-4.5 22.3-12 30-1.8 1.9-4 3.6-6.3 4.9 9.8 4 16.7 13.5 18.4 25 1.5 10.4-0.4 20.6-5.4 28.6 0 0.8-0.5 1.9-1 2.4 0.5 0.6 0.5 1.1 0.5 2z m45.5-193.4c-20.4-30.5-64.6-38.8-95.1-18.3-1.4 1-2.8 2-4.1 3.1-0.5-0.5-1-1-1.5-1.5-11.9-11.9-27.9-18.5-44.9-18.5h-150c-4.4 0-8 3.6-8 8v328.9c0 4.4 3.6 8 8 8h156.7c4.7 0 9.3-.5 13.8-1.5 39.1-8.6 67.7-44.2 67.7-84.6 0-23.8-9.2-46-25.8-62.5 10.1-7.1 18-16.5 23-27.5 0.8-1.7 1.4-3.4 2-5.2h4.4c22.5 0 42.2-9.6 56.3-25.5 8.9-10.1 15.4-21.9 18.6-35.4 0.3-1 0.6-2 0.8-3 1.7-8.8 2-17.8 0.8-26.8zM400.3 562.2c-13.2 0-24-10.8-24-24s10.8-24 24-24 24 10.8 24 24-10.8 24-24 24z m0-169.3h71c9.4 0 17 7.6 17 17s-7.6 17-17 17h-71c-9.4 0-17-7.6-17-17s7.6-17 17-17z m-1 248.8v-79.1h45.6c20.8 0 37.7 16.9 37.7 37.7 0 20.9-16.9 37.8-37.7 37.8H399.3z m237.9-364.3H512c-4.4 0-8 3.6-8 8v62c0 4.4 3.6 8 8 8h125.2c4.4 0 8-3.6 8-8v-62c0-4.4-3.6-8-8-8z m0 127.9H512c-4.4 0-8 3.6-8 8v62c0 4.4 3.6 8 8 8h125.2c4.4 0 8-3.6 8-8v-62c0-4.4-3.6-8-8-8z m0 127.9H512c-4.4 0-8 3.6-8 8v62c0 4.4 3.6 8 8 8h125.2c4.4 0 8-3.6 8-8v-62c0-4.4-3.6-8-8-8z" fill="#1890FF"/></svg>
+                          </div>
+                          <div class="stat-content">
+                            <div class="stat-value">{{ item.tableDataLength || '-' }}</div>
+                            <div class="stat-label">表大小</div>
+                          </div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-icon stat-icon-time">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#722ED1"/><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.7-3.7 1.9-8.7-1.8-11.2z" fill="#722ED1"/></svg>
+                          </div>
+                          <div class="stat-content">
+                            <div class="stat-value stat-value-sm" :title="item.tableCreateTime">{{ formatDate(item.tableCreateTime) }}</div>
+                            <div class="stat-label">添加时间</div>
+                          </div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-icon stat-icon-update">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M872 572H424c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h448c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM872 396H424c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h448c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM424 748h224c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H424c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM864 128H800V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H296V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H160c-17.7 0-32 14.3-32 32v56c0 4.4 3.6 8 8 8h752c4.4 0 8-3.6 8-8v-56c0-17.7-14.3-32-32-32zM160 896h704c17.7 0 32-14.3 32-32v-56c0-4.4-3.6-8-8-8H136c-4.4 0-8 3.6-8 8v56c0 17.7 14.3 32 32 32z" fill="#FA8C16"/></svg>
+                          </div>
+                          <div class="stat-content">
+                            <div class="stat-value stat-value-sm" :title="item.tableUpdateTime">{{ formatDate(item.tableUpdateTime) }}</div>
+                            <div class="stat-label">修改时间</div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -209,6 +233,7 @@ const expandedKeys = ref([1]);
 const pattern = ref('');
 const route = useRoute()
 const getApiFolderUrl = utils.getUrl('interface_lineage/getTreeAll')
+const reportSqlLineageVisitUrl = utils.getUrl('interface_lineage/reportSqlLineageVisit')
 const paginationReactive = reactive({
   page: 1,
   pageSize: 10,
@@ -339,6 +364,13 @@ function handlePageChange(currentPage, pageSize) {
   }
 }
 function play(row) {
+  const params = {
+    tableName: row.sqlLineageName
+  }
+  apiAxios.post(reportSqlLineageVisitUrl, params).catch(error => {
+    console.error('埋点上报失败:', error)
+  })
+
   router.push({
         name: 'assets-detail',
         state: {tableName: row.sqlLineageName, tableComment: row.notes, dbType: row.dbType, fieldArray: row.fieldArray, backName: 'assets-catalog'}
@@ -411,6 +443,36 @@ function renderSuffix({ option }) {
     return h('div', {class: "tree_count" }, { default: () => option.children?.length || 0  } )
 }
 
+function formatDbType(type) {
+  const map = {
+    'mysql': 'MySQL',
+    'oracle': 'Oracle',
+    'hive': 'Hive',
+    'dm': 'DM',
+    '0': 'MySQL',
+    '5': 'Oracle',
+    '2': 'Hive',
+    '12': 'DM'
+  }
+  return map[type] || type || '未知'
+}
+
+function formatNumber(val) {
+  if (val === null || val === undefined || val === '') return '-'
+  const num = Number(val)
+  if (isNaN(num)) return val
+  if (num >= 100000000) return (num / 100000000).toFixed(2) + '亿'
+  if (num >= 10000) return (num / 10000).toFixed(2) + '万'
+  return num.toLocaleString()
+}
+
+function formatDate(val) {
+  if (!val) return '-'
+  if (typeof val === 'string' && val.length <= 10) return val
+  const str = String(val)
+  return str.replace('T', ' ').substring(0, 16)
+}
+
 onMounted(() => {
   getApiFolder()
   if(route.query.type === 'collect'){
@@ -437,87 +499,6 @@ onMounted(() => {
   right: 20px !important;
 }
 
-.list-item {
-  padding: 16px 24px;
-  margin: 8px 0;
-  border-radius: 15px;
-  user-select: none;
-  transition: transform 0.3s; /* 添加过渡效果 */
-
-  &:hover {
-    /* 悬停特效 */
-    transform: scale(1.005); /* 稍微放大 */
-    box-shadow: 0 2px 4px rgba(181, 181, 181, 0.3);
-  }
-
-  .top {
-    border-bottom: 1px solid #e8e8e8;
-
-    .t-title .l-icon {
-      width: 16px;
-    }
-  }
-
-  .bottom {
-    flex-wrap: wrap;
-  }
-
-  .notesPi {
-    padding: 3px 0;
-  }
-
-  .text-box {
-    width: 33.33%;
-
-    .t-label {
-      color: rgba(0, 0, 0, .45);
-    }
-
-    .t-content {
-      color: rgba(0, 0, 0, .65);
-      width: 60%;
-      margin-right: 8px;
-    }
-
-  }
-
-  .text-box-4 {
-    width: 25%;
-
-    .t-label {
-      color: rgba(0, 0, 0, .45);
-    }
-
-    .t-content {
-      color: rgba(0, 0, 0, .65);
-      width: 60%;
-      margin-right: 8px;
-    }
-
-    .t-content.text-break {
-      flex: 1;
-      word-wrap: break-word;
-      word-break: break-all;
-    }
-  }
-}
-
-.bgf {
-  background-color: #fff;
-}
-
-.pt16 {
-  padding-top: 16px;
-}
-
-.pb16 {
-  padding-bottom: 16px;
-}
-
-.FBJ {
-  justify-content: space-between;
-}
-
 .FBJS {
   justify-content: flex-start;
 }
@@ -526,36 +507,31 @@ onMounted(() => {
   display: flex;
 }
 
-.mr48 {
-  margin-right: 48px;
-}
-.ml8 {
-  margin-left: 8px;
-}
-.fs16 {
-  font-size: 16px;
+.FBAC {
+  align-items: center;
 }
 
-.color25 {
-  color: rgba(0, 0, 0, .25);
+.FBJ {
+  justify-content: space-between;
 }
 
-a, a:hover {
-  color: #2466ff;
+.mb16 {
+  margin-bottom: 16px;
 }
 
-a {
-  text-decoration: none;
-  background-color: transparent;
-  outline: none;
+.bgf {
+  background-color: #fff;
+}
+
+.hand {
   cursor: pointer;
-  -webkit-transition: color .3s;
-  transition: color .3s;
 }
 
 .cue-table-container {
   overflow: auto;
-  background-color: #e8ecf0;
+  background: linear-gradient(180deg, #f5f7fa 0%, #eef1f5 100%);
+  padding: 12px 8px;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar {
@@ -563,18 +539,18 @@ a {
 }
 
 .no-data {
-  /* 为“无数据”提示添加样式 */
   height: 100%;
   text-align: center;
   background-color: #ffffff;
   color: #999;
-  display: flex;              /* 启用Flexbox布局 */
-  justify-content: center;    /* 在水平方向上居中 */
+  display: flex;
+  justify-content: center;
   align-items: center;
   user-select: none;
+  border-radius: 8px;
   .icon {
-    margin-right: 8px;  /* 图标和文字间距 */
-    flex-shrink: 0;     /* 防止 SVG 被压缩 */
+    margin-right: 8px;
+    flex-shrink: 0;
   }
 }
 
@@ -590,8 +566,291 @@ a {
   background-color: #F1F2F4FF !important;
 }
 
-.hand {
+.list-item {
+  padding: 0;
+  margin: 0 0 12px 0;
+  border-radius: 12px;
+  user-select: none;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  transition: all 0.25s ease-out;
+  overflow: hidden;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 84, 179, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    border-color: #d6e4ff;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, #fafcff 0%, #ffffff 60%);
+  border-bottom: 1px solid #f0f2f5;
+
+  .title-row {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .table-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .table-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2129;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 380px;
+
+    &:hover {
+      color: #165dff;
+    }
+  }
+
+  .db-tag {
+    margin-left: 12px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+  .db-tag-mysql, .db-tag-0 {
+    color: #00579c;
+    background: #e0edff;
+    border: 1px solid #b8d7ff;
+  }
+  .db-tag-oracle, .db-tag-5 {
+    color: #c41d21;
+    background: #ffece8;
+    border: 1px solid #ffcab8;
+  }
+  .db-tag-hive, .db-tag-2 {
+    color: #5d2b00;
+    background: #fff3e0;
+    border: 1px solid #ffd591;
+  }
+  .db-tag-dm, .db-tag-12 {
+    color: #086e4e;
+    background: #d1f0e2;
+    border: 1px solid #95debc;
+  }
+}
+
+.action-icons {
+  flex-shrink: 0;
+  margin-left: 16px;
+  padding: 4px 6px;
+  background: #f7f8fa;
+  border-radius: 8px;
+
+  .icon-btn {
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  .icon-divider {
+    width: 1px;
+    height: 16px;
+    background: #e5e6eb;
+    margin: 0 2px;
+  }
+}
+
+.description-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 20px;
+  background: #fafcff;
+  border-bottom: 1px dashed #eef2f7;
+
+  .desc-icon {
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .desc-text {
+    font-size: 13px;
+    line-height: 22px;
+    color: #4e5969;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.info-grid-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #f0f2f5;
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+
+    &:nth-child(odd) {
+      padding-right: 16px;
+      border-right: 1px solid #f0f2f5;
+    }
+    &:nth-child(even) {
+      padding-left: 16px;
+    }
+  }
+
+  .info-label {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: 13px;
+    color: #86909c;
+    margin-right: 8px;
+
+    svg {
+      margin-right: 4px;
+    }
+  }
+
+  .info-value {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: #1d2129;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.info-grid-bottom {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+
+    &:not(:last-child) {
+      border-right: 1px solid #f0f2f5;
+      margin-right: 0;
+    }
+    &:not(:first-child) {
+      padding-left: 16px;
+    }
+    &:not(:last-child) {
+      padding-right: 16px;
+    }
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+  .stat-icon-row {
+    background: linear-gradient(135deg, #e8ffea 0%, #b7eb8f 100%);
+  }
+  .stat-icon-size {
+    background: linear-gradient(135deg, #e6f4ff 0%, #91caff 100%);
+  }
+  .stat-icon-time {
+    background: linear-gradient(135deg, #f3e8ff 0%, #d3adf7 100%);
+  }
+  .stat-icon-update {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffbb96 100%);
+  }
+
+  .stat-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .stat-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2129;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.stat-value-sm {
+      font-size: 13px;
+      font-weight: 500;
+    }
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #86909c;
+    line-height: 18px;
+    margin-top: 2px;
+  }
+}
+
+a, a:hover {
+  color: #2466ff;
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+  outline: none;
   cursor: pointer;
+  -webkit-transition: color .3s;
+  transition: color .3s;
 }
 
 </style>

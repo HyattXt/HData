@@ -471,6 +471,10 @@ export function useDataList() {
               {
                 label: t('menu.model_list'),
                 key: '/data-assets/data-standard/model-list'
+              },
+              {
+                label: t('menu.value_assessment'),
+                key: '/data-assets/data-standard/value-assessment'
               }
             ]
           }
