@@ -907,7 +907,7 @@
 
   const downloadTemplate = () => {
     const link = document.createElement('a')
-    link.href = '/templates/model-import-template.xlsx'
+    link.href = `${import.meta.env.BASE_URL}templates/model-import-template.xlsx`
     link.download = '模型导入模板.xlsx'
     link.style.display = 'none'
     document.body.appendChild(link)
