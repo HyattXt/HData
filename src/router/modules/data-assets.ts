@@ -33,7 +33,7 @@ export default {
     {
       path: '/data-assets/assets',
       name: 'assets',
-      component: components['data-assets'],
+      component: () => import('@/views/data-assets/index.vue'),
       meta: {
         title: '资产概览',
         activeMenu: 'data-assets',

@@ -17,7 +17,6 @@
 
 import type { Component } from 'vue'
 import utils from '@/utils'
-//import { useTaskState } from '@/views/devops/use-task-state'
 
 const IFrame = () => import('@/views/iframe/index.vue')
 
@@ -36,7 +35,7 @@ export default {
         {
             path: '/devops/:projectCode/devops_overview',
             name: 'devops-overview',
-            component: components['devops'],
+            component: () => import('@/views/devops/index.vue'),
             meta: {
                 title: '首页',
                 activeMenu: 'devops',

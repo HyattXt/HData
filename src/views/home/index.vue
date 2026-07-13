@@ -1,140 +1,174 @@
 <template>
-  <div class="page flex-col">
-    <div class="box_3 flex-col">
-      <div class="group_5 flex-row">
-        <img
-            :src="topImagePath.one"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('datasource')">{{ data.dataSourceNum }}</span> <span class="text_title">数据连接</span>
+  <div class="page">
+    <div class="home-container">
+      <div class="stats-row">
+        <div
+          v-for="(item, index) in statsCards"
+          :key="index"
+          class="stat-card"
+          :style="{ '--card-color': item.color }"
+          @click="handleClick(item.type)"
+        >
+          <div class="stat-icon-wrap">
+            <img :src="item.icon" class="stat-icon" referrerpolicy="no-referrer" />
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ data[item.dataKey] ?? 0 }}</div>
+            <div class="stat-label">{{ item.label }}</div>
+          </div>
         </div>
-        <img
-            :src="topImagePath.two"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('api')">{{ data.interfaceNum }}</span> <span class="text_title">数据服务</span>
-        </div>
-        <img
-            :src="topImagePath.three"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('dataElement')">{{ data.dataElementNum }}</span> <span class="text_title">数据元</span>
-        </div>
-        <img
-            :src="topImagePath.four"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('dataModel')">{{ data.dataModel }}</span> <span class="text_title">数据模型</span>
-        </div>
-        <img
-            :src="topImagePath.five"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('workFlow')">{{ data.processNum }}</span> <span class="text_title">任务流</span>
-        </div>
-        <img
-            :src="topImagePath.six"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('workInstance')">{{ data.taskNum }}</span> <span class="text_title">任务实例</span>
-        </div>
-        <img
-            :src="topImagePath.seven"
-            class="image hover_image"
-            referrerpolicy="no-referrer"
-        />
-        <div class="text-wrapper flex-col justify-between">
-          <span class="text_number" @click="handleClick('dataAsset')">{{ data.assetsNum }}</span> <span class="text_title">数据资产</span>
-        </div>
-        <div class="box_4 flex-col"></div>
       </div>
-      <div class="group_6 flex-row">
-        <div class="group_7 flex-col">
-          <div class="grid_1 flex-row">
+      <div class="middle-section">
+        <div class="modules-panel">
+          <div class="section-header">
+            <span class="section-title">核心能力</span>
+            <span class="section-desc">数据中台 8 大功能模块</span>
+          </div>
+          <div class="modules-grid">
             <div
-                v-for="(item, index) in loopData0"
-                :key="index"
-                :style="{ background: `url('${loopDataBack}') 0px -1px no-repeat` }"
-                class="image-text_1 flex-row"
+              v-for="(item, index) in loopData0"
+              :key="index"
+              class="module-card"
             >
-              <img
+              <div class="module-icon-wrap">
+                <img
                   :src="item.lanhuimage0"
-                  class="label_1 hover_image"
+                  class="module-icon"
                   referrerpolicy="no-referrer"
-              />
-              <div
-                  v-if="item.slot2 === 2"
-                  class="text-group_1 flex-col justify-between"
-              >
-                <span
-                    class="text_29"
-                    v-html="item.specialSlot2.lanhutext0"
-                ></span>
-                <span
-                    class="text_30"
-                    v-html="item.specialSlot2.lanhutext1"
-                ></span>
+                />
               </div>
-              <div
-                  v-if="item.slot1 === 1"
-                  class="text-group_1 flex-col justify-between"
-              >
-                <span
-                    class="text_29"
-                    v-html="item.specialSlot1.lanhutext0"
-                ></span>
-                <span
-                    class="text_30"
-                    v-html="item.specialSlot1.lanhutext1"
-                ></span>
+              <div class="module-content">
+                <div class="module-title">
+                  {{ item.slot1 === 1 ? item.specialSlot1.lanhutext0 : item.specialSlot2.lanhutext0 }}
+                </div>
+                <div class="module-desc">
+                  {{ item.slot1 === 1 ? item.specialSlot1.lanhutext1 : item.specialSlot2.lanhutext1 }}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <img
-            :src='mainImagePath'
-            class="image_9 hover_image_large"
-            referrerpolicy="no-referrer"
-        />
-      </div>
-      <span style="margin: 28px 0 0 10px;">资源规划</span>
-      <div class="group_8 flex-row">
-        <div v-for="(item, index) in firstListData" :key="index" :class="{'text-wrapper flex-col hover_div': item.abutmentStatus === '1', 'disable-text-wrapper flex-col hover_div': item.abutmentStatus === '0'}">
-          <span :class="{'text': item.abutmentStatus === '1', 'disable-text': item.abutmentStatus === '0'}">{{item.systemName}}</span>
+        <div class="visual-panel">
+          <div class="section-header">
+            <span class="section-title">数据资产全景</span>
+            <span class="section-desc">平台资产架构总览</span>
+          </div>
+          <div class="visual-wrap">
+            <img
+              :src='mainImagePath'
+              class="visual-image"
+              referrerpolicy="no-referrer"
+            />
+          </div>
         </div>
       </div>
-      <div class="group_8 flex-row">
-        <div v-for="(item, index) in secondListData" :key="index" :class="{'text-wrapper flex-col hover_div': item.abutmentStatus === '1', 'disable-text-wrapper flex-col hover_div': item.abutmentStatus === '0'}">
-          <span :class="{'text': item.abutmentStatus === '1', 'disable-text': item.abutmentStatus === '0'}">{{item.systemName}}</span>
+      <div class="resource-panel">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="section-title">资源规划</span>
+            <span class="section-count">
+              共 {{ totalResourceList.length }} 个业务系统
+            </span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-item"><i class="dot dot-active"></i>已对接</span>
+            <span class="legend-item"><i class="dot dot-inactive"></i>未对接</span>
+          </div>
+        </div>
+        <div class="resource-rows">
+          <div
+            v-for="(row, rowIdx) in resourceRows"
+            :key="'row-' + rowIdx"
+            class="resource-row"
+            :style="row.length < 9 ? { 'grid-template-columns': `repeat(${row.length}, minmax(0, 1fr))` } : {}"
+          >
+            <template v-for="(item, idx) in row" :key="'r' + rowIdx + '-c' + idx">
+              <div
+                v-if="item.__isMore"
+                class="resource-tag tag-more"
+                @click="toggleResourceExpand"
+                :title="'点击展开剩余系统'"
+              >
+                <span class="tag-name">{{ item.systemName }}</span>
+              </div>
+              <div
+                v-else-if="item.__isCollapse"
+                class="resource-tag tag-collapse"
+                @click="toggleResourceExpand"
+                title="点击收起"
+              >
+                <span class="tag-name">▲ 收起</span>
+              </div>
+              <div
+                v-else
+                :class="['resource-tag', item.abutmentStatus === '1' ? 'tag-active' : 'tag-inactive']"
+                :title="item.remarks || item.systemName"
+              >
+                <i v-if="item.abutmentStatus === '1'" class="tag-tick">✓</i>
+                <span class="tag-name">{{ item.systemName }}</span>
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useUserStore} from "@/store/user/user";
 import {useRouter} from "vue-router";
 import {getDatasourceHome} from "@/service/modules/data-source";
 import {resourcePlanningList} from "@/service/modules/resources";
 
+const MAX_RESOURCE_VISIBLE = 18
+const RESOURCE_COLS = 9
+
 const userStore = useUserStore()
 const router = useRouter()
 const data = ref({})
-const firstListData = ref([])
-const secondListData = ref([])
+const totalResourceList = ref([])
+const showAllResource = ref(false)
+
+const visibleResourceList = computed(() => {
+  const total = totalResourceList.value
+  if (showAllResource.value || total.length <= MAX_RESOURCE_VISIBLE) {
+    return [...total]
+  }
+  const list = total.slice(0, MAX_RESOURCE_VISIBLE - 1)
+  list.push({
+    __isMore: true,
+    systemName: `更多 +${total.length - (MAX_RESOURCE_VISIBLE - 1)}`,
+  })
+  return list
+})
+
+const resourceRows = computed(() => {
+  const total = totalResourceList.value.length
+  // ≤18 且折叠：尽量均分两行（上 ceil(n/2)，下 floor(n/2)）
+  if (!showAllResource.value && total <= MAX_RESOURCE_VISIBLE) {
+    const list = visibleResourceList.value
+    const mid = Math.ceil(list.length / 2)
+    return [list.slice(0, mid), list.slice(mid)]
+  }
+  // 其余情况：按每行 9 个正常切（展开态 / >18折叠态的 17+更多）
+  const list = visibleResourceList.value
+  const rows = []
+  for (let i = 0; i < list.length; i += RESOURCE_COLS) {
+    rows.push(list.slice(i, i + RESOURCE_COLS))
+  }
+  if (showAllResource.value && total > MAX_RESOURCE_VISIBLE) {
+    const collapseItem = { __isCollapse: true, systemName: '收起' }
+    const lastRow = rows[rows.length - 1]
+    if (lastRow.length < RESOURCE_COLS) {
+      lastRow.push(collapseItem)
+    } else {
+      rows.push([collapseItem])
+    }
+  }
+  return rows
+})
+
 const loopDataBack = `${import.meta.env.BASE_URL}images/home/background.png`
 const loopData0 = [
   {
@@ -214,17 +248,25 @@ const topImagePath = {
   six: `${import.meta.env.BASE_URL}images/home/6.png`,
   seven: `${import.meta.env.BASE_URL}images/home/7.png`
 }
+const statsCards = [
+  { icon: topImagePath.one,   dataKey: 'dataSourceNum', label: '数据连接',  type: 'datasource',   color: '#1677ff' },
+  { icon: topImagePath.two,   dataKey: 'interfaceNum',  label: '数据服务',  type: 'api',          color: '#13c2c2' },
+  { icon: topImagePath.three, dataKey: 'dataElementNum',label: '数据元',    type: 'dataElement',  color: '#722ed1' },
+  { icon: topImagePath.four,  dataKey: 'dataModel',     label: '数据模型',  type: 'dataModel',    color: '#eb2f96' },
+  { icon: topImagePath.five,  dataKey: 'processNum',    label: '任务流',    type: 'workFlow',     color: '#fa8c16' },
+  { icon: topImagePath.six,   dataKey: 'taskNum',       label: '任务实例',  type: 'workInstance', color: '#52c41a' },
+  { icon: topImagePath.seven, dataKey: 'assetsNum',     label: '数据资产',  type: 'dataAsset',    color: '#f5222d' },
+]
 
 const initData = async () => {
   data.value = await getDatasourceHome()
   const list = await resourcePlanningList({}) || []
   const filteredList = list.filter(item => item.systemName?.trim())
+  showAllResource.value = false
   if(filteredList.length) {
-    const mid = Math.ceil(filteredList.length / 2)
-    firstListData.value = filteredList.slice(0, mid)
-    secondListData.value = filteredList.slice(mid)
+    totalResourceList.value = filteredList
   } else {
-    firstListData.value = [
+    totalResourceList.value = [
       { systemName: "档案系统", abutmentStatus: '1', remarks: '' },
       { systemName: "企业管理域", abutmentStatus: '1', remarks: '' },
       { systemName: "协调办公", abutmentStatus: '1', remarks: '' },
@@ -233,9 +275,7 @@ const initData = async () => {
       { systemName: "水力模型", abutmentStatus: '1', remarks: '' },
       { systemName: "生产调度", abutmentStatus: '1', remarks: '' },
       { systemName: "应急指挥", abutmentStatus: '1', remarks: '' },
-      { systemName: "科学调度", abutmentStatus: '1', remarks: '' }
-    ]
-    secondListData.value =[
+      { systemName: "科学调度", abutmentStatus: '1', remarks: '' },
       { systemName: "热线服务", abutmentStatus: '1', remarks: '' },
       { systemName: "二供管理系统", abutmentStatus: '1', remarks: '' },
       { systemName: "营业服务", abutmentStatus: '1', remarks: '' },
@@ -244,9 +284,15 @@ const initData = async () => {
       { systemName: "漏损管理系统", abutmentStatus: '1', remarks: '' },
       { systemName: "工程报表", abutmentStatus: '1', remarks: '' },
       { systemName: "管网管理域", abutmentStatus: '1', remarks: '' },
-      { systemName: "工单管理系统", abutmentStatus: '1', remarks: '' }
+      { systemName: "工单管理系统", abutmentStatus: '1', remarks: '' },
+      { systemName: "智慧抄表", abutmentStatus: '0', remarks: '对接中' },
+      { systemName: "水质监测", abutmentStatus: '0', remarks: '规划中' },
     ]
   }
+}
+
+const toggleResourceExpand = () => {
+  showAllResource.value = !showAllResource.value
 }
 
 const handleClick = (type) => {
@@ -306,202 +352,26 @@ onMounted(() => {
 
 <style scoped>
 .page {
-  background-color: rgba(232, 235, 240, 1);
-  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  .box_3 {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    .group_5 {
-      background-color: rgba(206, 206, 206, 0.13);
-      border-radius: 4px;
-      display: flex;
-      justify-content: space-between;
-      height: 88px;
-      margin: 16px 16px 0 16px;
-      .image {
-        width: 50px;
-        height: 50px;
-        margin: 19px 0 0 30px;
-      }
-      .text-wrapper {
-        width: 56px;
-        height: 55px;
-        margin: 13px 30px 0 0;
-        .text_number {
-          width: 29px;
-          height: 35px;
-          overflow-wrap: break-word;
-          color: rgb(50, 166, 238);
-          font-size: 24px;
-          font-family: SourceHanSansSC-Bold;
-          font-weight: 700;
-          text-align: left;
-          white-space: nowrap;
-          line-height: 35px;
-          cursor: pointer;
-        }
-        .text_title {
-          width: 56px;
-          height: 20px;
-          overflow-wrap: break-word;
-          color: rgba(34, 34, 34, 1);
-          font-size: 16px;
-          font-weight: bold;
-          text-align: left;
-          white-space: nowrap;
-          line-height: 20px;
-        }
-      }
-    }
-    .group_6 {
-      width: 100%;
-      height: calc(100% - 300px);
-      margin: 19px 0 0 16px;
-      .group_7 {
-        width: 50%;
-        height: 100%;
-        margin-top: 4px;
-        justify-content: center;
-        .grid_1 {
-          width: 783px;
-          height: 80%;
-          flex-wrap: wrap;
-          .image-text_1 {
-            width: 374px;
-            height: 70px;
-            background-size: 374px 71px;
-            margin: 0 35px 16px 0;
-            &:nth-child(2n) {
-              margin-right: 0;
-            }
-            &:nth-last-child(-n + 2) {
-              margin-bottom: 0;
-            }
-            .label_1 {
-              width: 40px;
-              height: 40px;
-              margin: 15px 0 0 10px;
-            }
-            .text-group_1 {
-              width: 360px;
-              height: 53px;
-              margin: 12px -56px 0 20px;
-              .text_29 {
-                width: 56px;
-                height: 20px;
-                overflow-wrap: break-word;
-                color: rgb(25, 128, 128);
-                font-size: 15px;
-                font-family: PingFangSC-Medium;
-                font-weight: 600;
-                text-align: left;
-                white-space: nowrap;
-                line-height: 20px;
-                margin-left: 1px;
-              }
-              .text_30 {
-                width: 360px;
-                height: 32px;
-                overflow-wrap: break-word;
-                color: rgba(102, 102, 102, 1);
-                font-size: 12px;
-                font-weight: normal;
-                text-align: left;
-                line-height: 31px;
-                margin-top: 1px;
-              }
-            }
-          }
-        }
-      }
-      .image_9 {
-        width: 50%;
-        height: 100%;
-        margin-left: -20px;
-      }
-    }
-    .group_8 {
-      height: 40px;
-      margin: 16px 10px 0 10px;
-      display: flex;
-      justify-content: space-between;
-      .text-wrapper {
-        background-color: rgba(96, 185, 255, 0.084);
-        border-radius: 2px;
-        height: 100%;
-        border: 1px solid rgba(28, 137, 255, 0.21);
-        width: 10%;
-        .text {
-          height: 100%;
-          overflow-wrap: break-word;
-          color: rgb(25, 128, 128);
-          font-size: 15px;
-          font-weight: bold;
-          display: flex;
-          justify-content: center; /* 水平居中 */
-          align-items: center; /* 垂直居中 */
-          white-space: nowrap;
-          line-height: 17px;
-        }
-      }
-    .disable-text-wrapper {
-      border-radius: 4px;
-      height: 100%;
-      width: 10%;
-      .disable-text {
-        height: 100%;
-        overflow-wrap: break-word;
-        font-size: 15px;
-        font-weight: bold;
-        color: #000000;
-        display: flex;
-        justify-content: center; /* 水平居中 */
-        align-items: center; /* 垂直居中 */
-        white-space: nowrap;
-        line-height: 17px;
-        background: #F7F7F7;
-        border-radius: 4px;
-        opacity: 0.58;
-      }
-    }
-    }
-  }
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #f5f7fa 0%, #eef2f7 100%);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.page::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-body * {
+.home-container {
+  padding: 16px;
+  min-height: 100%;
   box-sizing: border-box;
-  flex-shrink: 0;
-}
-body {
-  font-family: PingFangSC-Regular, Roboto, Helvetica Neue, Helvetica, Tahoma,
-  Arial, PingFang SC-Light, Microsoft YaHei;
-}
-input {
-  background-color: transparent;
-  border: 0;
-}
-button {
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  outline: none;
-  background-color: transparent;
 }
 
-button:active {
-  opacity: 0.6;
-}
-.van-nav-bar__left:active,
-.van-nav-bar__right:active {
-  opacity: 1;
-}
-[class*='van-']::after {
-  border-bottom: 0;
-}
 .flex-col {
   display: flex;
   flex-direction: column;
@@ -515,4 +385,388 @@ button:active {
   justify-content: space-between;
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  border: 1px solid #eef0f3;
+  transition: all 0.25s ease-out;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--card-color, #1677ff);
+    opacity: 0.85;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: #d6e4ff;
+    box-shadow: 0 8px 24px rgba(22, 119, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    &::before {
+      opacity: 1;
+      width: 6px;
+    }
+  }
+}
+
+.stat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--card-color, #1677ff) 12%, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.stat-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--card-color, #1677ff);
+  line-height: 32px;
+  letter-spacing: 0.5px;
+  font-family: 'DIN Alternate', 'SourceHanSansSC-Bold', -apple-system, sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #86909c;
+  line-height: 20px;
+  margin-top: 2px;
+}
+
+.middle-section {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 14px 4px;
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d2129;
+  line-height: 22px;
+  position: relative;
+  padding-left: 12px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #1677ff 0%, #4096ff 100%);
+  }
+}
+
+.section-desc {
+  font-size: 12px;
+  color: #86909c;
+}
+
+.section-count {
+  font-size: 12px;
+  color: #86909c;
+  padding: 2px 8px;
+  background: #f2f3f5;
+  border-radius: 4px;
+}
+
+.modules-panel,
+.visual-panel,
+.resource-panel {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eef0f3;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.module-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fafcff 0%, #f5f9ff 100%);
+  border: 1px solid #f0f4fa;
+  transition: all 0.25s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: #d6e4ff;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.08);
+  }
+}
+
+.module-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.06);
+}
+
+.module-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.module-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.module-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d2129;
+  line-height: 22px;
+  margin-bottom: 4px;
+}
+
+.module-desc {
+  font-size: 12px;
+  color: #6b7785;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.visual-wrap {
+  width: 100%;
+  height: calc(100% - 40px);
+  min-height: 380px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f5f9ff 0%, #eaf1ff 100%);
+  border: 1px solid #e6edf8;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.visual-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #86909c;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-active {
+  background: #52c41a;
+  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.15);
+}
+.dot-inactive {
+  background: #c9cdd4;
+}
+
+.resource-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resource-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.resource-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  min-height: 42px;
+  box-sizing: border-box;
+}
+
+.tag-active {
+  color: #1677ff;
+  background: linear-gradient(135deg, #e6f0ff 0%, #d6e6ff 100%);
+  border: 1px solid #b8d1ff;
+
+  &:hover {
+    background: linear-gradient(135deg, #d6e6ff 0%, #c2d9ff 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(22, 119, 255, 0.1);
+  }
+}
+
+.tag-inactive {
+  color: #86909c;
+  background: #f7f8fa;
+  border: 1px solid #e5e6eb;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.tag-tick {
+  font-style: normal;
+  font-size: 11px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 50%;
+  background: #52c41a;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.tag-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.tag-more {
+  color: #fff;
+  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
+  border: 1px solid #1677ff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(22, 119, 255, 0.25);
+
+  &:hover {
+    background: linear-gradient(135deg, #0958d9 0%, #1677ff 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.35);
+  }
+
+  .tag-name {
+    letter-spacing: 0.5px;
+  }
+}
+
+.tag-collapse {
+  color: #722ed1;
+  background: linear-gradient(135deg, #f9f0ff 0%, #efdbff 100%);
+  border: 1px dashed #9254de;
+  font-weight: 600;
+
+  &:hover {
+    background: linear-gradient(135deg, #efdbff 0%, #d3adf7 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(114, 46, 209, 0.15);
+  }
+}
+
+@media (max-width: 1440px) {
+  .stats-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .middle-section {
+    grid-template-columns: 1fr;
+  }
+  .resource-row {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
 </style>

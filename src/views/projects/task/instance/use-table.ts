@@ -47,7 +47,35 @@ export function useTable() {
   const projectCode = Number(route.params.projectCode)
   const processInstanceId = Number(route.params.processInstanceId)
   const stateType = ref(route.query.stateType)
-  const timeRangeParam = route.query.timeRange as string;
+  const timeRangeParam = route.query.timeRange as string
+
+  const toSafeTimestamp = (val: any): number | null => {
+    if (val === null || val === undefined || val === '') return null
+    const cleaned = String(val).replace(/[^\d-]/g, '')
+    if (!cleaned) return null
+    const n = Number(cleaned)
+    return Number.isFinite(n) && n > 0 ? n : null
+  }
+
+  const parseTimeRangeParam = (raw: string): [number, number] | null => {
+    if (!raw) return null
+    let input = raw
+    try { input = decodeURIComponent(raw) } catch { /* ignore */ }
+
+    let arr: any = null
+    try {
+      arr = JSON.parse(input)
+    } catch {
+      const parts = input.split(',').map((s) => s.trim()).filter(Boolean)
+      if (parts.length >= 2) arr = parts.slice(0, 2)
+    }
+
+    if (!Array.isArray(arr) || arr.length < 2) return null
+    const s = toSafeTimestamp(arr[0])
+    const e = toSafeTimestamp(arr[1])
+    if (s === null || e === null) return null
+    return [s, e]
+  }
 
   const variables = reactive({
     columns: [],
@@ -59,7 +87,7 @@ export function useTable() {
     processInstanceId: ref(processInstanceId ? processInstanceId : null),
     host: ref(null),
     stateType: stateType,
-    datePickerRange: ref(null),
+    datePickerRange: ref<[number, number] | null>(parseTimeRangeParam(timeRangeParam)),
     executorName: ref(null),
     processInstanceName: ref(null),
     totalPage: ref(1),
@@ -74,14 +102,6 @@ export function useTable() {
     taskType: ref(0),
     readOnly: ref(false),
   })
-
-  // 如果 timeRange 参数存在，则进行拆分处理
-  if (timeRangeParam) {
-    const [startTime, endTime] = timeRangeParam.split(',');
-    // 将拆分后的值存入 timeRangeArray
-    // @ts-ignore
-    variables.datePickerRange = [Number(startTime), Number(endTime)];
-  }
 
   const createColumns = (variables: any) => {
     variables.columns = [
@@ -302,6 +322,15 @@ export function useTable() {
   const getTableData = (params: any) => {
     if (variables.loadingRef) return
     variables.loadingRef = true
+    const isValidTs = (v: any): v is number | string => {
+      const n = typeof v === 'number' ? v : Number(v)
+      return Number.isFinite(n) && n > 0
+    }
+    const pick = (range: any, i: 0 | 1) =>
+      Array.isArray(range) && range.length > i && isValidTs(range[i])
+        ? format(parseTime(range[i]), 'yyyy-MM-dd HH:mm:ss')
+        : ''
+
     const data = {
       pageSize: params.pageSize,
       pageNo: params.pageNo,
@@ -309,12 +338,8 @@ export function useTable() {
       processInstanceId: params.processInstanceId,
       host: params.host,
       stateType: params.stateType,
-      startDate: params.datePickerRange
-        ? format(parseTime(params.datePickerRange[0]), 'yyyy-MM-dd HH:mm:ss')
-        : '',
-      endDate: params.datePickerRange
-        ? format(parseTime(params.datePickerRange[1]), 'yyyy-MM-dd HH:mm:ss')
-        : '',
+      startDate: pick(params.datePickerRange, 0),
+      endDate: pick(params.datePickerRange, 1),
       executorName: params.executorName,
       processInstanceName: params.processInstanceName,
       taskType: params.taskType,

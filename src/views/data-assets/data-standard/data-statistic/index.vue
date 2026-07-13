@@ -1,155 +1,112 @@
 <template>
-  <CrudHead title="标准概览" />
-  <div class="FBH mb16">
-    <div class="overview-item-2 hover_div FB1 FBV FBJB">
-      <div class="FBH FBJB">
-        <div class="FBT">数据元数</div>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <NIcon><QuestionCircle28Regular/></NIcon>
+  <div class="stats-row">
+    <div
+      v-for="(item, index) in statCards"
+      :key="index"
+      class="stat-card"
+      :style="item.vars"
+    >
+      <div class="stat-icon-wrap">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="stat-icon">
+          <path :d="item.iconPath" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-header">
+          <span class="stat-label">{{ item.label }}</span>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <NIcon size="14" class="tip-icon"><QuestionCircle28Regular/></NIcon>
+            </template>
+            {{ item.tip }}
+          </n-tooltip>
+        </div>
+        <div class="stat-value">
+          <template v-if="item.sub">
+            {{ indexData[item.valueKey1] }}<span class="stat-slash">/</span>{{ indexData[item.valueKey2] }}
           </template>
-          所有草稿/已发布/废止状态的基础数据元总数
-        </n-tooltip>
-      </div>
-      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElementNum }}<div class="overview-default">基础</div>
-      </div>
-    </div>
-    <div class="overview-item-2 hover_div FB1 FBV FBJB">
-      <div class="FBH FBJB">
-        <div class="FBT">数据模型数</div>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <NIcon><QuestionCircle28Regular/></NIcon>
+          <template v-else>
+            {{ indexData[item.valueKey] }}
           </template>
-          所有草稿/已发布/废止状态的基础和指标数据元总数
-        </n-tooltip>
-      </div>
-      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.modelNum }}<div class="overview-default"></div>
-      </div>
-    </div>
-    <div class="overview-item-2 hover_div FB1 FBV FBJB">
-      <div class="FBH FBJB">
-        <div class="FBT">近3个月添加数</div>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <NIcon><QuestionCircle28Regular/></NIcon>
-          </template>
-          所有草稿/已发布/废止状态的数据模型总数
-        </n-tooltip>
-      </div>
-      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElement3Num + '/' +  indexData.model3Num}}<div class="overview-default">数据元/数据模型</div>
-      </div>
-    </div>
-    <div class="overview-item-2 hover_div FB1 FBV FBJB" style="margin-right: 0">
-      <div class="FBH FBJB">
-        <div class="FBT">近3个月发布数</div>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <NIcon><QuestionCircle28Regular/></NIcon>
-          </template>
-          近3个月添加的数据元的总数，包括添加后删除的。同一个数据元添加后编辑的，数量仍为1
-        </n-tooltip>
-      </div>
-      <div class="overview-countLast FBV FBAC FBJC">{{ indexData.dataElement3ReleaseStatusNum }}<div class="overview-default">数据元</div>
+        </div>
+        <div v-if="item.desc" class="stat-desc">{{ item.desc }}</div>
       </div>
     </div>
   </div>
-  <div class="page-statistic FBH">
-    <NCard
-        hoverable
-        size="small"
-        :segmented="{
-          content: true,
-          footer: 'soft'
-        }"
-        style="margin-right: 12px"
-    >
-      <template #header>
-        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
-          热门标准云图
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <NIcon size="14"><QuestionCircle28Regular/></NIcon>
-          </template>
-          数据元映射至数据模型，按照数据元被引用的次数从高至低排列
-        </n-tooltip>
-        </CrudSplit>
-      </template>
-      <MyChart :option="cloudOption" height="300px"/>
-    </NCard>
-    <NCard
-        hoverable
-        size="small"
-        :segmented="{
-          content: true,
-          footer: 'soft'
-        }"
-    >
-      <template #header>
-        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
-        数据元落标情况
-        </CrudSplit>
-      </template>
-      <div class="FBH FBJB" style="background: rgba(243, 244, 249, 0.5); width: 168px; height: 43px; flex-direction: column">
-        <div class="bar-tag">
-          <span class="FBH FBAC">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDYzLjEgKDkyNDUyKSAtIGh0dHBzOi8vc2tldGNoLmNvbSAtLT4KICAgIDx0aXRsZT7lvaLnirY8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9Ijk4LjQxMzA4NTklIiB5MT0iNTAlIiB4Mj0iMCUiIHkyPSI1MCUiIGlkPSJsaW5lYXJHcmFkaWVudC0xIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzgzQkFGRCIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjM0Y3NkZCIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPGcgaWQ9Iumhtemdoi0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0i5qCH5YeG57uf6K6hIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzkzLjAwMDAwMCwgLTI0OS4wMDAwMDApIiBmaWxsPSJ1cmwoI2xpbmVhckdyYWRpZW50LTEpIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8ZyBpZD0i57yW57uEIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3OTMuMDAwMDAwLCAyNDkuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNS44NTQ2NzgxMywxLjUwNDY3ODE0IEw1Ljg1NDY3ODEzLDYuMTU0Njc4MTQgTDEwLjUwNDY3ODEsNi4xNTQ2NzgxNCBMMTAuNTA0Njc4MSw2Ljc1NDY3ODEzIEMxMC41MDQ2NzgxLDkuNjU0MTc4MTQgOC4xNTQxNzgxMywxMi4wMDQ2NzgxIDUuMjU0Njc4MTQsMTIuMDA0Njc4MSBDMi4zNTUxNzgxNiwxMi4wMDQ2NzgxIDAuMDA0Njc4MTM5MDMsOS42NTQxNzgxNCAwLjAwNDY3ODEzOTAzLDYuNzU0Njc4MTMgQzAuMDA0Njc4MTM5MDMsMy44ODgxNzgxNCAyLjMwMjA3ODE0LDEuNTU4MDc4MTQgNS4xNTU5NzgxNCwxLjUwNTU3ODE0IEw1LjI1NDY3ODE0LDEuNTA0Njc4MTQgTDUuODU0Njc4MTMsMS41MDQ2NzgxNCBaIE03LjUwNDY3ODE0LDAuMDA0Njc4MTM5MDMgQzkuOTg5ODc4MTQsMC4wMDQ2NzgxMzkwMyAxMi4wMDQ2NzgxLDIuMDE5NDc4MTQgMTIuMDA0Njc4MSw0LjUwNDY3ODE0IEwxMi4wMDQ2NzgxLDUuMTA0Njc4MTQgTDYuOTA0Njc4MTQsNS4xMDQ2NzgxNCBMNi45MDQ2NzgxNCwwLjAwNDY3ODEzOTAzIEw3LjUwNDY3ODE0LDAuMDA0Njc4MTM5MDMgWiIgaWQ9IuW9oueKtiI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" class="mr8" alt="img">
-            总落标数
-          </span>
-          <span style="display: flex; align-items: center">{{ total }}</span>
+  <div class="chart-row">
+    <div class="panel panel-flex-1">
+      <div class="section-header">
+        <span class="section-title">热门标准云图</span>
+        <span class="section-desc">
+          数据元映射至数据模型
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <NIcon size="14" class="tip-icon"><QuestionCircle28Regular/></NIcon>
+            </template>
+            按照数据元被引用的次数从高至低排列
+          </n-tooltip>
+        </span>
+      </div>
+      <div class="chart-wrap">
+        <MyChart :option="cloudOption" height="376px" :key="cloudChartKey"/>
+      </div>
+    </div>
+    <div class="panel panel-flex-1">
+      <div class="section-header">
+        <span class="section-title">数据元落标情况</span>
+        <span class="section-desc">落标数与落标率统计趋势</span>
+      </div>
+      <div class="rate-summary-row">
+        <div class="rate-tag rate-tag-count">
+          <div class="rate-icon">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M832 64H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32zm-600 72h560v208H232V136zm560 480H232V408h560v208zm0 272H232V680h560v208z" fill="#3F76DD"/></svg>
+          </div>
+          <div class="rate-info">
+            <div class="rate-value">{{ total ?? 0 }}</div>
+            <div class="rate-label">总落标数</div>
+          </div>
         </div>
-        <div class="bar-tag">
-          <span class="FBH FBAC">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTJweCIgaGVpZ2h0PSIxMnB4IiB2aWV3Qm94PSIwIDAgMTIgMTIiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDYzLjEgKDkyNDUyKSAtIGh0dHBzOi8vc2tldGNoLmNvbSAtLT4KICAgIDx0aXRsZT7lvaLnirY8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgeDE9Ijk4LjQxMzA4NTklIiB5MT0iNTAlIiB4Mj0iMCUiIHkyPSI1MCUiIGlkPSJsaW5lYXJHcmFkaWVudC0xIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzgzQkFGRCIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjM0Y3NkZCIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPGcgaWQ9Iumhtemdoi0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0i5qCH5YeG57uf6K6hIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzkzLjAwMDAwMCwgLTI0OS4wMDAwMDApIiBmaWxsPSJ1cmwoI2xpbmVhckdyYWRpZW50LTEpIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICA8ZyBpZD0i57yW57uEIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3OTMuMDAwMDAwLCAyNDkuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNS44NTQ2NzgxMywxLjUwNDY3ODE0IEw1Ljg1NDY3ODEzLDYuMTU0Njc4MTQgTDEwLjUwNDY3ODEsNi4xNTQ2NzgxNCBMMTAuNTA0Njc4MSw2Ljc1NDY3ODEzIEMxMC41MDQ2NzgxLDkuNjU0MTc4MTQgOC4xNTQxNzgxMywxMi4wMDQ2NzgxIDUuMjU0Njc4MTQsMTIuMDA0Njc4MSBDMi4zNTUxNzgxNiwxMi4wMDQ2NzgxIDAuMDA0Njc4MTM5MDMsOS42NTQxNzgxNCAwLjAwNDY3ODEzOTAzLDYuNzU0Njc4MTMgQzAuMDA0Njc4MTM5MDMsMy44ODgxNzgxNCAyLjMwMjA3ODE0LDEuNTU4MDc4MTQgNS4xNTU5NzgxNCwxLjUwNTU3ODE0IEw1LjI1NDY3ODE0LDEuNTA0Njc4MTQgTDUuODU0Njc4MTMsMS41MDQ2NzgxNCBaIE03LjUwNDY3ODE0LDAuMDA0Njc4MTM5MDMgQzkuOTg5ODc4MTQsMC4wMDQ2NzgxMzkwMyAxMi4wMDQ2NzgxLDIuMDE5NDc4MTQgMTIuMDA0Njc4MSw0LjUwNDY3ODE0IEwxMi4wMDQ2NzgxLDUuMTA0Njc4MTQgTDYuOTA0Njc4MTQsNS4xMDQ2NzgxNCBMNi45MDQ2NzgxNCwwLjAwNDY3ODEzOTAzIEw3LjUwNDY3ODE0LDAuMDA0Njc4MTM5MDMgWiIgaWQ9IuW9oueKtiI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" class="mr8" alt="img">
-            总落标率
-          </span>
-          <span style="display: flex; align-items: center">{{ rate }}</span>
+        <div class="rate-tag rate-tag-rate">
+          <div class="rate-icon">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#3bb969"/><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.7-3.7 1.9-8.7-1.8-11.2z" fill="#3bb969"/></svg>
+          </div>
+          <div class="rate-info">
+            <div class="rate-value">{{ rate ?? '0%' }}</div>
+            <div class="rate-label">总落标率</div>
+          </div>
         </div>
       </div>
-      <MyChart :option="barOption" height="300px"/>
-    </NCard>
+      <div class="chart-wrap">
+        <MyChart :option="barOption" height="300px"/>
+      </div>
+    </div>
   </div>
-  <div class="page-statistic FBH">
-    <NCard
-        hoverable
-        size="small"
-        :segmented="{
-          content: true,
-          footer: 'soft'
-        }"
-        style="margin-right: 12px"
-    >
-      <template #header>
-        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
-        最新30个数据元
-        </CrudSplit>
-      </template>
-      <n-data-table
-          striped
-          :columns="columns"
-          :data="data"
-          :max-height="300"
-          :min-height="300"
-      />
-    </NCard>
-    <NCard
-        hoverable
-        size="small"
-        :segmented="{
-          content: true,
-          footer: 'soft'
-        }"
-    >
-      <template #header>
-        <CrudSplit noPadding noBackgroundColor style="font-size: 16px; font-weight: 600">
-        最新30个标准的类型占比
-        </CrudSplit>
-      </template>
-      <div style="display: flex">
+  <div class="chart-row">
+    <div class="panel panel-flex-1">
+      <div class="section-header">
+        <span class="section-title">最新30个数据元</span>
+        <span class="section-desc">最近新增的数据元列表</span>
+      </div>
+      <div class="table-wrap">
+        <n-data-table
+            striped
+            :columns="columns"
+            :data="data"
+            :max-height="300"
+            :min-height="300"
+        />
+      </div>
+    </div>
+    <div class="panel panel-flex-1">
+      <div class="section-header">
+        <span class="section-title">最新30个标准的类型占比</span>
+        <span class="section-desc">基础数据元与数据模型占比</span>
+      </div>
+      <div class="pie-row">
         <MyChart :option="pieOptionOne" height="300px" width="50%"/>
         <MyChart :option="pieOptionTwo" height="300px" width="50%"/>
       </div>
-    </NCard>
+    </div>
   </div>
 </template>
 
@@ -158,14 +115,13 @@ import CrudHead from '@/components/cue/crud-header.vue'
 import { QuestionCircle28Regular } from '@vicons/fluent'
 import MyChart from "@/components/chart/modules/MyChart";
 import 'echarts-wordcloud';
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {
   queryModelIndexLatest, queryModelIndexLineChart,
   queryModelIndexNephogram,
   queryModelIndexNum,
   queryModelIndexRate
 } from "@/service/modules/data-standard";
-import CrudSplit from "@/components/cue/crud-split.vue";
 
 const total = ref()
 const rate = ref()
@@ -256,6 +212,8 @@ const barOption = ref({
   ]
 })
 
+const cloudChartKey = ref(0)
+
 const cloudOption = ref({
   tooltip: {
     backgroundColor: '#fff',
@@ -265,10 +223,20 @@ const cloudOption = ref({
   },
   series: [{
     type: 'wordCloud',
-    gridSize: 20,
-    sizeRange: [20, 60],
-    rotationRange: [-90, 90],
+    shape: 'square',
+    left: 'center',
+    top: 'middle',
+    width: '99%',
+    height: '99%',
+    right: null,
+    bottom: null,
+    gridSize: 6,
+    sizeRange: [10, 56],
+    rotationRange: [-10, 10],
     drawOutOfBound:true,
+    rotationStep: 5,
+    drawOutOfBound: false,
+    layoutAnimation: true,
     textStyle: {
       color: function () {
         return 'rgb(' +
@@ -373,6 +341,83 @@ const columns = [
   }
 ]
 
+const statCards = computed(() => [
+  {
+    label: '数据元数',
+    tip: '所有草稿/已发布/废止状态的基础数据元总数',
+    valueKey: 'dataElementNum',
+    desc: '基础',
+    vars: {
+      '--c-main': '#1677ff',
+      '--c-icon-bg-from': '#e6f0ff',
+      '--c-icon-bg-to': '#f0f5ff',
+      '--c-icon-border': '#bae0ff55',
+      '--c-icon-shadow': 'rgba(22,119,255,0.10)',
+      '--c-corner-bg': 'rgba(22,119,255,0.08)',
+      '--c-hover-border': '#b8d1ff',
+      '--c-hover-shadow': 'rgba(22,119,255,0.10)',
+      '--c-tip-hover': '#1677ff'
+    },
+    iconPath: 'M832 64H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32zm-600 72h560v208H232V136zm560 480H232V408h560v208zm0 272H232V680h560v208z'
+  },
+  {
+    label: '数据模型数',
+    tip: '所有草稿/已发布/废止状态的基础和指标数据元总数',
+    valueKey: 'modelNum',
+    desc: '',
+    vars: {
+      '--c-main': '#722ED1',
+      '--c-icon-bg-from': '#f3e9ff',
+      '--c-icon-bg-to': '#faf5ff',
+      '--c-icon-border': '#d3adf755',
+      '--c-icon-shadow': 'rgba(114,46,209,0.10)',
+      '--c-corner-bg': 'rgba(114,46,209,0.08)',
+      '--c-hover-border': '#d3adf7',
+      '--c-hover-shadow': 'rgba(114,46,209,0.10)',
+      '--c-tip-hover': '#722ED1'
+    },
+    iconPath: 'M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372zM334.9 577.7c-15.4-4.5-27.3-17.4-34.1-36.7-7-19.9-6.9-44.1-.2-64.3 6.9-20.9 19.7-35.8 35.4-40.3 8.5-2.4 13-1.3 18.7 4.5 10.6 10.9 14.8 29.9 11.1 48.3-3.7 18.3-14.5 34.6-28.7 38.9-4.6 1.3-8.3.9-12.2-.4zm130.6 27.5c-17.9 0-32.4-14.5-32.4-32.4V402.4c0-17.9 14.5-32.4 32.4-32.4s32.4 14.5 32.4 32.4v170.5c0 18-14.5 32.3-32.4 32.3zm186.6 0c-17.9 0-32.4-14.5-32.4-32.4V402.4c0-17.9 14.5-32.4 32.4-32.4s32.4 14.5 32.4 32.4v170.5c0 18-14.5 32.3-32.4 32.3z'
+  },
+  {
+    label: '近3个月添加数',
+    tip: '近3个月添加的数据元与数据模型总数，包括添加后删除的',
+    valueKey1: 'dataElement3Num',
+    valueKey2: 'model3Num',
+    sub: true,
+    desc: '数据元 / 数据模型',
+    vars: {
+      '--c-main': '#52C41A',
+      '--c-icon-bg-from': '#e9ffd6',
+      '--c-icon-bg-to': '#f6ffed',
+      '--c-icon-border': '#b7eb8f55',
+      '--c-icon-shadow': 'rgba(82,196,26,0.10)',
+      '--c-corner-bg': 'rgba(82,196,26,0.08)',
+      '--c-hover-border': '#b7eb8f',
+      '--c-hover-shadow': 'rgba(82,196,26,0.10)',
+      '--c-tip-hover': '#52C41A'
+    },
+    iconPath: 'M904 296h-92v-92c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v92H648c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h92v92c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-92h92c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM916 472H792V596H668V472H544V348H668V224H792v124h124v124zM120 112h72c4.4 0 8 3.6 8 8v720c0 4.4-3.6 8-8 8h-72c-4.4 0-8-3.6-8-8V120c0-4.4 3.6-8 8-8zm256 0h72c4.4 0 8 3.6 8 8v720c0 4.4-3.6 8-8 8h-72c-4.4 0-8-3.6-8-8V120c0-4.4 3.6-8 8-8z'
+  },
+  {
+    label: '近3个月发布数',
+    tip: '近3个月添加并发布的数据元总数，同一个数据元添加后编辑的数量仍为1',
+    valueKey: 'dataElement3ReleaseStatusNum',
+    desc: '数据元',
+    vars: {
+      '--c-main': '#FA8C16',
+      '--c-icon-bg-from': '#ffe8cc',
+      '--c-icon-bg-to': '#fff7e6',
+      '--c-icon-border': '#ffd59155',
+      '--c-icon-shadow': 'rgba(250,140,22,0.10)',
+      '--c-corner-bg': 'rgba(250,140,22,0.08)',
+      '--c-hover-border': '#ffd591',
+      '--c-hover-shadow': 'rgba(250,140,22,0.10)',
+      '--c-tip-hover': '#FA8C16'
+    },
+    iconPath: 'M653.6 279.3l155.8 416.5c-1.7 2.7-3.7 5.3-5.9 7.7-32.2 35.1-76.4 56.6-123.5 56.6H280c-8.8 0-16-7.2-16-16v-56c0-8.8 7.2-16 16-16h114.8L279.2 193.6A8 8 0 0 1 286.8 184h267.6c5.2 0 9.6 3.4 11.5 8.3l87.7 228zM624 400c26.5 0 48-21.5 48-48s-21.5-48-48-48-48 21.5-48 48 21.5 48 48 48z'
+  }
+])
+
 const data = ref([{}])
 const indexData = ref({
   dataElement3Num: 0,
@@ -386,10 +431,43 @@ const initData = async () => {
   indexData.value = await queryModelIndexNum({})
 
   const cloudData = await queryModelIndexNephogram({})
-  cloudOption.value.series[0].data = cloudData.map(item => ({
+  const words = cloudData.map(item => ({
     name: item.chineseName,
     value: item.fieldNum
-  }));
+  }))
+  cloudOption.value = {
+    ...cloudOption.value,
+    series: [{
+      type: 'wordCloud',
+      shape: 'square',
+      left: 'center',
+      top: 'middle',
+      width: '99%',
+      height: '99%',
+      right: null,
+      bottom: null,
+      gridSize: 6,
+      sizeRange: [10, 56],
+      rotationRange: [-10, 10],
+      rotationStep: 5,
+      drawOutOfBound: false,
+      layoutAnimation: true,
+      textStyle: {
+        color: function () {
+          return 'rgb(' +
+              Math.round(Math.random() * 255) + ',' +
+              Math.round(Math.random() * 255) + ',' +
+              Math.round(Math.random() * 255) + ')';
+        },
+        emphasis: {
+          shadowBlur: 10,
+          shadowColor: '#333'
+        }
+      },
+      data: words
+    }]
+  }
+  cloudChartKey.value++
 
   data.value = await queryModelIndexLatest({})
 
@@ -427,71 +505,290 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.FBH, .FBV {
-  display: flex;
-}
-
-.mb16 {
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
   margin-bottom: 12px;
 }
 
-.overview-item-2 {
-  padding: 16px;
-  height: 160px;
-  background-color: #fff;
-  border: 1px solid #e8e8e8;
-  margin: 12px 12px 0 0;
-
-  .overview-countLast {
-    height: 120px;
-    font-size: 35px;
-    color: rgba(0, 0, 0, .85);
-  }
-
-  .overview-default {
-    font-size: 12px;
-    color: rgba(0,0,0,.65);
-  }
+.stat-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 18px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eef0f3;
+  overflow: hidden;
+  transition: all 0.25s ease-out;
+  box-sizing: border-box;
+  min-height: 120px;
 }
 
-.FB1 {
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--c-main);
+  opacity: 0.95;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 0;
+  width: 90px;
+  height: 110px;
+  background: linear-gradient(135deg, var(--c-corner-bg) 0%, transparent 70%);
+  border-radius: 0 0 0 100%;
+  pointer-events: none;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--c-hover-border);
+  box-shadow: 0 8px 20px var(--c-hover-shadow);
+}
+
+.stat-icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--c-icon-bg-from) 0%, var(--c-icon-bg-to) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--c-main);
+  box-shadow: 0 4px 10px var(--c-icon-shadow), inset 0 0 0 1px var(--c-icon-border);
+  position: relative;
+  z-index: 1;
+}
+
+.stat-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.stat-content {
   flex: 1;
-}
-
-.FBJB {
-  justify-content: space-between;
-}
-
-html .FBV {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-}
-
-.FBJC {
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
-.FBAC {
+.stat-header {
+  display: flex;
   align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
-.page-statistic {
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7785;
+  line-height: 1;
+}
+
+.tip-icon {
+  color: #c9cdd4;
+  cursor: help;
+  transition: color 0.2s ease;
+}
+
+.tip-icon:hover {
+  color: var(--c-tip-hover);
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1d2129;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.stat-slash {
+  margin: 0 4px;
+  color: #c9cdd4;
+  font-weight: 500;
+}
+
+.stat-desc {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #86909c;
+  line-height: 1;
+}
+
+.chart-row {
+  display: flex;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
-.mr8 {
-  margin-right: 8px;
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eef0f3;
+  padding: 18px;
+  box-sizing: border-box;
+  transition: all 0.25s ease-out;
 }
 
-.bar-tag {
+.panel:hover {
+  border-color: #e0e6ef;
+  box-shadow: 0 4px 14px rgba(22, 119, 255, 0.05);
+}
+
+.panel-flex-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-header {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 10px
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-left: 12px;
 }
 
-.FBT {
-  font-size: 18px;
-  font-weight: 600
+.section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #1677ff 0%, #4096ff 100%);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d2129;
+  line-height: 1.4;
+}
+
+.section-desc {
+  font-size: 12px;
+  color: #86909c;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.4;
+}
+
+.chart-wrap {
+  width: 100%;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fafcff 0%, #f5f9ff 100%);
+  border: 1px solid #f0f4fa;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.rate-summary-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.rate-tag {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  transition: all 0.25s ease-out;
+  box-sizing: border-box;
+}
+
+.rate-tag:hover {
+  transform: translateY(-1px);
+}
+
+.rate-tag-count {
+  background: linear-gradient(135deg, #e6f0ff 0%, #d6e6ff 100%);
+  border: 1px solid #b8d1ff;
+}
+
+.rate-tag-count:hover {
+  box-shadow: 0 4px 10px rgba(22, 119, 255, 0.1);
+}
+
+.rate-tag-rate {
+  background: linear-gradient(135deg, #e8fff2 0%, #d6ffe5 100%);
+  border: 1px solid #b7f0c9;
+}
+
+.rate-tag-rate:hover {
+  box-shadow: 0 4px 10px rgba(82, 196, 26, 0.1);
+}
+
+.rate-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.rate-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rate-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d2129;
+  line-height: 1.2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.rate-label {
+  font-size: 12px;
+  color: #6b7785;
+  line-height: 1;
+}
+
+.table-wrap {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #f0f4fa;
+}
+
+.pie-row {
+  display: flex;
+  width: 100%;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fafcff 0%, #f5f9ff 100%);
+  border: 1px solid #f0f4fa;
+  padding: 8px;
+  box-sizing: border-box;
 }
 </style>

@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
-import { defineComponent, PropType, ref } from 'vue'
-import initChart from '@/components/chart'
+import { defineComponent, PropType, ref, watch, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { useThemeStore } from '@/store/theme/theme'
+import { throttle } from 'echarts'
+import { useI18n } from 'vue-i18n'
 import type { Ref } from 'vue'
+import type { ECharts } from 'echarts'
 
 const props = {
   height: {
@@ -74,8 +77,53 @@ const MyChart = defineComponent({
   props,
   setup(props) {
     const myChartRef: Ref<HTMLDivElement | null> = ref(null)
+    let chart: ECharts | null = null
+    const themeStore = useThemeStore()
+    const { locale } = useI18n()
+    const globalProperties =
+      getCurrentInstance()?.appContext.config.globalProperties
 
-    initChart(myChartRef, props.option)
+    const init = () => {
+      chart?.dispose()
+      const option = { ...(props.option || {}) } as any
+      option.backgroundColor = ''
+      chart = globalProperties?.echarts.init(
+        myChartRef.value,
+        themeStore.darkTheme ? 'dark-bold' : 'macarons'
+      )
+      chart && chart.setOption(option, true)
+    }
+
+    const resize = throttle(() => {
+      chart && chart.resize()
+    }, 20)
+
+    watch(
+      () => themeStore.darkTheme,
+      init
+    )
+
+    watch(
+      () => locale.value,
+      init
+    )
+
+    watch(
+      () => props.option,
+      init,
+      { deep: true }
+    )
+
+    onMounted(() => {
+      init()
+      addEventListener('resize', resize)
+    })
+
+    onBeforeUnmount(() => {
+      removeEventListener('resize', resize)
+      chart?.dispose()
+      chart = null
+    })
 
     return { myChartRef }
   },
