@@ -68,11 +68,43 @@ const baseRequestConfig: AxiosRequestConfig = {
 
 const service = axios.create(baseRequestConfig)
 
-const err = (err: AxiosError): Promise<AxiosError> => {
+const isBlobResponse = (headers: Record<string, any> | undefined): boolean => {
+  if (!headers) return false
+  const ct = String(headers['content-type'] || headers['Content-Type'] || '').toLowerCase()
+  if (!ct) return false
+  return (
+    ct.includes('application/vnd.ms-excel') ||
+    ct.includes('application/vnd.openxmlformats-officedocument') ||
+    ct.includes('application/octet-stream') ||
+    ct.includes('application/x-xls') ||
+    ct.includes('application/xlsx') ||
+    ct.includes('application/download') ||
+    ct.includes('application/force-download') ||
+    ct.includes('spreadsheetml')
+  )
+}
+
+const wrapBlobResponse = <T>(resp: AxiosResponse<T> | undefined) => {
+  if (!resp) return undefined
+  return {
+    data: resp.data,
+    headers: resp.headers || {},
+    status: resp.status,
+    statusText: resp.statusText
+  }
+}
+
+const err = (err: AxiosError): Promise<any> => {
   if (err.response?.status === 401) {
     userStore.setSessionId('')
     userStore.setUserInfo({})
     router.push({ path: '/login' })
+    return Promise.reject(err)
+  }
+
+  const config = (err.config || {}) as AxiosRequestConfig
+  if (config.responseType === 'blob' && err.response && isBlobResponse(err.response.headers)) {
+    return Promise.resolve(wrapBlobResponse(err.response))
   }
 
   return Promise.reject(err)
@@ -128,6 +160,10 @@ service.interceptors.request.use( async (config: InternalAxiosRequestConfig<any>
 
 // The response to intercept
 service.interceptors.response.use((res: AxiosResponse) => {
+  if (res.config?.responseType === 'blob') {
+    return wrapBlobResponse(res)
+  }
+
   // No code will be processed
   if (res.data.code === undefined) {
     return res.data

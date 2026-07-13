@@ -424,6 +424,7 @@ export function importModel(data: FormData): any {
     url: '/Model/import',
     method: 'post',
     data,
+    responseType: 'blob',
     headers: {
       'Content-Type': 'multipart/form-data'
     }

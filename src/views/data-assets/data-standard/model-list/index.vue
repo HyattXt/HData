@@ -205,7 +205,7 @@
   </el-config-provider>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { ref, reactive, onMounted, h, computed } from 'vue'
   import { useRouter } from 'vue-router'
   import { BoxPlotOutlined } from '@vicons/antd'
@@ -969,6 +969,68 @@
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
   }
 
+  const _blobToJson = (blob: Blob): Promise<any> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onerror = () => reject(new Error('解析响应失败'))
+      reader.onload = () => {
+        try {
+          const text = typeof reader.result === 'string' ? reader.result : ''
+          resolve(text ? JSON.parse(text) : {})
+        } catch (e) {
+          reject(new Error('响应格式非法'))
+        }
+      }
+      reader.readAsText(blob, 'utf-8')
+    })
+
+  const _isExcelContentType = (ct?: string): boolean => {
+    const s = String(ct || '').toLowerCase()
+    if (!s) return false
+    return (
+      s.includes('application/vnd.ms-excel') ||
+      s.includes('openxmlformats-officedocument') ||
+      s.includes('application/octet-stream') ||
+      s.includes('application/x-xls') ||
+      s.includes('application/xlsx') ||
+      s.includes('spreadsheetml')
+    )
+  }
+
+  const _extractFilename = (disposition?: string, fallback = '导入失败记录.xlsx'): string => {
+    const raw = String(disposition || '').trim()
+    if (!raw) return fallback
+    try {
+      const utf8Match = raw.match(/filename\*\s*=\s*UTF-8''([^;]+)/i)
+      if (utf8Match && utf8Match[1]) return decodeURIComponent(utf8Match[1])
+      const quotedMatch = raw.match(/filename\s*=\s*"([^"]+)"/i)
+      if (quotedMatch && quotedMatch[1]) return quotedMatch[1]
+      const plainMatch = raw.match(/filename\s*=\s*([^;"'\s]+)/i)
+      if (plainMatch && plainMatch[1]) return plainMatch[1]
+    } catch { /* ignore */ }
+    return fallback
+  }
+
+  const _downloadBlob = (blob: Blob, filename: string) => {
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.style.display = 'none'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setTimeout(() => window.URL.revokeObjectURL(url), 0)
+  }
+
+  const _isSuccessJson = (payload: any): { ok: boolean; msg?: string } => {
+    if (!payload) return { ok: false }
+    if (payload.code === 0 || payload.code === 200 || payload.success === true) {
+      return { ok: true, msg: payload.msg || payload.message }
+    }
+    return { ok: false, msg: payload.msg || payload.message }
+  }
+
   const handleImport = async () => {
     if (!selectedFile.value) {
       message.warning('请选择要导入的文件')
@@ -981,14 +1043,73 @@
       const formData = new FormData()
       formData.append('file', selectedFile.value)
 
-      await importModel(formData)
+      const wrapped = await importModel(formData)
+      const headers = (wrapped && wrapped.headers) || {}
+      const blob: Blob | undefined = wrapped && wrapped.data
+      const ct: string = headers['content-type'] || headers['Content-Type'] || ''
+
+      if (blob && _isExcelContentType(ct)) {
+        const disposition = headers['content-disposition'] || headers['Content-Disposition']
+        const filename = _extractFilename(disposition, '导入失败记录.xlsx')
+        _downloadBlob(blob, filename)
+        const badStatus = wrapped && (typeof wrapped.status === 'number') && wrapped.status >= 400
+        message.warning(
+          badStatus
+            ? `导入失败，失败数据已下载：${filename}`
+            : `导入存在失败数据，已下载：${filename}`
+        )
+        closeImportModal()
+        await handlePageChange(1, paginationReactive.pageSize)
+        return
+      }
+
+      if (blob instanceof Blob && ct.toLowerCase().includes('application/json')) {
+        const json = await _blobToJson(blob)
+        const { ok, msg } = _isSuccessJson(json)
+        if (ok) {
+          message.success(msg || '导入成功')
+          closeImportModal()
+          await handlePageChange(1, paginationReactive.pageSize)
+        } else {
+          message.error(msg || '导入失败')
+        }
+        return
+      }
+
+      if (blob instanceof Blob) {
+        const text = await _blobToJson(blob).catch(() => null)
+        if (text && typeof text === 'object') {
+          const { ok, msg } = _isSuccessJson(text)
+          if (ok) {
+            message.success(msg || '导入成功')
+            closeImportModal()
+            await handlePageChange(1, paginationReactive.pageSize)
+          } else {
+            message.error(msg || '导入失败')
+          }
+          return
+        }
+      }
 
       message.success('导入成功')
       closeImportModal()
       await handlePageChange(1, paginationReactive.pageSize)
-    } catch (error) {
+    } catch (error: any) {
+      if (error && error.data instanceof Blob && _isExcelContentType(error.headers?.['content-type'])) {
+        try {
+          const disposition = error.headers?.['content-disposition']
+          const filename = _extractFilename(disposition, '导入失败记录.xlsx')
+          _downloadBlob(error.data, filename)
+          message.warning(`导入失败，失败数据已下载：${filename}`)
+          closeImportModal()
+          await handlePageChange(1, paginationReactive.pageSize)
+          return
+        } catch (innerErr) {
+          console.error('下载失败Excel异常:', innerErr)
+        }
+      }
       console.error('导入失败:', error)
-      message.error('导入失败: ' + (error.message || '未知错误'))
+      message.error('导入失败: ' + (error?.message || '未知错误'))
     } finally {
       importing.value = false
     }
